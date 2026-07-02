@@ -95,6 +95,7 @@ Do not split one workflow across separate top-level `skills`, `agents`, and `pro
 ## Project Navigation
 
 - Package catalog: [`REGISTRY.md`](REGISTRY.md)
+- Design system planning & engineering methodology research: [`docs/design-system-methodology.md`](docs/design-system-methodology.md)
 - GitHub About text and topics: [`docs/github-about.md`](docs/github-about.md)
 - Project board plan: [`docs/project-board.md`](docs/project-board.md)
 - Wiki source pages: [`docs/wiki/Home.md`](docs/wiki/Home.md)
