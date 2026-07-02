@@ -32,6 +32,11 @@
     - [17.7 Button](#177-button-아이템-스펙)
     - [17.8 Label / Description / Title](#178-label--description--title-아이템-스펙)
     - [17.9 결론: 매트릭스는 Figma 핸드오프의 관행](#179-결론-매트릭스는-공개-문서가-아니라-figma-핸드오프의-관행)
+    - [17.10 Input 계열](#1710-input-계열-textfield--textarea--select--switch)
+    - [17.11 표시·상태 계열](#1711-표시상태-계열-tag--badge--chip--avatar--progress)
+    - [17.12 피드백 계열](#1712-피드백-계열-alert--toast--tooltip)
+    - [17.13 내비게이션 계열](#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu)
+    - [17.14 전체 종합: 원자 카탈로그의 4가지 법칙](#1714-전체-종합-원자-카탈로그에서-반복되는-4가지-법칙)
 18. [출처](#18-출처)
 
 ---
@@ -345,6 +350,45 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 - **외부에 공개하는 컴포넌트 라이브러리 문서 사이트**(Storybook, Zeroheight류)를 만들 때 → 아나토미 다이어그램 + prose + 축별 개별 예시 (17.1~17.4, 17.6~17.8의 실사례를 따름)
 - 두 상황이 섞여 있다면(사내 핸드오프 문서를 나중에 공개 문서로 승격) 매트릭스를 1차 초안으로 쓰고, 공개 전 아나토미+prose로 재작성하는 2단계 프로세스를 권장합니다.
 
+17.9까지는 폼 아톰(체크박스·버튼 등)을 다뤘습니다. 아래 17.10~17.13은 원자 카탈로그를 입력/표시·상태/피드백/내비게이션 4계열로 넓혀 검증한 결과이며, 17.14가 전체 종합 결론입니다.
+
+### 17.10 Input 계열 (TextField / Textarea / Select / Switch)
+
+- **TextField**: label + container + placeholder + leading/trailing icon + helper/error text + char counter가 공통 아나토미입니다. 축은 size(sm/md/lg)와 style입니다 — Material Design 3는 `filled`(배경 강조, 짧은 폼/다이얼로그) vs `outlined`(강조 약함, 긴 폼)를 핵심 스타일 축으로 두고, Atlassian은 `standard`/`subtle` appearance로 표현합니다. 상태는 default/focus/filled/error/disabled/read-only 공통에 Carbon만 warning/skeleton을 추가합니다.
+- **Textarea**: 구현 계층이 두 갈래입니다 — Ant의 `Input.TextArea`(Input의 dot-namespace 자식, `autoSize={{minRows,maxRows}}` 추가)·Polaris의 `TextField multiline` prop처럼 **TextField에 종속**시키는 방식과, Carbon/Atlassian/Material처럼 **독립 컴포넌트**로 분리하는 방식. 고유 축은 resize(수직/수평), min/max rows(auto-grow), char limit.
+- **Select/Dropdown**: 시스템 간 컴포넌트 분화가 가장 큰 영역입니다. Carbon은 `Select`(네이티브, 단일)/`Dropdown`(커스텀, 필터·정렬)/`ComboBox`(검색 입력 추가) 3분화, Polaris도 `Select`/`Combobox`/`Listbox`(옵션 메뉴를 독립 컴포넌트로 분리) 3분화, Material은 모두 `Menu`로 통합, Ant은 단일 `Select`에 `mode="multiple|tags"`·`showSearch` 축을 몰아넣습니다. 옵션은 Ant `Select.Option`처럼 네임스페이스 자식으로 노출되는 것이 대표 패턴입니다.
+- **Switch/Toggle**: track + thumb(+optional icon/label) 아나토미. 축은 on/off × interaction, size, label 위치. **Checkbox와의 구분 지침이 5개 시스템 모두 일치** — Switch는 "즉시 적용되는 이진 상태(별도 제출 불필요)", Checkbox는 "제출·확인 단계가 있는 다중 선택". Carbon은 "toggle을 2개 초과 옵션에 쓰지 말라"고 명시. Polaris만 전용 Switch가 없어 Checkbox로 대체합니다.
+
+### 17.11 표시·상태 계열 (Tag / Badge / Chip / Avatar / Progress)
+
+- **Tag/Badge/Chip**: 명명이 시스템마다 크게 갈립니다 — Carbon은 라벨=`Tag`, Material은 통칭 `Chips`+카운트 `Badge`, Ant은 라벨 `Tag`+숫자 `Badge` 분리, Atlassian은 2026 개편으로 `Lozenge`(상태)/`Tag`(객체 라벨)/`Badge`(숫자) 3분할, Polaris는 사실상 `Badge` 하나로 통합. 상호작용 축을 가장 정교하게 명시하는 곳은 **Carbon Tag의 4변형**(read-only/dismissible/selectable/operational)입니다. `tone × style(filled/outlined/subtle)`이 명확한 2축이지만 — 뒤 17.14 참조 — 완전한 렌더 격자는 없습니다.
+- **Avatar**: 이미지 → 폴백 이니셜 → 폴백 아이콘 3단 폴백 + 코너 프레즌스/상태 배지가 표준. Atlassian은 presence(온라인 여부)와 status(승인/거절 등)를 **별개 하위 컴포넌트**로 분리합니다. `AvatarGroup`은 대부분 별도 컴포넌트로, max 초과 시 "+N" 카운터 아바타를 규정 — 17.14의 "item vs group 분리" 패턴의 또 다른 사례입니다.
+- **Progress/Spinner**: Carbon이 가장 체계적으로 `Progress bar`(선형)와 `Loading`(원형)을 분리하고 "5초 미만은 스피너, 예측 불가/장기는 progress bar"라는 선택 규칙까지 둡니다. 공통 축은 determinate/indeterminate, size, with-percentage, inline/block. Ant은 `type=line/circle/dashboard`로 나눕니다.
+
+### 17.12 피드백 계열 (Alert / Toast / Tooltip)
+
+- **Alert/Banner/Inline message**: 명명은 Ant `Alert`, Polaris `Banner`, Carbon `Notification`, Atlassian `SectionMessage`, Material `Banner`로 갈리지만, 아이콘 + 제목 + 본문 + 액션(옵션) + 닫기(옵션) 아나토미와 4~5단계 severity 축을 공유합니다. `severity × placement(inline/banner/toast)`가 명확한 2축이며, severity별로 접근성 live-region을 매핑(error/warning=assertive/`role=alert`, info/success=polite)하는 것이 공통 규칙입니다.
+- **Toast/Snackbar(일시형)**: 텍스트 + 단일 액션(옵션) + 닫기. Material Snackbar는 최대 2줄 + 단일 액션만 허용. 축은 with-action 여부, 자동 소멸 타이밍(Polaris 기본 5000ms, 접근성 위해 최소 10000ms 권장), 위치, severity. 지속형(Banner)과의 차이("자동 소멸·최소 간섭" vs "사용자 액션으로만 dismiss·지속")를 모든 시스템이 명시적으로 대비시킵니다.
+- **Tooltip/Popover**: 컨테이너 + caret/arrow + 콘텐츠. 축은 placement(top/right/bottom/left) × align(start/center/end), 트리거(hover/click/focus). Material은 `plain`(텍스트) vs `rich`(제목+설명+액션=사실상 popover), Carbon은 Tooltip(hover)/Popover(인터랙티브)/Toggletip(click) 3분할. **Ant Design의 Tooltip/Popover 문서가 12방향 placement를 중앙 요소 주위에 실제 렌더한 격자를 제공** — 이번 전체 리서치에서 확인된 유일한 실제 2축 렌더 매트릭스입니다.
+
+### 17.13 내비게이션 계열 (Tabs / Breadcrumb / Pagination / Menu)
+
+- **Tabs**: tab item(label + optional icon + optional badge) + tab list + active indicator + panel. 스타일 축은 Material `primary/secondary`, Carbon `line/contained`, Ant `line/card/editable-card`. 네임스페이스 패밀리는 Atlassian이 가장 명확(`Tabs`+`TabList`+`Tab`+`TabPanel` 각각 별도 문서), 반면 Ant/Polaris는 개별 Tab을 `items`/`tabs` 데이터 배열 객체로 취급합니다.
+- **Breadcrumb**: page link 아이템 + separator + current-page 아이템 + overflow 메뉴. current(마지막) 아이템을 "비링크·비인터랙티브 텍스트"라는 별도 상태로 규정(Carbon)하는 것이 특징. Atlassian `Breadcrumbs`+`BreadcrumbsItem`, Ant은 `items` 배열로 전환(`Breadcrumb.Item` deprecated).
+- **Pagination**: page number + prev/next + ellipsis + page-size selector(Select 내장) + item count 텍스트. Ant이 API가 가장 풍부(`showSizeChanger`/`showQuickJumper`/`simple`/`showTotal`), Polaris는 prev/next 중심 미니멀. 페이지 넘버 아이템을 독립 컴포넌트로 문서화하는 시스템은 없습니다(내부 렌더링 취급).
+- **Menu/Dropdown menu**: menu item(container + label + leading icon + trailing shortcut/checkmark + submenu indicator + selection state) + section header + divider + submenu. Carbon은 아이템 상태를 7개(enabled/hover/focus/focus+hover/danger hover/danger hover+focus/disabled)까지 명시. `MenuItem`을 독립 컴포넌트로 분해하는 패턴(17.1의 ListItem 분해와 동형)은 Atlassian(`DropdownMenu`+`DropdownItem`+`DropdownItemGroup`)과 Carbon(`Menu`+`MenuItem`+`MenuItemDivider`+`MenuItemGroup`)이 대표적, Ant/Polaris는 `items` 데이터 배열 방식입니다.
+
+### 17.14 전체 종합: 원자 카탈로그에서 반복되는 4가지 법칙
+
+차트 텍스트부터 Input·Tag·Alert·Tabs까지 20여 개 원자·분자 컴포넌트를 검증한 결과, 시스템·컴포넌트를 가로질러 다음 4가지가 일관되게 반복됩니다.
+
+1. **렌더 매트릭스는 예외, 아나토미+prose가 규칙**: 두 축이 명확한 컴포넌트(Tag의 tone×style, Alert의 severity×placement, Tooltip의 placement×align)조차 공개 문서는 거의 전부 "아나토미 다이어그램 + prose + 한 축(주로 tone/color) 렌더 갤러리"로 문서화합니다. 전체 리서치에서 확인된 **실제 2축 렌더 격자는 Ant Design Tooltip의 12방향 placement 그리드가 유일**했습니다. 이는 17.9 결론(매트릭스는 Figma 핸드오프 관행)을 원자 전 범위에서 재확인합니다.
+2. **"아이템 vs 그룹"의 분리**: Radio/RadioGroup, Select/Option, Menu/MenuItem, Tabs/Tab, Breadcrumb/BreadcrumbItem, Avatar/AvatarGroup — 개별 아이템과 그 컨테이너(그룹)를 별도 컴포넌트/별도 문서로 나누는 것이 거의 모든 계열에서 반복됩니다. 그룹은 키보드 내비게이션·상호배타 동작·"+N 오버플로" 같은 고유 책임을 따로 갖기 때문입니다.
+3. **네임스페이스 패밀리 vs 데이터 배열, 두 갈래**: 하위 파츠를 다루는 방식이 (a) 접두사/dot 네임스페이스 컴포넌트로 분해(Atlassian이 전 영역에서 가장 일관, Ant의 `Select.Option`·`Input.TextArea`)와 (b) `items`/`tabs`/`sections` 데이터 배열 객체로 취급(Ant·Polaris의 Tabs·Menu·Breadcrumb)으로 갈립니다. 이미지에서 학습한 `Chart`+`Value`/`Label`/`Legend`는 (a) 방식이며, shadcn/ui `Field`+`FieldLabel`/`FieldTitle`/`FieldDescription`이 가장 유사한 실사례입니다.
+4. **상태(empty/loading/error)는 전역 패턴으로 위임**: 개별 컴포넌트 문서에 empty/loading/error를 다 넣지 않고, 시스템 전역 패턴 문서(Loading pattern, Empty states, Disabled states)에 정의한 뒤 링크로 참조하는 것이 지배적입니다. 예외적으로 Carbon만 컴포넌트별 `skeleton` 상태를 1급으로 문서화하는 경향이 강합니다.
+
+`ds-transform`의 UI Archetype Reference와 Phase 4 규칙은 이 4가지 법칙을 반영합니다 — 특히 (2)(3)은 Phase 2(Atomic Mapping)에서 컴포넌트 후보를 "아이템/그룹"으로 쪼개고 네임스페이스를 부여하는 단계로, (4)는 Phase 4에서 상태를 개별 스펙에 중복 기술하지 않고 전역 패턴으로 링크하는 규칙으로 반영되어 있습니다.
+
 ## 18. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
@@ -485,3 +529,47 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 - [Forms patterns – Atlassian Design](https://atlassian.design/patterns/forms/)
 - [Text input – GOV.UK Design System](https://design-system.service.gov.uk/components/text-input/)
 - [Field – shadcn/ui](https://ui.shadcn.com/docs/components/radix/field)
+
+### Input 계열 아이템 스펙
+- [Text fields – Material Design 3](https://m3.material.io/components/text-fields/overview)
+- [Menus – Material Design 3](https://m3.material.io/components/menus)
+- [Switch – Material Design 3](https://m3.material.io/components/switch/guidelines)
+- [Text input – Carbon Design System](https://carbondesignsystem.com/components/text-input/usage/)
+- [Dropdown – Carbon Design System](https://carbondesignsystem.com/components/dropdown/usage/)
+- [Toggle – Carbon Design System](https://carbondesignsystem.com/components/toggle/usage/)
+- [Input – Ant Design](https://ant.design/components/input/)
+- [Select – Ant Design](https://ant.design/components/select/)
+- [Text field – Shopify Polaris React](https://polaris-react.shopify.com/components/selection-and-input/text-field)
+- [Combobox – Shopify Polaris React](https://polaris-react.shopify.com/components/selection-and-input/combobox)
+
+### 표시·상태 계열 아이템 스펙
+- [Tag – Carbon Design System](https://carbondesignsystem.com/components/tag/usage/)
+- [Chips – Material Design 3](https://m3.material.io/components/chips/guidelines)
+- [Tag – Ant Design](https://ant.design/components/tag/)
+- [Badge – Ant Design](https://ant.design/components/badge/)
+- [Lozenge – Atlassian Design](https://atlassian.design/components/lozenge)
+- [Avatar – Atlassian Design](https://atlassian.design/components/avatar/)
+- [Avatar group – Atlassian Design](https://atlassian.design/components/avatar-group)
+- [Progress bar – Carbon Design System](https://carbondesignsystem.com/components/progress-bar/usage/)
+- [Progress indicators – Material Design 3](https://m3.material.io/components/progress-indicators/guidelines)
+
+### 피드백 계열 아이템 스펙
+- [Notification – Carbon Design System](https://carbondesignsystem.com/components/notification/usage/)
+- [Snackbar – Material Design 3](https://m3.material.io/components/snackbar/guidelines)
+- [Tooltips – Material Design 3](https://m3.material.io/components/tooltips/guidelines)
+- [Alert – Ant Design](https://ant.design/components/alert/)
+- [Tooltip – Ant Design](https://ant.design/components/tooltip/)
+- [Popover – Ant Design](https://ant.design/components/popover/)
+- [Banner – Shopify Polaris React](https://polaris-react.shopify.com/components/feedback-indicators/banner)
+- [Section message – Atlassian Design](https://atlassian.design/components/section-message/)
+
+### 내비게이션 계열 아이템 스펙
+- [Tabs – Material Design 3](https://m3.material.io/components/tabs/guidelines)
+- [Menus (specs) – Material Design 3](https://m3.material.io/components/menus/specs)
+- [Tabs – Carbon Design System](https://carbondesignsystem.com/components/tabs/usage/)
+- [Breadcrumb – Carbon Design System](https://carbondesignsystem.com/components/breadcrumb/usage/)
+- [Menu – Carbon Design System](https://carbondesignsystem.com/components/menu/usage/)
+- [Pagination – Ant Design](https://ant.design/components/pagination/)
+- [Tabs – Atlassian Design](https://atlassian.design/components/tabs)
+- [Dropdown menu – Atlassian Design](https://atlassian.design/components/dropdown-menu)
+- [Action list – Shopify Polaris React](https://polaris-react.shopify.com/components/lists/action-list)

@@ -57,7 +57,13 @@ Even the simplest atoms (checkbox, radio, button, form label) are documented wit
 | Checkbox / Radio | container/circle, mark, label | selection state x interaction state | anatomy + prose for public docs; document the group as a separate component |
 | Button | label, container, optional icon | kind/appearance x size | anatomy + prose for public docs; icon-only is a separate `IconButton` or a prop, not a new axis on the matrix |
 | Label / Description / Title | label text, required indicator, helper text, title text | required/optional, tone, typography role x size | anatomy + prose; group as one namespace-prefixed family (e.g. `Field` + `Label`/`Title`/`Description`) |
+| Input (TextField/Textarea/Select/Switch) | label, container, placeholder, icons, helper/error text | size, style (filled/outlined), state; Select adds single/multi | anatomy + prose; Textarea = variant vs own component; Select splits into native/custom/combobox; options via `Select.Option` |
+| Tag / Badge / Chip | container, label, optional icon/dismiss/count | tone x style; interactive (read-only/dismissible/selectable) | anatomy + prose + single-axis (tone) gallery; separate status vs object-label vs numeric count naming |
+| Feedback (Alert/Banner/Toast/Tooltip) | icon, title, body, actions, dismiss; tooltip = caret + content | severity x placement; tooltip placement x align | anatomy + prose; map severity to a11y live-region; separate transient (toast) from persistent (banner) |
+| Navigation (Tabs/Breadcrumb/Pagination/Menu) | item + container + indicator/separator | style, size, item state; menu adds danger/submenu | anatomy + prose; split item vs container OR use a data array; document current/active item as a distinct state |
 | Atom-level, two-axis component in a handoff spec | single visual unit | two independent props | variant matrix table |
+
+Four recurring laws across all archetypes: (1) rendered matrices are the exception — public docs use anatomy + prose even for two-axis atoms (only Ant's Tooltip placement grid is a true rendered matrix); (2) split "item" from "group" (Select/Option, Menu/MenuItem, Tabs/Tab); (3) sub-parts are either a namespace family (`Select.Option`) or a data array (`items`); (4) delegate empty/loading/error to system-wide patterns and link.
 
 ## Guardrails
 
