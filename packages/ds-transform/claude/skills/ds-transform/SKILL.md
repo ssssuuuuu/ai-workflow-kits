@@ -38,6 +38,7 @@ to-be web planning (component + variant + state + token)
 3. **Tokenization** — extract repeated raw values (color, spacing, radius, typography) and propose a 3-tier token set: global/core -> semantic/alias -> component, named `namespace-object-base-modifier`. Flag genuine one-offs as open questions rather than forcing a token.
 
 4. **DS-Based Spec Rewrite** — restate the original screen definitions using component + variant + state + token references instead of raw visual description. For each component candidate, add anatomy, states, props/variants, accessibility notes, and do's/don'ts. Keep business logic and screen flow untouched.
+   - **Variant matrix rule**: when a component has two independent visual axes (e.g. `weight x size`, `color x align`), render the variants as a grid — one axis as rows, one as columns, real rendered content in each cell — instead of a prose list. Cap each table at two axes; split a third axis into a separate table. Group related components under one namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`).
 
 5. **Governance Handoff** — mark which candidates are net-new vs. already exist in the target system (if known). Flag net-new or breaking candidates as RFC-worthy. Note the number of affected screens/instances and a suggested migration order (highest occurrence first).
 

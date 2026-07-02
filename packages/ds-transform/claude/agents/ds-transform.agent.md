@@ -52,6 +52,7 @@ Follow the five phases in order. Each phase's output is required input for the n
 
 - Rewrite the as-is screen definitions using component name + variant + state + token references instead of raw visual description.
 - For each component candidate, write a spec block: anatomy, states, props/variants, accessibility notes, do's/don'ts.
+- **Variant matrix rule**: if a component candidate has two or more independent visual axes (e.g. `weight x size`, `color x align`, `layout x density`), render its variants as a grid table — axis values as rows, the other axis as columns, actual rendered content in each cell — instead of prose. Keep each matrix to two axes; split a third independent axis into its own table. Use a namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`) when several components share a domain, so the relationship is visible from the name alone.
 - Preserve the original screen flow and business logic — only the UI description layer changes.
 
 ### Phase 5 — Governance Handoff

@@ -22,7 +22,8 @@
 14. [국내 테크기업 디자인 시스템 사례](#14-국내-테크기업-디자인-시스템-사례)
 15. [반복되는 실패 패턴](#15-반복되는-실패-패턴)
 16. [실전 체크리스트](#16-실전-체크리스트)
-17. [출처](#17-출처)
+17. [아이템 단위 컴포넌트 스펙: 배리언트 매트릭스 문서화](#17-아이템-단위-컴포넌트-스펙-배리언트-매트릭스-문서화)
+18. [출처](#18-출처)
 
 ---
 
@@ -222,7 +223,35 @@ Figma는 Plugin/Widget/REST 세 종류의 API를 제공하며, **변수(Variable
 - [ ] 디프리케이션 정책(기준·마킹·경로)이 문서화되어 있는가
 - [ ] 시스템팀-제품팀 관계가 "공급자-수요자"가 아닌 "문제 해결 파트너"로 설계되어 있는가
 
-## 17. 출처
+**아이템 스펙 단계**
+- [ ] 축이 2개 이상인 컴포넌트(색상×정렬, 굵기×크기 등)에 배리언트 매트릭스 표를 작성했는가
+- [ ] 컴포넌트 패밀리를 네임스페이스 프리픽스(예: `Chart` + 역할)로 그룹핑했는가
+- [ ] 각 컴포넌트 제목 아래 역할/의도를 한 문장으로 명시했는가
+
+## 17. 아이템 단위 컴포넌트 스펙: 배리언트 매트릭스 문서화
+
+개별 컴포넌트(아이템) 단위로 내려가면, 6장의 컴포넌트 아키텍처와 7장의 문서화 방법론이 실제로 한 장의 스펙 시트에서 어떻게 만나는지가 중요해집니다. 특히 차트/데이터 시각화처럼 "같은 역할, 다른 스타일 조합"이 많은 영역(라벨, 값, 범례 텍스트 등)에서 반복적으로 관찰되는 문서화 패턴을 정리합니다.
+
+**네임스페이스 프리픽스로 컴포넌트 패밀리 그룹핑**
+
+상위 도메인(예: `Chart`)과 역할(`Value`, `Label`, `LabelGroup`, `Legend`)을 이어붙여 컴포넌트명을 지으면, 이름만으로 같은 패밀리에 속한다는 것과 각자의 역할을 동시에 전달할 수 있습니다. 실제 오픈소스 차트 시스템에서도 같은 패턴이 보입니다 — shadcn/ui는 `ChartLegend`/`ChartLegendContent`로 범례를 별도 컴포넌트로 분리하고, PatternFly의 `ChartLegend`는 "standalone 컴포넌트로도 사용 가능"하다고 명시합니다. Carbon Charts는 데이터 시각화 전용 타이포그래피·컬러 토큰 체계를 UI 컴포넌트와 별도로 관리합니다.
+
+**배리언트 매트릭스(Variant/Property Matrix) 표**
+
+컴포넌트 하나가 서로 다른 두 축의 prop(예: `weight × size`, `color × align`)을 가질 때, 모든 조합을 행×열 그리드에 배치하고 각 셀에 실제 렌더링 결과를 그대로 보여주는 표를 만드는 것이 "property matrix" 기법입니다. Figma의 컴포넌트/Variants 문서화 가이드에서도 변형이 많아지면 행·열·그리드로 배치하고 축에 라벨을 붙이도록 권장합니다.
+
+- 축은 최대 2개까지만 하나의 표에 담고, 3번째 이상의 독립 변수는 표를 분리합니다 (예시 이미지의 `ChartValue`는 `weight × size`, `ChartLabel`은 `color × align`을 각각 별도 표로 분리).
+- 셀 안에는 추상적인 설명 대신 실제 렌더링 텍스트("value", "Label")를 그대로 넣어, 표 자체가 대비·가독성 QA 도구 역할을 하게 합니다.
+- 컴포넌트명 옆에 아이콘 배지(◆ 등)를 붙여 "이것은 디자인 툴의 컴포넌트/Variant 세트"임을 시각적으로 표시하는 관행도 함께 관찰됩니다.
+- 제목 바로 아래 한 문장으로 "이 컴포넌트가 차트/화면 내에서 어떤 역할을 하는지"를 적는 것은 Material Design 3의 anatomy/behavior 문서화와 같은 목적(역할과 의도의 명시)을 가집니다.
+
+**이 방식이 유효한 이유**
+
+- 조합 폭발(combinatorial explosion)을 표 하나로 통제 — 새 조합이 필요하면 빈 셀만 채우면 되므로 확장성이 높습니다.
+- 디자이너와 개발자가 같은 표를 보고 "이미 존재하는 조합인지, 새로 만들어야 하는 조합인지"를 즉시 판단할 수 있어 4장의 거버넌스 프로세스(RFC 등)에 바로 연결됩니다.
+- `ds-transform` 패키지(`packages/ds-transform/`)의 Phase 4(DS 기반 스펙 재작성)에서, 축이 2개 이상인 컴포넌트 후보는 산문형 설명 대신 이 매트릭스 표로 출력하도록 반영했습니다.
+
+## 18. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
 - [Planning a Design System Generation – Nathan Curtis](https://medium.com/@nathanacurtis/planning-a-design-system-generation-ce4120393557)
@@ -286,3 +315,13 @@ Figma는 Plugin/Widget/REST 세 종류의 API를 제공하며, **변수(Variable
 - [인프랩 tech – 오픈소스 기반 디자인시스템 구축 회고](https://tech.inflab.com/20240224-design-system/)
 - [플립커뮤니케이션즈 – 디자인 시스템이 현장에서 무너지는 이유](https://blog.pulip.com/%EB%94%94%EC%9E%90%EC%9D%B8-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%84-%EB%8F%84%EC%9E%85%ED%96%88%EC%A7%80%EB%A7%8C-%EC%99%9C-%ED%98%84%EC%9E%A5%EC%97%90%EC%84%9C-%EB%AC%B4%EB%84%88%EC%A7%80%EB%8A%94/)
 - [Design System Pitfalls and Best Practices – neue.world](https://www.neue.world/learn/design-system/design-system-pitfalls-and-best-practices)
+
+### 아이템 단위 스펙, 배리언트 매트릭스, 차트 컴포넌트
+- [Create and use variants – Figma Learn](https://help.figma.com/hc/en-us/articles/360056440594-Create-and-use-variants)
+- [Component matrix – Orange Design System](https://system.design.orange.com/0c1af118d/p/65825e-component-matrix)
+- [Component Variants in Design Systems: Naming, Organization, and Scale – Sigma Collection](https://www.thesigma.co/journal/component-variants-design-system)
+- [Chart – shadcn/ui (ChartLegend, ChartLegendContent)](https://ui.shadcn.com/docs/components/radix/chart)
+- [Legends – PatternFly Charts (ChartLegend standalone usage)](https://www.patternfly.org/charts/legends/)
+- [Charts – Pajamas Design System (GitLab)](https://design.gitlab.com/data-visualization/charts/)
+- [Simple charts – Carbon Design System](https://carbondesignsystem.com/data-visualization/simple-charts/)
+- [Color usage – Carbon Design System](https://carbondesignsystem.com/elements/color/usage/)

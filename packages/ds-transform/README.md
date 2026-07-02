@@ -44,10 +44,14 @@ Use the **agent** when the source document is large or the work should run as a 
 1. **As-Is Audit** — extract every UI element mention from the source doc into an inventory table.
 2. **Atomic Mapping** — classify each element (atom/molecule/organism/template/page) and consolidate near-duplicates into component candidates.
 3. **Tokenization** — extract repeated raw values into a 3-tier token proposal (global -> semantic -> component).
-4. **DS-Based Spec Rewrite** — restate the original screen definitions using component + variant + state + token references.
+4. **DS-Based Spec Rewrite** — restate the original screen definitions using component + variant + state + token references. When a component has two independent visual axes (e.g. `weight x size`, `color x align`), render it as a variant matrix — a grid with real rendered content in each cell — instead of prose.
 5. **Governance Handoff** — flag net-new/breaking component candidates for the target team's RFC or review process, with an adoption note.
 
 Each phase's output is required input for the next. See the agent and skill files for the full method and output shape.
+
+### Variant Matrix Documentation
+
+For item-level component specs with multiple independent variants, use a two-axis grid table instead of a bullet list: one axis as rows, the other as columns, each cell showing the component actually rendered in that combination. Cap each table at two axes and split a third axis into a separate table. Group related components under one namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`) so the relationship is visible from the name alone. See `docs/design-system-methodology.md#17-아이템-단위-컴포넌트-스펙-배리언트-매트릭스-문서화` at the repo root for the full pattern and sources, and `examples/chart-text-variant-matrix/` for a worked example.
 
 ## Evidence Contract
 
