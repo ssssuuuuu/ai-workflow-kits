@@ -4,6 +4,8 @@
 
 이 문서는 코드가 아닌 지식 정리 자료이며, 팀에서 디자인 시스템을 새로 기획하거나 기존 시스템을 진단할 때 체크리스트로 활용하는 것을 목표로 합니다.
 
+> 원자 → 컴포넌트 → 화면의 전 계층을 빠르게 찾으려면 [컴포넌트 카탈로그 인덱스](component-catalog-index.md)를 먼저 보세요.
+
 ## 목차
 
 1. [기획·전략 방법론](#1-기획전략-방법론)
@@ -38,7 +40,8 @@
     - [17.13 내비게이션 계열](#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu)
     - [17.14 전체 종합: 원자 카탈로그의 4가지 법칙](#1714-전체-종합-원자-카탈로그에서-반복되는-4가지-법칙)
 18. [아이템 조합: 원자에서 컴포넌트, 컴포넌트에서 화면으로](#18-아이템-조합-원자에서-컴포넌트-컴포넌트에서-화면으로)
-19. [출처](#19-출처)
+19. [화면 조립: 컴포넌트에서 페이지로](#19-화면-조립-컴포넌트에서-페이지로)
+20. [출처](#20-출처)
 
 ---
 
@@ -453,7 +456,62 @@ page/screen(웹 화면)       실제 데이터가 채워진 최종 화면
 
 실제 적용 예시는 `packages/ds-transform/examples/datalist-composition/`에 있습니다.
 
-## 19. 출처
+## 19. 화면 조립: 컴포넌트에서 페이지로
+
+18장이 원자를 컴포넌트로 조합하는 단계였다면, 이 장은 그 컴포넌트들을 **레이아웃 위에 배치해 하나의 웹 화면(page)** 을 만드는 마지막 단계입니다. Atomic Design의 template → page 단계에 해당합니다.
+
+### 19.1 레이아웃 그리드 (배치의 좌표계)
+
+화면 조립의 토대는 **반응형 레이아웃 그리드**입니다.
+
+- **IBM Carbon 2x Grid**: 16컬럼, 5개 기본 브레이크포인트, 8px mini-unit 기반. 컨테이너–행–컬럼 구조(Flexbox)로 정렬하며 기본 거터 32px.
+- **Material Design 반응형 그리드**: 컬럼 폭은 고정값이 아니라 %로 정의(화면 크기에 유연), 거터는 브레이크포인트별 고정값. 브레이크포인트에서 레이아웃이 "적응(adapt)".
+- **공통 원칙**: 컬럼(column) + 거터(gutter) + 마진(margin) + 브레이크포인트의 4요소로 좌표계를 정의하고, 컴포넌트는 이 그리드 위 컬럼 스팬(span)으로 폭을 지정합니다. 그리드 값도 토큰화 대상입니다(5장 참조).
+
+### 19.2 앱 셸과 영역(region) 슬롯
+
+페이지는 보통 **앱 셸(app shell)** — 헤더, 사이드 내비게이션, 콘텐츠 영역, 푸터 같은 최상위 영역(region)의 골격 — 위에 구성됩니다. 이것은 18장의 슬롯 개념을 **화면 레벨로 확장**한 것입니다: 컴포넌트에 `#title`·`#meta` 슬롯이 있었듯, 페이지 템플릿에는 `header`·`nav`·`main`·`aside`·`footer` 영역 슬롯이 있습니다.
+
+- **Atlassian `Page layout`**: banner/top-nav/left-sidebar/main/right-sidebar/aside 같은 영역을 슬롯으로 제공.
+- **Esri Calcite `Shell` / `Shell Panel`**: 셸이 헤더·콘텐츠 영역을 정의하고, 셸 패널이 접이식 사이드 영역(필터·범례·보조 콘텐츠)을 담당.
+
+### 19.3 캐노니컬 레이아웃 (검증된 페이지 골격)
+
+매번 레이아웃을 새로 짜는 대신, 검증된 페이지 골격을 재사용합니다. Material Design 3의 **canonical layouts** 3종이 대표적입니다.
+
+| 레이아웃 | 구조 | 쓰임 |
+| --- | --- | --- |
+| List-detail | 좌: 항목 리스트 / 우: 선택 항목 상세 | 탐색형 목록 + 상세 (메일, 설정) |
+| Supporting pane | 주 영역(대부분) + 보조 영역 | 본문 + 보조 정보/도구 |
+| Feed | 그리드 컴포지션 | 카드형 콘텐츠 탐색 (뉴스, 소셜) |
+
+각 레이아웃은 compact/medium/expanded 브레이크포인트별 구성을 함께 정의합니다 — 즉 "반응형 동작까지 포함한 페이지 템플릿"입니다.
+
+### 19.4 화면 조립의 3단계
+
+1. **템플릿 선택**: 화면의 정보 구조에 맞는 캐노니컬 레이아웃(또는 앱 셸 영역 구성)을 고릅니다.
+2. **컴포넌트 배치도 작성**: 어떤 컴포넌트(18장에서 만든 `DataList` 등)를 어느 영역·컬럼 스팬에 놓을지 지정합니다. 이 배치도가 원자→컴포넌트→화면의 추적성을 잇는 핵심 산출물입니다.
+3. **반응형 규칙 명시**: 브레이크포인트별로 영역이 어떻게 재배치/접힘/스택되는지(예: medium 이하에서 사이드바 → 상단 접이식)를 규정합니다.
+
+### 19.5 전체 계층 요약
+
+```text
+token          색·간격·타이포 등 원시 결정 (5장)
+  ↓
+atom(slot)     title / label / checkbox / icon (17장)
+  ↓ compose
+molecule       DataListItem — 원자 슬롯 조합 (18장)
+  ↓ collect
+organism       DataList — 컴포넌트 컬렉션 (18장)
+  ↓ place on grid + region
+template       캐노니컬 레이아웃 / 앱 셸 영역 (19장)
+  ↓ fill content + responsive rules
+page/screen    최종 웹 화면 (19장)
+```
+
+`ds-transform`은 이 전체 계층을 커버합니다 — Phase 2에서 원자·분자를, Phase 4에서 컴포넌트 스펙과 **화면 조립(템플릿 선택 + 컴포넌트 배치도 + 반응형 규칙)** 까지 산출하도록 확장되었습니다.
+
+## 20. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
 - [Planning a Design System Generation – Nathan Curtis](https://medium.com/@nathanacurtis/planning-a-design-system-generation-ce4120393557)
@@ -646,3 +704,13 @@ page/screen(웹 화면)       실제 데이터가 채워진 최종 화면
 - [Primitives – Atlassian Design](https://atlassian.design/components/primitives/overview)
 - [Component Composition Pattern – Radix Primitives](https://www.radix-ui.com/primitives/docs/overview/introduction)
 - [The Compound Components Pattern in React – freeCodeCamp](https://www.freecodecamp.org/news/compound-components-pattern-in-react/)
+
+### 화면 조립 (layout grid / templates / canonical layouts)
+- [2x Grid – Carbon Design System](https://carbondesignsystem.com/elements/2x-grid/overview/)
+- [Responsive layout grid – Material Design](https://m2.material.io/design/layout/responsive-layout-grid.html)
+- [Canonical layouts – Material Design 3](https://m3.material.io/foundations/adaptive-design/canonical-layouts)
+- [Layout overview – Material Design 3](https://m3.material.io/foundations/layout/layout-overview/overview)
+- [Page layout – Atlassian Design](https://atlassian.design/components/page-layout/)
+- [Layout patterns – Calcite Design System (Esri)](https://developers.arcgis.com/calcite-design-system/foundations/layouts/)
+- [Layout – Cloudscape Design System](https://cloudscape.design/foundation/visual-foundation/layout/)
+- [Layout grid – USWDS](https://designsystem.digital.gov/utilities/layout-grid/)
