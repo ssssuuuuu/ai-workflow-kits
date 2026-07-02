@@ -37,7 +37,8 @@
     - [17.12 피드백 계열](#1712-피드백-계열-alert--toast--tooltip)
     - [17.13 내비게이션 계열](#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu)
     - [17.14 전체 종합: 원자 카탈로그의 4가지 법칙](#1714-전체-종합-원자-카탈로그에서-반복되는-4가지-법칙)
-18. [출처](#18-출처)
+18. [아이템 조합: 원자에서 컴포넌트, 컴포넌트에서 화면으로](#18-아이템-조합-원자에서-컴포넌트-컴포넌트에서-화면으로)
+19. [출처](#19-출처)
 
 ---
 
@@ -389,7 +390,70 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 
 `ds-transform`의 UI Archetype Reference와 Phase 4 규칙은 이 4가지 법칙을 반영합니다 — 특히 (2)(3)은 Phase 2(Atomic Mapping)에서 컴포넌트 후보를 "아이템/그룹"으로 쪼개고 네임스페이스를 부여하는 단계로, (4)는 Phase 4에서 상태를 개별 스펙에 중복 기술하지 않고 전역 패턴으로 링크하는 규칙으로 반영되어 있습니다.
 
-## 18. 출처
+## 18. 아이템 조합: 원자에서 컴포넌트, 컴포넌트에서 화면으로
+
+17장이 개별 원자(아이템)의 스펙을 다뤘다면, 이 장은 그 원자들을 **조합(composition)** 해서 하나의 컴포넌트를 만들고, 그 컴포넌트들을 모아 웹 화면을 구성하는 계층을 다룹니다. 이 조합 계층은 6장의 Atomic Design(atom → molecule → organism → template → page)을 실제 스펙 시트 수준에서 구현하는 방식입니다.
+
+### 18.1 조합 계층 모델
+
+```text
+atom(원자, 슬롯 단위)      title / description / meta / label / checkbox / icon
+        ↓ compose
+molecule(분자, 컴포넌트)    DataListItem  (원자들을 슬롯으로 조합)
+        ↓ collect
+organism(유기체, 컬렉션)    DataList      (DataListItem을 반복·정렬)
+        ↓ place into layout
+template(템플릿)           화면 골격에 컬렉션·컴포넌트를 배치
+        ↓ fill content
+page/screen(웹 화면)       실제 데이터가 채워진 최종 화면
+```
+
+핵심은 **"원자 → 컴포넌트 → 화면"의 각 단계가 상향식 조립**이라는 점입니다. 원자를 바꾸면 그 원자를 슬롯으로 쓰는 모든 컴포넌트와 화면이 함께 갱신됩니다(단일 정의, 다중 재사용).
+
+### 18.2 슬롯(slot) 표기와 컴파운드 컴포넌트
+
+레퍼런스 스펙(예: `DataList / DataListItem`)에서 `#title`, `#description`, `#meta`, `#label`처럼 `#` 접두사를 붙인 것은 **명명된 슬롯(named slot)** — 컴포넌트 내부의 "여기에 이런 역할의 콘텐츠가 들어간다"는 지정된 자리입니다. 점선 사각형(`⃞`)은 아직 채워지지 않은 빈 슬롯(예: 선택용 체크박스 자리)을 뜻합니다.
+
+이 슬롯 조합을 코드로 구현하는 대표 패턴이 **컴파운드 컴포넌트(compound component)** 입니다.
+
+- **부모-자식 암묵적 상태 공유**: 부모(`DataList`)가 공유 상태(선택 항목 등)를 관리하고, 자식(`DataListItem`, 그 안의 슬롯)은 각자의 렌더링만 담당합니다.
+- **네이티브 HTML처럼 조립**: 긴 prop 목록 대신 `DataList.Item`, `DataList.Item.Title` 식으로 자식을 배치해 소비자가 자연스럽게 UI를 구성합니다.
+- **구현 기술**: React children/compound 패턴, Radix UI의 `@radix-ui/react-slot`(`asChild`로 폴리모픽 렌더링), Web Components의 `<slot>`, React Aria의 slot prop 패턴이 모두 같은 아이디어입니다.
+
+### 18.3 레이아웃 영역 = 정렬 변형
+
+레퍼런스 이미지의 `left` / `right`는 **같은 `DataListItem`의 레이아웃(정렬) 변형**입니다 — 동일한 슬롯 세트(title/description/meta/label…)를 어느 쪽으로 정렬·배치하느냐만 다릅니다. 이는 17.14 법칙 1(축이 2개면 매트릭스가 아니라 아나토미+prose)과 연결됩니다: `DataListItem`은 "슬롯 구성 × 정렬 영역"이라는 두 축을 갖지만, 실제 스펙은 각 영역(region)에 슬롯을 배치한 **아나토미 다이어그램**으로 그리는 것이 자연스럽습니다. 이 이미지 자체가 그 아나토미 다이어그램의 전형입니다.
+
+### 18.4 Composition over Configuration
+
+성숙한 시스템일수록 "옵션이 20개 달린 거대한 단일 컴포넌트(configuration)"보다 "작은 원자를 슬롯으로 조립(composition)"하는 방향을 택합니다.
+
+- **Atlassian Primitives**: `Box`, `Inline`, `Stack` 등 레이아웃 프리미티브 + 디자인 토큰으로 컴포넌트를 조립하도록 안내합니다("configuration이 아니라 composition"). 실제로 Atlassian은 전용 Card 컴포넌트 대신 프리미티브 조합을 권장합니다(17.4 참조).
+- **Radix Primitives**: 접근성·동작만 제공하는 프리미티브 위에 `Slot`으로 콘텐츠를 조합하는 primitive-first 접근.
+- **장점**: 슬롯은 "목적을 가진 영역(purposeful region)"이라, 같은 컴포넌트를 서로 다른 맥락(리치 콘텐츠 패널 vs 단순 폼)에서 재사용해도 파운데이션이 같아 일관성이 유지됩니다.
+
+### 18.5 두 가지 조합 API (17.14 법칙 3의 재확인)
+
+원자를 컴포넌트로 조합하는 API는 17.14에서 확인한 두 갈래가 그대로 반복됩니다.
+
+| 방식 | 형태 | 대표 | 언제 |
+| --- | --- | --- | --- |
+| 컴파운드/네임스페이스 슬롯 | `<DataList.Item><Title/><Meta/></DataList.Item>` | Radix, Atlassian, shadcn/ui `Field` | 슬롯마다 독립 로직·자유 배치가 필요할 때 |
+| 데이터 배열/설정 | `<DataList items={[{title, meta, label}]} />` | Ant `items`, Polaris `sections` | 항목이 균질하고 대량 반복될 때 |
+
+`DataList/DataListItem`처럼 슬롯을 시각적으로 명시한 스펙은 전자(컴파운드/슬롯) 지향입니다.
+
+### 18.6 ds-transform에의 반영
+
+`ds-transform`의 5단계에 조합 계층을 명시적으로 넣었습니다.
+
+- **Phase 2 (Atomic Mapping)**: 원자를 식별한 뒤, 반복적으로 함께 등장하는 원자 묶음을 **분자 컴포넌트 후보**(예: title+description+meta+label = `DataListItem`)로 승격하고, 각 원자를 **명명된 슬롯**으로 표기합니다.
+- **Phase 4 (DS-Based Spec Rewrite)**: 분자 컴포넌트는 슬롯 아나토미 다이어그램 + 레이아웃 영역(정렬) 변형으로 기술하고, 조합 API(컴파운드 vs 데이터 배열)를 명시합니다.
+- **화면 조립**: 최종 화면은 "컴포넌트 배치도(어떤 컴포넌트가 어느 영역에)"로 표현해, 원자 → 컴포넌트 → 화면의 추적성을 유지합니다.
+
+실제 적용 예시는 `packages/ds-transform/examples/datalist-composition/`에 있습니다.
+
+## 19. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
 - [Planning a Design System Generation – Nathan Curtis](https://medium.com/@nathanacurtis/planning-a-design-system-generation-ce4120393557)
@@ -573,3 +637,12 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 - [Tabs – Atlassian Design](https://atlassian.design/components/tabs)
 - [Dropdown menu – Atlassian Design](https://atlassian.design/components/dropdown-menu)
 - [Action list – Shopify Polaris React](https://polaris-react.shopify.com/components/lists/action-list)
+
+### 아이템 조합 (composition / slots / compound components)
+- [Atomic Design – Chapter 2 (Brad Frost)](https://atomicdesign.bradfrost.com/chapter-2/)
+- [Compound Pattern – patterns.dev](https://www.patterns.dev/react/compound-pattern/)
+- [Slot-Based APIs in React – DEV](https://dev.to/talissoncosta/slot-based-apis-in-react-designing-flexible-and-composable-components-7pj)
+- [Composition – Atlassian Design](https://atlassian.design/get-started/develop/composition/)
+- [Primitives – Atlassian Design](https://atlassian.design/components/primitives/overview)
+- [Component Composition Pattern – Radix Primitives](https://www.radix-ui.com/primitives/docs/overview/introduction)
+- [The Compound Components Pattern in React – freeCodeCamp](https://www.freecodecamp.org/news/compound-components-pattern-in-react/)

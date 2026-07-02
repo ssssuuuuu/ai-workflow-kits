@@ -39,7 +39,8 @@ Follow the five phases in order. Each phase's output is required input for the n
 
 - Classify each inventory item as an atom, molecule, organism, template, or page (Atomic Design, Brad Frost).
 - Consolidate near-duplicate elements — e.g. "확인 버튼", "저장 버튼", "제출 버튼" often collapse into one Button component with variants — into a single component candidate.
-- Produce a **Component Candidate List**: `component | atomic level | variants | consolidates (source elements) | priority (by occurrence frequency)`.
+- **Promote co-occurring atoms into molecule components**: when a set of atoms repeatedly appears together (e.g. title + description + meta + label + checkbox → a list item), promote them into one molecule component and record each atom as a **named slot** (`#title`, `#meta`, `#leading`, `#trailing`…). Note which slots are optional/empty and which repeat. This is the composition layer (atom → molecule → collection → screen); see section 18 of `docs/design-system-methodology.md`.
+- Produce a **Component Candidate List**: `component | atomic level | slots | variants | consolidates (source elements) | priority (by occurrence frequency)`.
 - Priority is driven by occurrence frequency and cross-screen reuse, not by subjective visual importance.
 
 ### Phase 3 — Tokenization
@@ -53,6 +54,7 @@ Follow the five phases in order. Each phase's output is required input for the n
 - Rewrite the as-is screen definitions using component name + variant + state + token references instead of raw visual description.
 - For each component candidate, write a spec block: anatomy, states, props/variants, accessibility notes, do's/don'ts.
 - **Variant matrix rule**: ask (or infer from context) whether the output is an internal handoff spec (for designers/engineers to verify every combination, Figma-derived) or a public-facing component doc site (Storybook, Zeroheight-style). For handoff specs, render a component candidate's variants as a grid table when it has two independent axes (e.g. `weight x size`, `color x align`, `kind x size`) — axis values as rows, the other axis as columns, actual rendered content in each cell. For public-facing docs, use anatomy + prose + per-axis examples instead, even for two-axis atoms — this is what Material Design 3, Carbon, Ant Design, Atlassian, and Polaris actually do in their published documentation; true rendered matrices are a Figma component-set convention, not a public-doc one. Keep each matrix to two axes; split a third independent axis into its own table. Use a namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`, or `Field` + `Label`/`Title`/`Description`) when several components share a domain, so the relationship is visible from the name alone.
+- **Composition rule**: for a molecule component built from atom slots (see Phase 2 promotion), write a **slot anatomy diagram** (which atom goes in which region) rather than a variant matrix. Treat layout/alignment differences (e.g. `region=left` vs `right`) as one variant of the same component, not separate components. State the composition API — compound/namespace children (`DataList.Item`, free slot placement) vs a data array (`items`) — per law 3 above. Then express the screen as a component placement map (which component sits in which screen region) to keep atom → component → screen traceability.
 - Preserve the original screen flow and business logic — only the UI description layer changes.
 
 ### Phase 5 — Governance Handoff
