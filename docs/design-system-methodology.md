@@ -28,6 +28,10 @@
     - [17.3 Search](#173-search-아이템-스펙)
     - [17.4 Card](#174-card-아이템-스펙)
     - [17.5 유형별 문서화 방식 선택 가이드](#175-종합-컴포넌트-유형별-문서화-방식-선택-가이드)
+    - [17.6 Checkbox / Radio](#176-checkbox--radio-아이템-스펙)
+    - [17.7 Button](#177-button-아이템-스펙)
+    - [17.8 Label / Description / Title](#178-label--description--title-아이템-스펙)
+    - [17.9 결론: 매트릭스는 Figma 핸드오프의 관행](#179-결론-매트릭스는-공개-문서가-아니라-figma-핸드오프의-관행)
 18. [출처](#18-출처)
 
 ---
@@ -309,6 +313,38 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 
 `ds-transform` 패키지의 Phase 2(Atomic Mapping)·Phase 4(DS-Based Spec Rewrite)는 이 가이드를 반영해, 컴포넌트 후보의 축 개수와 파츠 복잡도에 따라 매트릭스 표와 아나토미+prose 중 하나를 선택하도록 갱신되었습니다.
 
+17.5까지는 "축 2개짜리 원자 단위는 매트릭스가 적합하다"고 가정했습니다. 이 가정을 실제 원자 컴포넌트(체크박스, 라디오 버튼, 버튼, 폼 라벨/디스크립션/타이틀)로 검증한 결과가 아래 17.6~17.9입니다.
+
+### 17.6 Checkbox / Radio 아이템 스펙
+
+- **아나토미**: Checkbox = container(박스) + checkmark/indeterminate 아이콘 + label. Radio = 원 + 내부 점 + label. Material Design 3, Carbon, Ant Design, Atlassian, Shopify Polaris 5개 시스템 모두 이 기본 구조를 공유합니다.
+- **변형 축**: `selection state`(unselected/selected/indeterminate/error) × `interaction state`(enabled/hover/focused/pressed/disabled)가 개념적으로 두 축을 이룹니다. Carbon은 여기에 `read-only`, `warning`(경고성 미확정 상태)까지 추가합니다.
+- **그룹 vs 아이템 분리**: Ant Design, Atlassian, Carbon, Polaris 모두 "그룹"(`Radio.Group`, `Radio group` 페이지, `Radio button group` 패턴)을 개별 라디오 아이템과 별도 컴포넌트/별도 문서 페이지로 분리합니다 — 그룹은 네이티브 `name` 속성 기반 상호배타 동작과 화살표 키 내비게이션을 별도로 다뤄야 하기 때문입니다.
+- **매트릭스 여부**: 5개 시스템의 공개 문서 어디에도 `selection state × interaction state`를 렌더링된 격자로 채운 표는 없습니다. 모두 상태별 스크린샷을 세로로 나열하는 prose 방식입니다. 진짜 격자 배치(50~90개 variant를 한 캔버스에 배열)는 Figma 커뮤니티 컴포넌트 파일에서만 관찰되며, 공개 웹 문서 사이트에는 나타나지 않습니다.
+
+### 17.7 Button 아이템 스펙
+
+- **아나토미**: label(필수) + container + optional icon. 축은 `kind/type/appearance`(primary/secondary/tertiary/ghost/danger 등)와 `size`(Carbon만 7단계: xs/sm/md/lg-productive/lg-expressive/xl/2xl)입니다.
+- **아이콘 버튼 분리 방식**: Carbon·Material Web·Atlassian은 `IconButton`을 별도 컴포넌트로 분리하고, Ant Design·Polaris는 기존 `Button`에 `shape="circle"` 또는 `icon` prop을 조합하는 방식을 씁니다 — List의 서브컴포넌트 분해(17.1)와 마찬가지로 "분리형 vs prop 조합형" 두 갈래가 반복됩니다.
+- **매트릭스 여부**: 5개 시스템 공개 문서 어디에도 `kind × size` 또는 `kind × state`를 렌더링된 버튼 프리뷰로 채운 격자 표가 없습니다. 대신 (a) 축마다 별도 프로즈 섹션 + 라이브 코드 데모, (b) Storybook 개별 story/컨트롤 패널, (c) prop을 행으로 나열하는 API 표(시각적 매트릭스 아님) 방식이 표준입니다. 로딩/비활성 상태도 매트릭스에 곱해 넣지 않고 별도 섹션에서 1회만 설명합니다(Carbon은 "로딩=disabled의 특수 케이스"로 단순화).
+
+### 17.8 Label / Description / Title 아이템 스펙
+
+- **Label**: 폼 라벨은 위치(top-aligned가 표준), 필수/선택 표시(별표 vs "(optional)" 접미사), 상태(success/warning/error) 축으로 문서화됩니다. Material Design 3는 resting/floating 두 상태를 가진 라벨을 모든 텍스트 필드의 필수 요소로 규정합니다.
+- **Description/Helper text**: Material Design 3와 Carbon 모두 helper text가 **에러 발생 시 error text로 완전히 대체(교체)되는 슬롯**이라는 점을 명시합니다 — 즉 helper와 error는 같은 자리를 놓고 경쟁하는 상호배타적 variant입니다. GOV.UK는 반대로 hint text를 variant 축이 아니라 콘텐츠 라이팅 규칙(한 문장 이내, 링크 금지, 마침표로 종료)으로 다룹니다.
+- **Title/Typography as 매트릭스**: Material Design 3의 타입 스케일은 `role`(display/headline/title/body/label) × `size`(large/medium/small) = 15개 조합으로, 개념적으로는 정확히 2축 매트릭스입니다. 하지만 실제 페이지는 격자가 아니라 15개 행을 가진 세로 flat 표(각 행 = role+size 조합 + 렌더 샘플)로 표시됩니다. Carbon은 role×size 대신 `사용 맥락`(Productive/Expressive) × `역할`(heading/body/label)을 축으로 삼습니다.
+- **네임스페이스 그룹핑의 실사례**: `Chart`+`Value`/`Label`/`Legend` 가설과 가장 유사한 실제 사례는 **shadcn/ui의 `Field` 패밀리**입니다 — `Field`, `FieldLabel`, `FieldTitle`, `FieldDescription`, `FieldError`, `FieldSet`, `FieldGroup`으로 구성되며, `FieldTitle`은 "Label과 동일한 타이포 스타일을 공유하는 타이틀 슬롯"으로 명시되어 Label·Title·Description이 하나의 상위 도메인(`Field`) 아래 프리픽스로 묶인 것을 실증합니다.
+
+### 17.9 결론: 매트릭스는 "공개 문서"가 아니라 "Figma 핸드오프"의 관행
+
+체크박스·라디오·버튼·라벨까지 가장 단순한 원자 컴포넌트로 검증을 넓혀도 결론은 일관됩니다 — **주요 디자인 시스템의 공개 웹 문서(m3.material.io, carbondesignsystem.com, ant.design, atlassian.design, polaris-react.shopify.com 등)는 두 축을 교차한 렌더링 격자 표를 쓰지 않습니다.** 축마다 분리된 prose·데모·API 표로 다루는 것이 업계 표준입니다.
+
+반면 이번에 학습한 원본 이미지처럼 **행×열 그리드에 실제 렌더링 결과를 채우고, 컴포넌트명 옆에 Figma 컴포넌트/Variant 아이콘 배지를 붙이는 방식은 Figma 컴포넌트 셋 캔버스 관행이 스크린샷/스펙 문서로 그대로 캡처된 결과**입니다. 따라서 `ds-transform`에서 매트릭스 표를 쓸 상황을 다음과 같이 좁혀 정의합니다.
+
+- **디자이너·엔지니어에게 넘기는 내부 핸드오프 스펙 문서**(Figma에서 바로 파생되었거나, QA가 모든 조합을 검증해야 하는 상황)를 만들 때 → 매트릭스
+- **외부에 공개하는 컴포넌트 라이브러리 문서 사이트**(Storybook, Zeroheight류)를 만들 때 → 아나토미 다이어그램 + prose + 축별 개별 예시 (17.1~17.4, 17.6~17.8의 실사례를 따름)
+- 두 상황이 섞여 있다면(사내 핸드오프 문서를 나중에 공개 문서로 승격) 매트릭스를 1차 초안으로 쓰고, 공개 전 아나토미+prose로 재작성하는 2단계 프로세스를 권장합니다.
+
 ## 18. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
@@ -420,3 +456,32 @@ List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material De
 - [Card – Shopify Polaris React](https://polaris-react.shopify.com/components/layout-and-structure/card)
 - [Card – Ant Design](https://ant.design/components/card/)
 - [Atlassian Design System – Components overview](https://atlassian.design/components)
+
+### Checkbox / Radio 아이템 스펙
+- [Checkbox – Material Design 3](https://m3.material.io/components/checkbox/guidelines)
+- [Radio button – Material Design 3](https://m3.material.io/components/radio-button/guidelines)
+- [Checkbox – Carbon Design System](https://carbondesignsystem.com/components/checkbox/usage/)
+- [Radio button – Carbon Design System](https://carbondesignsystem.com/components/radio-button/usage/)
+- [Checkbox – Ant Design](https://ant.design/components/checkbox/)
+- [Radio – Ant Design](https://ant.design/components/radio/)
+- [Checkbox – Atlassian Design](https://atlassian.design/components/checkbox)
+- [Radio group – Atlassian Design](https://atlassian.design/components/radio/radio-group)
+- [Checkbox – Shopify Polaris React](https://polaris-react.shopify.com/components/selection-and-input/checkbox)
+
+### Button 아이템 스펙
+- [Buttons – Material Design 3](https://m3.material.io/components/buttons/guidelines)
+- [Button – Carbon Design System](https://carbondesignsystem.com/components/button/usage/)
+- [Button – Ant Design](https://ant.design/components/button/)
+- [Button – Shopify Polaris React](https://polaris-react.shopify.com/components/actions/button)
+- [Button – Atlassian Design](https://atlassian.design/components/button)
+- [Icon button – Atlassian Design](https://atlassian.design/components/button/icon-button)
+
+### Label / Description / Title 아이템 스펙
+- [Text fields – Material Design 3](https://m3.material.io/components/text-fields/guidelines)
+- [Typography type scale – Material Design 3](https://m3.material.io/styles/typography/type-scale-tokens)
+- [Form – Carbon Design System](https://carbondesignsystem.com/components/form/usage/)
+- [Typography type sets – Carbon Design System](https://v11.carbondesignsystem.com/guidelines/typography/type-sets)
+- [Form – Ant Design](https://ant.design/components/form/)
+- [Forms patterns – Atlassian Design](https://atlassian.design/patterns/forms/)
+- [Text input – GOV.UK Design System](https://design-system.service.gov.uk/components/text-input/)
+- [Field – shadcn/ui](https://ui.shadcn.com/docs/components/radix/field)

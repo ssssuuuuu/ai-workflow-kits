@@ -38,7 +38,7 @@ to-be web planning (component + variant + state + token)
 3. **Tokenization** — extract repeated raw values (color, spacing, radius, typography) and propose a 3-tier token set: global/core -> semantic/alias -> component, named `namespace-object-base-modifier`. Flag genuine one-offs as open questions rather than forcing a token.
 
 4. **DS-Based Spec Rewrite** — restate the original screen definitions using component + variant + state + token references instead of raw visual description. For each component candidate, add anatomy, states, props/variants, accessibility notes, and do's/don'ts. Keep business logic and screen flow untouched.
-   - **Variant matrix rule**: when a component has two independent visual axes (e.g. `weight x size`, `color x align`), render the variants as a grid — one axis as rows, one as columns, real rendered content in each cell — instead of a prose list. Cap each table at two axes; split a third axis into a separate table. Group related components under one namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`).
+   - **Variant matrix rule**: matrices are for internal handoff specs (Figma-derived, every combination needs QA), not for public-facing docs. When producing a handoff spec and a component has two independent visual axes (e.g. `weight x size`, `color x align`, `kind x size`), render the variants as a grid — one axis as rows, one as columns, real rendered content in each cell. When producing public-facing docs, use anatomy + prose instead, even for simple two-axis atoms like checkbox, radio, or button — that's what Material Design 3, Carbon, Ant Design, Atlassian, and Polaris actually do. Cap each matrix table at two axes; split a third axis into a separate table. Group related components under one namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`, or `Field` + `Label`/`Title`/`Description`).
 
 5. **Governance Handoff** — mark which candidates are net-new vs. already exist in the target system (if known). Flag net-new or breaking candidates as RFC-worthy. Note the number of affected screens/instances and a suggested migration order (highest occurrence first).
 
@@ -46,7 +46,7 @@ Each phase feeds the next — do not skip ahead or merge phases.
 
 ## UI Archetype Reference
 
-Real public design systems mostly document List/Card/Search with an anatomy diagram + prose, not a variant matrix — reserve the matrix for atom-level, two-axis components (see the variant matrix rule above).
+Even the simplest atoms (checkbox, radio, button, form label) are documented with anatomy + prose in real public design systems, not matrices — matrices win only for internal handoff specs (see the variant matrix rule above).
 
 | Archetype | Anatomy | Common axes | Phase 4 approach |
 | --- | --- | --- | --- |
@@ -54,7 +54,10 @@ Real public design systems mostly document List/Card/Search with an anatomy diag
 | Detail / Description | label + value, optional actions | layout, column count, bordered | prose + explicit action-count sub-table (none/single/multiple/group-level) |
 | Search | search icon, input, clear button, optional submit | expanded vs collapsed, with/without button, size | anatomy + prose; route empty/loading states to the system-wide pattern |
 | Card | media, headline, subhead, supporting text, actions | style, media presence, orientation | anatomy + prose; split behavior-specific variants (clickable/selectable/expandable) into their own components |
-| Atom-level, two-axis component | single visual unit | two independent props | variant matrix table |
+| Checkbox / Radio | container/circle, mark, label | selection state x interaction state | anatomy + prose for public docs; document the group as a separate component |
+| Button | label, container, optional icon | kind/appearance x size | anatomy + prose for public docs; icon-only is a separate `IconButton` or a prop, not a new axis on the matrix |
+| Label / Description / Title | label text, required indicator, helper text, title text | required/optional, tone, typography role x size | anatomy + prose; group as one namespace-prefixed family (e.g. `Field` + `Label`/`Title`/`Description`) |
+| Atom-level, two-axis component in a handoff spec | single visual unit | two independent props | variant matrix table |
 
 ## Guardrails
 
