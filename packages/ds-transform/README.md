@@ -40,6 +40,7 @@ It does not design a design system from scratch (see `docs/design-system-methodo
 | See a worked example (List / Detail / Search / Card) | `examples/list-detail-search-card-transform/` |
 | See a worked example (Checkbox / Radio / Button / Field text roles) | `examples/form-atoms-variant-matrix/` |
 | See a worked example (composition: atoms → component → screen) | `examples/datalist-composition/` |
+| See a worked example (full homepage: header + carousel + quick links) | `examples/finance-portal-home/` |
 
 Use the **agent** when the source document is large or the work should run as a separate, boundable task with its own report. Use the **skill** when you want the main chat to walk through the same five phases directly, without spawning a subagent.
 
