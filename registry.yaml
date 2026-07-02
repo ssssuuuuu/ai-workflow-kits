@@ -52,3 +52,26 @@ packages:
       - hook
       - instruction
       - example
+  - id: ds-transform
+    name: DS Transform
+    description: Evolve as-is general web planning documents into design-system-based UI component specs.
+    category: design-system
+    status: active
+    path: packages/ds-transform
+    runtimes:
+      codex:
+        status: planned
+        path: packages/ds-transform/codex
+      claude:
+        status: active
+        path: packages/ds-transform/claude
+      gemini:
+        status: planned
+        path: packages/ds-transform/gemini
+      copilot:
+        status: planned
+        path: packages/ds-transform/copilot
+    artifacts:
+      - agent
+      - skill
+      - example

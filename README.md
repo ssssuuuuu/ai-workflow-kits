@@ -49,10 +49,13 @@ Evidence can be changed files, test output, build output, logs, screenshots, str
 | --- | --- | --- |
 | [`package-authoring`](packages/package-authoring/README.md) | Add public-safe packages and runtime artifacts consistently | Active |
 | [`keepworking`](packages/keepworking/README.md) | Keep AI agents working until evidence exists | Active |
+| [`ds-transform`](packages/ds-transform/README.md) | Evolve as-is web planning into design-system-based UI component specs | Active |
 
 `package-authoring` is the meta package for adding future skills, agents, prompts, hooks, commands, plugins, examples, and runtime adapters.
 
 `keepworking` is the first workflow package. It defines a long-running evidence-first loop with tiered routing, parallel worker dispatch, repair, and re-verification.
+
+`ds-transform` is a design-system workflow package. It evolves an as-is general web planning document into a to-be, design-system-based UI component specification through a five-phase method (audit, atomic mapping, tokenization, spec rewrite, governance handoff).
 
 ## Repository Model
 
