@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ssssuuuuu/ai-workflow-kits/packages/ds-transform/schema/component-spec.schema.json",
+  "title": "DS Transform Machine-Readable Component Spec",
+  "description": "A machine-readable component specification emitted by ds-transform for AI/agent consumption. Per the JSON-for-structure / Markdown-for-rules split validated by Indeed's benchmark, this JSON carries structured component metadata (name, slots, variants, tokens, states) while human-readable usage rules stay in the prose spec (referenced via docsRef). See docs/design-system-methodology.md section 20.1.",
+  "type": "object",
+  "required": ["name", "atomicLevel", "docsRef"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Component name. Use a namespace-prefixed family name when part of a family (e.g. DataListItem, ChartValue, FieldLabel).",
+      "examples": ["DataListItem", "ChartValue", "Button"]
+    },
+    "family": {
+      "type": "string",
+      "description": "The parent family/namespace this component belongs to, if any.",
+      "examples": ["DataList", "Chart", "Field"]
+    },
+    "atomicLevel": {
+      "type": "string",
+      "enum": ["atom", "molecule", "organism", "template", "page"],
+      "description": "Atomic Design level."
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence statement of the component's role/intent."
+    },
+    "slots": {
+      "type": "array",
+      "description": "Named slots (composition). Each slot is a place where an atom or content is injected.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "description": "Slot name, e.g. title, meta, leading, trailing." },
+          "accepts": { "type": "string", "description": "What atom/content the slot accepts, e.g. 'Icon | Checkbox', 'text'." },
+          "optional": { "type": "boolean", "default": false },
+          "repeatable": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "description": "Independent variant axes. Keep to the real axes; layout/alignment differences are a variant, not a separate component.",
+      "items": {
+        "type": "object",
+        "required": ["axis", "values"],
+        "additionalProperties": false,
+        "properties": {
+          "axis": { "type": "string", "description": "Axis name, e.g. size, tone, region, kind." },
+          "values": { "type": "array", "items": { "type": "string" }, "description": "Allowed values for this axis." },
+          "default": { "type": "string", "description": "Default value, if any." }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "description": "Interaction/data states. Prefer referencing a system-wide pattern (via statesRef) over redefining shared states per component.",
+      "items": { "type": "string" },
+      "examples": [["default", "hover", "focus", "disabled"]]
+    },
+    "statesRef": {
+      "type": "string",
+      "description": "Reference to a system-wide state pattern doc when states are shared (empty/loading/error)."
+    },
+    "tokens": {
+      "type": "array",
+      "description": "Design tokens this component consumes (component-tier tokens referencing semantic tokens).",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "description": "Component token, e.g. datalistitem-background." },
+          "references": { "type": "string", "description": "Semantic token it maps to, e.g. color-surface-default." }
+        }
+      }
+    },
+    "compositionApi": {
+      "type": "string",
+      "enum": ["compound", "data-array", "props"],
+      "description": "How sub-parts are supplied: compound/namespace children, a data array (items), or flat props."
+    },
+    "children": {
+      "type": "array",
+      "description": "Child components in the family (item/group decomposition), by name.",
+      "items": { "type": "string" }
+    },
+    "accessibility": {
+      "type": "array",
+      "description": "Non-negotiable accessibility rules (ARIA roles/attrs, focus, live-region) encoded for agents.",
+      "items": { "type": "string" }
+    },
+    "consolidates": {
+      "type": "array",
+      "description": "As-is source elements this component consolidates (traceability back to the original planning doc).",
+      "items": { "type": "string" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["existing", "net-new", "breaking-change"],
+      "description": "Governance status relative to the target design system."
+    },
+    "docsRef": {
+      "type": "string",
+      "description": "Path/anchor to the human-readable prose spec (usage rules, do's/don'ts). Structure lives here in JSON; natural-language rules live there in Markdown."
+    }
+  }
+}

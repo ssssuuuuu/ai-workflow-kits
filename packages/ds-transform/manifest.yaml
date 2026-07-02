@@ -23,10 +23,12 @@ runtimes:
 artifacts:
   - agent
   - skill
+  - schema
   - example
 evidence_required:
   - as_is_ui_inventory
   - component_candidate_list
   - token_proposal
   - ds_based_spec_rewrite
+  - machine_readable_spec_optional
   - unresolved_risks

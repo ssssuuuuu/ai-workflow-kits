@@ -58,6 +58,17 @@ token → atom(slot) → molecule → organism → template → page/screen
 | 앱 셸 & 영역 슬롯 | header/nav/main/aside/footer | [19.2](design-system-methodology.md#192-앱-셸과-영역region-슬롯) |
 | 캐노니컬 레이아웃 | list-detail / supporting-pane / feed | [19.3](design-system-methodology.md#193-캐노니컬-레이아웃-검증된-페이지-골격) |
 
+## 고차원 진화 (20장)
+
+| 방향 | 요점 | 절 |
+| --- | --- | --- |
+| AI 네이티브 | 머신 리더블 DS(context engine), MCP, DESIGN.md, "구조는 JSON·규칙은 Markdown" | [20.1](design-system-methodology.md#201-ai-네이티브--에이전틱-디자인-시스템) |
+| 토큰 파이프라인·멀티브랜드 | DTCG 2025.10, Style Dictionary, 3-tier 테마, OKLCH | [20.2](design-system-methodology.md#202-토큰-파이프라인멀티브랜드-심화) |
+| DesignOps·헬스 메트릭 | 커버리지, detached instances, ROI, 자동화 게이트 | [20.3](design-system-methodology.md#203-designops와-헬스-메트릭) |
+| 차세대 아키텍처 | Web Components, 헤드리스, 크로스플랫폼, 모던 CSS | [20.4](design-system-methodology.md#204-차세대-아키텍처) |
+
+**AI-native 산출물**: `ds-transform`은 사람용 스펙 외에 에이전트가 소비 가능한 [머신 리더블 컴포넌트 스펙(JSON 스키마)](../packages/ds-transform/schema/component-spec.schema.json)을 Phase 6에서 산출합니다 ([예제](../packages/ds-transform/examples/datalist-composition/component-spec.example.json)).
+
 ## 워크드 예제 (ds-transform)
 
 이론을 실제 as-is → to-be 변환으로 보여주는 예제입니다.

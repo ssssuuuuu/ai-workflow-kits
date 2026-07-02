@@ -41,7 +41,13 @@
     - [17.14 전체 종합: 원자 카탈로그의 4가지 법칙](#1714-전체-종합-원자-카탈로그에서-반복되는-4가지-법칙)
 18. [아이템 조합: 원자에서 컴포넌트, 컴포넌트에서 화면으로](#18-아이템-조합-원자에서-컴포넌트-컴포넌트에서-화면으로)
 19. [화면 조립: 컴포넌트에서 페이지로](#19-화면-조립-컴포넌트에서-페이지로)
-20. [출처](#20-출처)
+20. [고차원 진화: 차세대 디자인 시스템 방향](#20-고차원-진화-차세대-디자인-시스템-방향)
+    - [20.1 AI 네이티브 / 에이전틱 디자인 시스템](#201-ai-네이티브--에이전틱-디자인-시스템)
+    - [20.2 토큰 파이프라인·멀티브랜드 심화](#202-토큰-파이프라인멀티브랜드-심화)
+    - [20.3 DesignOps와 헬스 메트릭](#203-designops와-헬스-메트릭)
+    - [20.4 차세대 아키텍처](#204-차세대-아키텍처)
+    - [20.5 성숙도 다음 단계: 진화 로드맵](#205-성숙도-다음-단계-진화-로드맵)
+21. [출처](#21-출처)
 
 ---
 
@@ -511,7 +517,55 @@ page/screen    최종 웹 화면 (19장)
 
 `ds-transform`은 이 전체 계층을 커버합니다 — Phase 2에서 원자·분자를, Phase 4에서 컴포넌트 스펙과 **화면 조립(템플릿 선택 + 컴포넌트 배치도 + 반응형 규칙)** 까지 산출하도록 확장되었습니다.
 
-## 20. 출처
+## 20. 고차원 진화: 차세대 디자인 시스템 방향
+
+1~19장이 "디자인 시스템을 어떻게 기획·설계·조립하는가"였다면, 이 장은 2025~2026년 기준 **디자인 시스템이 다음으로 진화하는 4가지 방향**을 다룹니다. 특히 20.1(AI 네이티브)은 이 저장소(AI 워크플로우 킷)와 `ds-transform` 도구에 직접 반영했습니다.
+
+### 20.1 AI 네이티브 / 에이전틱 디자인 시스템
+
+디자인 시스템이 사람뿐 아니라 **AI 에이전트가 소비하는 "컨텍스트 엔진(context engine)"** 으로 재정의되고 있습니다(Atlassian, "Design System: Building the context engine for the AI era").
+
+- **머신 리더블 레이어**: 전통적 파운데이션/토큰/컴포넌트 위에 컨텍스트 레이어를 얹어, 컴포넌트·토큰·사용 규칙·접근성을 구조화된 형식으로 노출합니다. Atlassian은 이를 **ADS MCP 서버 + 구조화 콘텐츠 모델 + 코드 생성 템플릿 + ADS 스킬 + 이식 가능한 `DESIGN.md`** 로 구현합니다. `DESIGN.md`는 앞부분=기계 판독(토큰 나열), 뒷부분=인간/에이전트 판독(근거·규칙)으로 나뉩니다.
+- **포맷 역할 분담 (핵심 실증)**: Indeed 벤치마크 결과 **구조화된 컴포넌트 메타데이터는 JSON, 자연어 규칙은 Markdown**이 최적 — JSON이 하이브리드 대비 동등·우수한 정확도를 약 80% 적은 토큰으로 달성(비용 약 5배 절감). "구조는 JSON, 규칙은 Markdown."
+- **에이전트 UI 생성의 3층위**: (1) 정적(AI가 값만 채움), (2) 선언적(승인된 컴포넌트 레지스트리가 가드레일), (3) 완전 생성(원시 HTML/CSS). 완전 생성은 **컴포넌트 환각**(없는 컴포넌트/props 생성)·접근성·일관성 문제로, 실무는 **화이트리스트 제약 기반 선언적 생성**으로 수렴합니다.
+- **개발 도구 MCP**: Figma Dev Mode MCP 서버(2025.6 베타 — 파일 구조·레이아웃·토큰을 MCP로 노출), shadcn MCP 서버(2025.8 CLI 3.0 — 실제 props·variants로 정확한 생성)가 대표적. MCP는 "컴포넌트 존재·조합 규칙·유효 props·토큰·비협상 접근성 규칙"을 시맨틱 메타데이터로 인코딩합니다.
+- **결론**: AI는 대체가 아니라 가속기이며, **잘 거버넌스된 디자인 시스템이 AI 코드 생성의 가드레일**이 될 때만 일관성·접근성이 확보됩니다("제약은 영속, 생성물은 소모품").
+
+### 20.2 토큰 파이프라인·멀티브랜드 심화
+
+- **DTCG 표준 성숙**: W3C DTCG가 2025.10에 첫 안정판(Design Tokens Format Module 2025.10)을 발표 — JSON 기반, 미디어타입 `application/design-tokens+json`, 14개 색공간·멀티파일·테마 정식 지원. Adobe·Google·Microsoft·Figma 등 참여. **Style Dictionary v4**가 DTCG 1급 지원, v5에서 2025.10 대응 진행 중. Terrazzo(구 Cobalt)가 MIT DTCG 네이티브 대안.
+- **멀티브랜드 3-tier 테마**: reference(원시값) → semantic/system(`color.text.brand`) → component(`button.background`)로 나누고, **브랜드 룩앤필을 컴포넌트에서 분리된 테마 레이어**에 둡니다. 공유 코어 컴포넌트 위로 여러 브랜드/모드(light·dark·high-contrast)를 흘려보내며, 런타임 전환은 CSS custom properties + 시맨틱 레이어 리매핑으로 구현합니다.
+- **토큰을 API처럼 거버넌스**: CI로 검증·시맨틱 버저닝·changelog, 디자인/코드 토큰명 일치, 주기적 audit으로 중복·미사용 토큰 정리, drift detection으로 디자인-코드 동기화.
+- **고급 컬러**: **OKLCH**가 표준 색공간으로 부상 — 인지 명도를 선형 추적해 예측 가능한 스케일과 **대비 안전(contrast-safe)** 팔레트 생성이 가능. Radix v3·Tailwind v4가 Display P3+OKLCH로 전환. Material dynamic color식 자동 tonal 팔레트 생성에도 적합.
+
+### 20.3 DesignOps와 헬스 메트릭
+
+- **헬스 메트릭**: 최상위 지표는 **커버리지**(전체 UI 대비 DS 컴포넌트 사용 %) — 프로덕션 HTML에 `data-*`를 심어 렌더 노드 기준으로 산출(Mews). 그 외 채택률, 컴포넌트 사용 빈도, **detached/overridden 인스턴스**(유스케이스 갭 신호), 폐기 부채, 기여율, time-to-adopt. 도구: Omlet(코드 레벨 애널리틱스), Figma Library Analytics(2025.2부터 변수·스타일 사용량 확장), Supernova, zeroheight.
+- **제품으로서의 디자인 시스템**: 로드맵·메트릭·내부 사용자층을 갖고 DesignOps PO가 운영. 지원 모델(오피스아워·릴리스 케이던스·Slack·SLA), 4개 하위기능(Governance/Infrastructure/Intelligence). 중앙집중→연합형으로 이동하되, "담당자를 기존 업무에서 해방시키지 않은 연합형"의 정체 위험(Nathan Curtis) 유의.
+- **자동화 품질 게이트**: 토큰/컴포넌트 린팅(Atlassian `@atlassian/eslint-plugin-design-system`, Stylelint), fixer(지속 강제) vs codemod(대규모 일회성 마이그레이션 — 2,500+파일을 수 분 내 변환), CI에 시각 회귀(Chromatic)+접근성(axe) 통합, Figma 내 디자인 린팅.
+- **ROI**: 시간 절감→비용 환산이 근거. 디자인 효율 +38%·개발 +31%, Carbon 실험서 폼 구축 47% 단축, 제품팀은 개발 사이클의 34%를 기존 컴포넌트 재제작에 소모.
+
+### 20.4 차세대 아키텍처
+
+- **Web Components 부활**: Shopify가 2025.10 **Polaris를 Web Components로 GA**(Admin/Checkout/POS 통합, CDN 자동 업데이트, React/Vue/바닐라 어디서든). IBM Carbon Web Components(Lit), Microsoft Fluent(FAST), Web Awesome(구 Shoelace) 확산. **Declarative Shadow DOM**으로 JS 없는 SSR 개선(단 스타일링·타이핑은 미완).
+- **헤드리스 프리미티브 + 스타일 레이어 분리**: 동작·접근성(Radix, React Aria, Base UI, Ark UI) ↔ 스타일(Tailwind, Panda CSS, vanilla-extract)을 분리. **shadcn/ui copy-paste 레지스트리**(Registry 2.0, Universal Registry Items)로 npm 설치 없이 코드를 소유하는 배포 모델이 부상.
+- **크로스플랫폼**: 토큰 주도 일관성 — DTCG + Style Dictionary/Terrazzo로 웹·iOS·Android·RN에 동일 토큰 배포.
+- **모던 CSS**: `@layer`(스페시피시티 전쟁 종식), 컨테이너 쿼리(부모 기준 모듈형), `:has()`(관계 선택), 네이티브 중첩, `light-dark()`로 "self-aware" 컴포넌트. 배포는 npm / copy-paste 레지스트리 / CDN 세 갈래, 버저닝은 Changesets가 사실상 표준.
+
+### 20.5 성숙도 다음 단계: 진화 로드맵
+
+2장의 성숙도 모델을 넘어, 위 4방향을 조직의 다음 성숙 단계로 배치하면:
+
+| 현재 상태 | 다음 진화 | 대표 지표/산출물 |
+| --- | --- | --- |
+| 컴포넌트 라이브러리 존재 | 토큰을 API로 거버넌스 (20.2) | DTCG 파이프라인, 토큰 버저닝 |
+| 수동 채택 | 헬스 메트릭·자동 게이트 (20.3) | 커버리지 대시보드, CI 린트 |
+| 프레임워크 종속 | 프레임워크 독립·헤드리스 (20.4) | Web Components / 레지스트리 |
+| 사람만 소비 | AI 에이전트가 소비 (20.1) | 머신 리더블 스펙, MCP, DESIGN.md |
+
+이 저장소의 `ds-transform`은 20.1 방향을 실제로 구현합니다 — as-is 기획을 사람용 스펙뿐 아니라 **에이전트가 소비 가능한 머신 리더블 컴포넌트 스펙(JSON)** 으로도 산출하도록 확장했습니다(아래 참조).
+
+## 21. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
 - [Planning a Design System Generation – Nathan Curtis](https://medium.com/@nathanacurtis/planning-a-design-system-generation-ce4120393557)
@@ -714,3 +768,33 @@ page/screen    최종 웹 화면 (19장)
 - [Layout patterns – Calcite Design System (Esri)](https://developers.arcgis.com/calcite-design-system/foundations/layouts/)
 - [Layout – Cloudscape Design System](https://cloudscape.design/foundation/visual-foundation/layout/)
 - [Layout grid – USWDS](https://designsystem.digital.gov/utilities/layout-grid/)
+
+### 고차원 진화: AI 네이티브
+- [Design System: Building the context engine for the AI era – Atlassian](https://www.atlassian.com/blog/ai-at-work/atlassian-design-system-building-the-context-engine-for-the-ai-era)
+- [Atlassian's DESIGN.md is here – Atlassian](https://www.atlassian.com/blog/ai-at-work/atlassians-design-md-is-here-what-we-learned-testing-portable-design-context-in-practice)
+- [Machine-readable design systems – Design Systems Collective](https://www.designsystemscollective.com/machine-readable-design-systems-designing-for-ai-as-a-user-28077c9f2144)
+- [shadcn MCP server](https://ui.shadcn.com/docs/mcp)
+- [Figma MCP server](https://www.figma.com/blog/introducing-figma-mcp-server/)
+- [The three kinds of generative UI – CopilotKit](https://www.copilotkit.ai/blog/the-three-kinds-of-generative-ui)
+
+### 고차원 진화: 토큰 파이프라인·멀티브랜드
+- [Design Tokens spec first stable version – W3C DTCG](https://www.w3.org/community/design-tokens/2025/10/28/design-tokens-specification-reaches-first-stable-version/)
+- [Style Dictionary DTCG support](https://styledictionary.com/info/dtcg/)
+- [Terrazzo tokens](https://terrazzo.app/docs/tokens/)
+- [The many faces of themeable design systems – Brad Frost](https://bradfrost.com/blog/post/the-many-faces-of-themeable-design-systems/)
+- [OKLCH in CSS: why quit RGB/HSL – Evil Martians](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
+
+### 고차원 진화: DesignOps·헬스 메트릭
+- [Design system adoption metric – Mews](https://developers.mews.com/design-system-adoption-metric-building/)
+- [Design systems 104: making metrics matter – Figma](https://www.figma.com/blog/design-systems-104-making-metrics-matter/)
+- [How leaders measure design system adoption – Omlet](https://omlet.dev/blog/how-leaders-measure-design-system-adoption/)
+- [Ensure design token usage (ESLint) – Atlassian](https://atlassian.design/components/eslint-plugin-design-system/ensure-design-token-usage/)
+- [ROI of design systems – Netguru](https://www.netguru.com/blog/roi-design-systems)
+
+### 고차원 진화: 차세대 아키텍처
+- [Polaris unified and for the web – Shopify](https://www.shopify.com/partners/blog/polaris-unified-and-for-the-web)
+- [Lit SSR overview](https://lit.dev/docs/ssr/overview/)
+- [shadcn registry – getting started](https://ui.shadcn.com/docs/registry/getting-started)
+- [Panda CSS](https://panda-css.com/docs/overview/getting-started)
+- [CSS cascade layers – MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Cascade_layers)
+- [Changesets](https://github.com/changesets/changesets)

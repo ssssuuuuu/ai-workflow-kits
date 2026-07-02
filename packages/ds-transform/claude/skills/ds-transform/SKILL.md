@@ -43,7 +43,9 @@ to-be web planning (component + variant + state + token)
 
 5. **Governance Handoff** — mark which candidates are net-new vs. already exist in the target system (if known). Flag net-new or breaking candidates as RFC-worthy. Note the number of affected screens/instances and a suggested migration order (highest occurrence first).
 
-Each phase feeds the next — do not skip ahead or merge phases.
+6. **Machine-Readable Spec (optional)** — when the consumer is an AI agent or code generator, also emit a JSON component spec per `schema/component-spec.schema.json`: structured metadata (name, slots, variants, tokens, states, accessibility) in JSON, natural-language rules left in the Phase 4 prose via `docsRef`. This is what an MCP server / codegen consumes to produce DS-compliant UI without component hallucination (methodology 20.1). Example: `examples/datalist-composition/component-spec.example.json`.
+
+Each phase feeds the next — do not skip ahead or merge phases. Phase 6 is optional and only for AI-native/codegen handoffs.
 
 ## UI Archetype Reference
 

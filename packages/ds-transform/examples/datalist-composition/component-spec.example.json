@@ -1,0 +1,32 @@
+{
+  "name": "DataListItem",
+  "family": "DataList",
+  "atomicLevel": "molecule",
+  "description": "A single list row composed of atom slots; the region variant only changes slot alignment, not the slot set.",
+  "slots": [
+    { "name": "leading", "accepts": "Checkbox | Avatar | Icon", "optional": true },
+    { "name": "title", "accepts": "text" },
+    { "name": "description", "accepts": "text | Icon", "optional": true },
+    { "name": "meta", "accepts": "text", "optional": true },
+    { "name": "label", "accepts": "Link", "optional": true, "repeatable": true },
+    { "name": "trailing", "accepts": "Icon", "optional": true }
+  ],
+  "variants": [
+    { "axis": "region", "values": ["left", "right"], "default": "right" }
+  ],
+  "states": ["default", "hover", "selected", "disabled"],
+  "statesRef": "docs/design-system-methodology.md#174-종합-컴포넌트-유형별-문서화-방식-선택-가이드",
+  "tokens": [
+    { "name": "datalistitem-background", "references": "color-surface-default" },
+    { "name": "datalistitem-padding", "references": "space-card-padding" }
+  ],
+  "compositionApi": "compound",
+  "children": ["DataListItem.Leading", "DataListItem.Title", "DataListItem.Description", "DataListItem.Meta", "DataListItem.Label"],
+  "accessibility": [
+    "The leading Checkbox uses role=checkbox with aria-checked reflecting selection.",
+    "Label slots rendered as links need visually-hidden context text when the link text is generic."
+  ],
+  "consolidates": ["목록 항목(좌 정렬)", "목록 항목(우 정렬)", "즐겨찾기 하트 항목", "체크박스 있는 항목"],
+  "status": "net-new",
+  "docsRef": "packages/ds-transform/examples/datalist-composition/to-be.example.md"
+}

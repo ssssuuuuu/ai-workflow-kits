@@ -64,6 +64,16 @@ Follow the five phases in order. Each phase's output is required input for the n
 - Flag net-new or breaking candidates as RFC-worthy per the target team's governance process.
 - Attach an adoption note: number of screens/instances affected, and a suggested migration order (highest occurrence first).
 
+### Phase 6 — Machine-Readable Spec (optional, AI-native handoff)
+
+When the target consumer is an AI agent or a code generator (not only humans), also emit a **machine-readable component spec in JSON** conforming to `schema/component-spec.schema.json`. This follows the validated split (see methodology 20.1): structured metadata (name, slots, variants, tokens, states, accessibility) goes in JSON — which is more accurate and far cheaper in tokens for LLMs — while natural-language usage rules stay in the Phase 4 prose spec, referenced via `docsRef`.
+
+- One JSON object per component candidate; use namespace-prefixed family names.
+- Encode non-negotiable accessibility rules in `accessibility` so generators cannot drop them.
+- Set `consolidates` to the as-is source elements for traceability, and `status` (existing / net-new / breaking-change) from Phase 5.
+- This JSON is what an MCP server or codegen tool would consume to generate design-system-compliant UI without component hallucination.
+- Example: `examples/datalist-composition/component-spec.example.json`.
+
 ## UI Archetype Reference (for Phase 2 and Phase 4)
 
 Most as-is elements collapse into a small set of recurring archetypes. Use this reference to decide atomic level, anatomy, and common variant axes. Even simple atoms (checkbox, radio, button, form label) are documented with anatomy + prose in real public design systems, not matrices — matrices only win for internal handoff specs (see the variant matrix rule above).
@@ -101,6 +111,7 @@ Write results to the requested location (default to `docs/` if unspecified) and 
 - Token proposal
 - DS-based spec rewrite (full or excerpted, depending on input size)
 - Governance/adoption notes
+- Machine-readable component spec (JSON, when the consumer is an agent/codegen — Phase 6)
 - Unresolved risks (ambiguous elements, missing states, conflicting sources)
 
 ## Limits
@@ -121,5 +132,6 @@ Phase 2 - Component Candidates: <count, link/path>
 Phase 3 - Token Proposal: <tier counts, link/path>
 Phase 4 - DS-Based Spec: <path>
 Phase 5 - Governance Notes: <net-new count, migration order>
+Phase 6 - Machine-Readable Spec: <path to JSON, or "n/a (human-only handoff)">
 Unresolved Risks: <list or "none">
 ```

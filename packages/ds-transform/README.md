@@ -50,8 +50,13 @@ Use the **agent** when the source document is large or the work should run as a 
 3. **Tokenization** — extract repeated raw values into a 3-tier token proposal (global -> semantic -> component).
 4. **DS-Based Spec Rewrite** — restate the original screen definitions using component + variant + state + token references. When the output is an internal handoff spec and a component has two independent visual axes (e.g. `weight x size`, `color x align`, `kind x size`), render it as a variant matrix — a grid with real rendered content in each cell — instead of prose. For public-facing docs, use anatomy + prose even for two-axis atoms (see below).
 5. **Governance Handoff** — flag net-new/breaking component candidates for the target team's RFC or review process, with an adoption note.
+6. **Machine-Readable Spec (optional, AI-native)** — when the consumer is an AI agent or code generator, also emit a JSON component spec per `schema/component-spec.schema.json` so agents can generate design-system-compliant UI without component hallucination.
 
-Each phase's output is required input for the next. See the agent and skill files for the full method and output shape.
+Each phase's output is required input for the next (Phase 6 is optional). See the agent and skill files for the full method and output shape.
+
+### Machine-Readable Component Spec (AI-native handoff)
+
+Per the JSON-for-structure / Markdown-for-rules split (validated by Indeed's benchmark — JSON gave equal-or-better accuracy at ~80% fewer tokens; see `docs/design-system-methodology.md` section 20.1), ds-transform can emit a machine-readable component spec: structured metadata (name, slots, variants, tokens, states, accessibility) in JSON conforming to [`schema/component-spec.schema.json`](schema/component-spec.schema.json), with natural-language usage rules kept in the prose spec via `docsRef`. This is what an MCP server or code generator consumes. See [`examples/datalist-composition/component-spec.example.json`](examples/datalist-composition/component-spec.example.json).
 
 ### Variant Matrix Documentation
 
