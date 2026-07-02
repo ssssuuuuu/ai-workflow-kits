@@ -61,6 +61,20 @@ Follow the five phases in order. Each phase's output is required input for the n
 - Flag net-new or breaking candidates as RFC-worthy per the target team's governance process.
 - Attach an adoption note: number of screens/instances affected, and a suggested migration order (highest occurrence first).
 
+## UI Archetype Reference (for Phase 2 and Phase 4)
+
+Most as-is elements collapse into a small set of recurring archetypes. Use this reference to decide atomic level, anatomy, and whether Phase 4 should use a variant matrix or an anatomy-diagram-plus-prose spec. Real public design systems mostly document List/Card/Search with anatomy + prose, not matrices — reserve the matrix for atom-level, two-axis components.
+
+| Archetype | Typical anatomy | Common variant axes | Phase 4 documentation |
+| --- | --- | --- | --- |
+| List / ListItem | leading (icon/avatar/checkbox), title, supporting text, trailing (icon/text/switch) | density, content lines (one/two/three-line), leading/trailing presence | Anatomy diagram + prose; decompose leading/trailing into separate namespace-prefixed sub-components (e.g. `ListItemLeading`, `ListItemTrailing`) if they carry independent logic |
+| Detail / Description (key-value) | label (term) + value, optional actions | layout (horizontal/vertical), column count, bordered | Prose with an explicit actions sub-table: none / single action / multiple actions (cap at ~3) / group-level action. Give action links hidden context text for accessibility |
+| Search | leading search icon, input, clear button (value present only), optional submit button | expanded vs collapsed (icon-only), with-button vs without-button, size | Anatomy + prose. Route "no results" and loading states to the system-wide empty-state/loading pattern instead of documenting them locally |
+| Card | media, headline, subhead, supporting text, actions | style (elevated/filled/outlined), media presence, orientation | Anatomy + prose for the composed Card; if the family splits into behavior-specific variants (e.g. `ClickableTile`, `SelectableTile`, `ExpandableTile`), document each as its own component with its own state list |
+| Atom-level, two-axis component (chart value/label, badge, button) | single visual unit | two independent props (e.g. `weight x size`, `color x align`) | Variant matrix table (see the main variant-matrix rule above) |
+
+State variants (empty, loading/skeleton, error) are rarely first-class per component in real systems — default to documenting them once at the screen or system level and referencing that from each component spec, unless the source document calls out component-specific state behavior.
+
 ## Output
 
 Write results to the requested location (default to `docs/` if unspecified) and return:

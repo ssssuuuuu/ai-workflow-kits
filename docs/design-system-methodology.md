@@ -23,6 +23,11 @@
 15. [반복되는 실패 패턴](#15-반복되는-실패-패턴)
 16. [실전 체크리스트](#16-실전-체크리스트)
 17. [아이템 단위 컴포넌트 스펙: 배리언트 매트릭스 문서화](#17-아이템-단위-컴포넌트-스펙-배리언트-매트릭스-문서화)
+    - [17.1 List / ListItem](#171-list--listitem-아이템-스펙)
+    - [17.2 Detail / 속성표](#172-detail--속성표description-아이템-스펙)
+    - [17.3 Search](#173-search-아이템-스펙)
+    - [17.4 Card](#174-card-아이템-스펙)
+    - [17.5 유형별 문서화 방식 선택 가이드](#175-종합-컴포넌트-유형별-문서화-방식-선택-가이드)
 18. [출처](#18-출처)
 
 ---
@@ -251,6 +256,59 @@ Figma는 Plugin/Widget/REST 세 종류의 API를 제공하며, **변수(Variable
 - 디자이너와 개발자가 같은 표를 보고 "이미 존재하는 조합인지, 새로 만들어야 하는 조합인지"를 즉시 판단할 수 있어 4장의 거버넌스 프로세스(RFC 등)에 바로 연결됩니다.
 - `ds-transform` 패키지(`packages/ds-transform/`)의 Phase 4(DS 기반 스펙 재작성)에서, 축이 2개 이상인 컴포넌트 후보는 산문형 설명 대신 이 매트릭스 표로 출력하도록 반영했습니다.
 
+**중요한 보정: 매트릭스는 보편적 관행이 아니라 상황별 선택지**
+
+List, Detail(속성표), Search, Card 4개 UI 패턴을 대상으로 Material Design 3, Carbon, Ant Design, Shopify Polaris, Atlassian, GOV.UK, Cloudscape 등 주요 공개 디자인 시스템 문서를 추가로 조사한 결과, 이미지에서 관찰한 "행×열 매트릭스에 렌더링 프리뷰를 채우는" 방식은 **공개 웹 문서에서는 오히려 드문 관행**이라는 사실이 확인되었습니다. 대부분의 시스템은 다음 3가지 방식을 조합합니다.
+
+1. **아나토미 다이어그램**(번호 매긴 구성요소 목록) + **prose 가이드라인** — Material Design 3의 Guidelines/Specs 탭 구조가 대표적
+2. **축 하나씩 분리한 개별 라이브 예시**를 세로로 나열 — Ant Design, Carbon usage 페이지가 대표적("축 하나 = 데모 하나")
+3. **상태(state)는 컴포넌트 전용이 아니라 시스템 전역 패턴 문서**(Disabled states, Loading pattern, Empty states 등)로 위임하고 컴포넌트 페이지에서는 링크만 거는 방식
+
+진짜 격자형 매트릭스(두 축을 교차한 그리드에 실제 렌더링을 채우는 방식)는 **Figma 컴포넌트 셋 캔버스**처럼 디자인 툴 파일 내부 관행으로 주로 발견되며, 그것이 스크린샷/이미지로 캡처되어 별도 스펙 문서로 공유될 때 이번에 학습한 이미지와 같은 형태가 됩니다. 즉:
+
+- **매트릭스 표**는 하나의 컴포넌트가 **정확히 2개의 독립적인 시각 축**을 가지고, 그 조합을 디자이너·QA가 한 화면에서 검증해야 할 때(전형적으로 차트 텍스트, 배지/태그, 버튼처럼 상태·크기 조합이 많은 원자 단위 컴포넌트) 가장 효율적입니다.
+- **아나토미 다이어그램 + prose**는 컴포넌트의 구성 파츠 자체가 복잡하거나(List, Card, Search처럼 리딩/트레일링/미디어/액션 슬롯이 여러 개인 분자·유기체 단위), 축 간 상호배타 규칙이 많아 격자로 표현하면 오히려 빈 칸(해당 없음)이 많아지는 경우에 더 적합합니다.
+- 두 방식은 배타적이지 않습니다 — 같은 컴포넌트 패밀리 안에서도 원자(atom) 단위 하위 요소는 매트릭스로, 그 위의 분자(molecule)/유기체(organism) 조립 규칙은 아나토미+prose로 문서화하는 것이 실무에서 관찰되는 균형점입니다.
+
+### 17.1 List / ListItem 아이템 스펙
+
+- **아나토미**: leading(아이콘/아바타/체크박스) — headline/title — supporting text(부제) — trailing(아이콘/텍스트/스위치)의 4파츠 구조가 Material Design 3, Ant Design, Shopify Polaris ResourceItem에서 공통으로 관찰됩니다. MD3는 텍스트 줄 수에 따라 one-line/two-line/three-line으로 콘텐츠 타입 축을 별도로 문서화합니다.
+- **서브컴포넌트 네이밍**: MUI(Material UI)는 `ListItem`, `ListItemAvatar`, `ListItemIcon`, `ListItemText`, `ListItemButton`, `ListItemSecondaryAction`으로 리딩/트레일링 파츠를 별개 컴포넌트로 쪼개는 접두사(prefix) 분해 패턴을 씁니다. Ledger Live 디자인 시스템도 `ListItemLeading`/`ListItemContent`/`ListItemTitle`/`ListItemDescription`/`ListItemTrailing`으로 동일한 패턴을 채택했습니다 — `Chart` 패밀리와 같은 네임스페이스 프리픽스 원칙이 List 파츠 분해에도 그대로 적용된 사례입니다.
+- **상태**: hover/selected/disabled/loading(skeleton)/empty가 반복 관찰되나, Carbon StructuredList처럼 "selected 표시가 체크마크에서 라디오 아이콘/좌측 배치로 개편"된 사례처럼 컴포넌트별 세부 규칙은 계속 진화합니다. empty/loading은 List 컴포넌트 자체보다 시스템 전역 패턴에 위임되는 경우가 많습니다.
+- **매트릭스 vs prose**: 정통 매트릭스 문서는 발견되지 않았고, "밀도(density) × 콘텐츠 타입" 조합은 개별 예시 나열 방식이 지배적입니다.
+
+### 17.2 Detail / 속성표(Description) 아이템 스펙
+
+- **아나토미**: label(term) + value(definition) 쌍이 기본 단위이며, GOV.UK `Summary list`는 여기에 선택적 `actions`(예: "Change" 링크)를 3번째 구성요소로 공식화합니다. Ant Design `Descriptions`가 가장 세분화된 축(layout: horizontal/vertical, column 수, size, bordered)을 제공합니다.
+- **액션 slot의 variant화**: GOV.UK Summary list는 "액션 없음 → `--no-border`로 테두리 제거", "단일 액션", "복수 액션(최대 3개 권장)", "카드 레벨 액션(summary-card로 감싸 그룹 단위 액션)"까지 액션 유무·개수를 명시적 variant 축으로 문서화한 유일한 사례입니다. 접근성 규칙으로 "Change" 같은 링크 텍스트에 시각적으로 숨긴 대상 설명(`visually-hidden`)을 반드시 붙이도록 강제합니다.
+- **상태**: Carbon StructuredList만 skeleton(로딩) 상태를 공식 지원합니다. 값이 없을 때(empty value), 긴 텍스트 처리(ellipsis/truncation), 에러/누락 데이터는 대부분 시스템에서 detail 컴포넌트 자체가 아니라 콘텐츠 라이팅 가이드나 별도 알림 컴포넌트로 위임됩니다.
+- **매트릭스 vs prose**: 6개 시스템 모두 매트릭스를 쓰지 않고 "축 하나 = 데모 하나" 방식입니다.
+
+### 17.3 Search 아이템 스펙
+
+- **아나토미**: leading search 아이콘 + input text + clear(X) 버튼(값이 있을 때만 노출) + optional submit 버튼 조합이 공통입니다. Material Design 3는 축약형 `SearchBar`와 전체화면/도킹형 `SearchView`를 별개 컴포넌트로 분리하고, Carbon은 `expandable`(아이콘만 있다가 클릭 시 확장) vs 항상 펼쳐진 필드를 variant 축으로 둡니다 — "expanded vs collapsed(icon-only)" 축은 Search 컴포넌트에서 유독 자주 등장하는 패턴입니다.
+- **필터와의 조합**: 검색 결과를 좁히는 필터 칩/태그는 별도 컴포넌트로 분리 문서화됩니다(Carbon `Tag`의 dismissible variant, Material Design `Filter chip`, AWS Cloudscape의 `TextFilter`/`PropertyFilter`). 검색 결과 아이템 자체를 독자 컴포넌트로 스펙화한 시스템은 드물고, List/Card/Data table을 재사용하도록 안내하는 경우가 대부분입니다.
+- **상태**: enabled/focus/filled(값 있음)/disabled가 기본이며, "no results found" 빈 상태와 로딩은 Search 컴포넌트 페이지가 아니라 시스템 전역 Empty state / Loading 패턴 문서에서 다뤄집니다. 디바운스·타이핑 중 상태를 명시적으로 문서화한 시스템은 확인되지 않았습니다(구현 세부사항으로 남겨둠).
+- **매트릭스 vs prose**: 검색 컴포넌트도 매트릭스보다 아나토미 다이어그램 + 속성표 + 개별 code example 조합이 지배적입니다.
+
+### 17.4 Card 아이템 스펙
+
+- **아나토미**: container, media/thumbnail, headline/title, subhead, supporting text, actions/buttons가 Material Design 3·Ant Design·Shopify Polaris에서 공통 관찰됩니다. Polaris는 header/body(section)/footer 3부 구조로 단순화합니다.
+- **스타일 축과 패밀리 네이밍**: MD3는 elevated/filled/outlined 3가지 스타일을 하나의 `Card` 컴포넌트 prop으로 관리하는 반면, Carbon은 `Tile`을 기본으로 `ClickableTile`/`SelectableTile`/`ExpandableTile`처럼 **형용사+Tile 접두 방식**의 별개 컴포넌트로 쪼갭니다. Atlassian은 범용 Card 컴포넌트 자체가 없고 Box 프리미티브 + 토큰 조합("composition" 패턴)으로 직접 구성하도록 안내한다는 점이 특이합니다 — 모든 시스템이 전용 Card 컴포넌트를 갖는 것은 아닙니다.
+- **상태**: MD3가 enabled/hover/focused/pressed/dragged/disabled 6개로 가장 표준화되어 있고, Carbon Tile은 variant별로 상태 목록이 달라집니다(SelectableTile만 hover-selected 상태를 별도로 가짐). loading/skeleton은 Ant Design만 명시적으로 지원, selected는 Carbon만 명확히 구분 — 시스템마다 어떤 상태를 "1급 시민"으로 다룰지가 다릅니다.
+- **매트릭스 vs prose**: MD3의 Specs 탭(anatomy → states → measurements를 순서대로 체계화)이 "완전한 격자는 아니지만 축별로 계통적으로 나눈다"는 점에서 매트릭스에 가장 근접한 사례로 관찰됩니다.
+
+### 17.5 종합: 컴포넌트 유형별 문서화 방식 선택 가이드
+
+| 컴포넌트 성격 | 대표 사례 | 권장 문서화 |
+| --- | --- | --- |
+| 축 2개, 원자 단위, 조합 수가 QA 대상 (텍스트 스타일, 배지, 버튼 등) | ChartValue, ChartLabel | 배리언트 매트릭스 표 |
+| 파츠가 여러 개인 분자/유기체, 슬롯 조합이 다양 (List, Card, Search) | ListItem, Card, SearchBar | 아나토미 다이어그램 + prose + 축별 개별 예시 |
+| 액션/상호작용이 variant처럼 취급되는 경우 (Detail/속성표) | Summary list의 actions | 액션 유무·개수를 명시적 축으로 표기 |
+| 상태(empty/loading/error) | 전 유형 공통 | 컴포넌트 페이지에 개별 정의하지 말고 시스템 전역 패턴 문서로 위임 후 링크 |
+
+`ds-transform` 패키지의 Phase 2(Atomic Mapping)·Phase 4(DS-Based Spec Rewrite)는 이 가이드를 반영해, 컴포넌트 후보의 축 개수와 파츠 복잡도에 따라 매트릭스 표와 아나토미+prose 중 하나를 선택하도록 갱신되었습니다.
+
 ## 18. 출처
 
 ### 기획·전략, 성숙도, 거버넌스, 팀 모델
@@ -325,3 +383,40 @@ Figma는 Plugin/Widget/REST 세 종류의 API를 제공하며, **변수(Variable
 - [Charts – Pajamas Design System (GitLab)](https://design.gitlab.com/data-visualization/charts/)
 - [Simple charts – Carbon Design System](https://carbondesignsystem.com/data-visualization/simple-charts/)
 - [Color usage – Carbon Design System](https://carbondesignsystem.com/elements/color/usage/)
+
+### List / ListItem 아이템 스펙
+- [Lists – Material Design 3 (Guidelines)](https://m3.material.io/components/lists/guidelines)
+- [Lists – Material Design 3 (Specs)](https://m3.material.io/components/lists/specs)
+- [List – Carbon Design System](https://carbondesignsystem.com/components/list/usage/)
+- [Structured list – Carbon Design System](https://carbondesignsystem.com/components/structured-list/usage/)
+- [Resource list / Resource item – Shopify Polaris React](https://polaris-react.shopify.com/components/lists/resource-list)
+- [List – Ant Design](https://ant.design/components/list/)
+- [React List component – Material UI (MUI)](https://mui.com/material-ui/react-list/)
+- [LedgerHQ/ledger-live PR #13701 (ListItemLeading/Trailing 컴포지션)](https://github.com/LedgerHQ/ledger-live/pull/13701)
+- [Summary list – GOV.UK Design System](https://design-system.service.gov.uk/components/summary-list/)
+
+### Detail / 속성표(Description) 아이템 스펙
+- [Descriptions – Ant Design](https://ant.design/components/descriptions/)
+- [Structured list – Carbon Design System](https://carbondesignsystem.com/components/structured-list/usage/)
+- [Description list – Shopify Polaris React](https://polaris-react.shopify.com/components/lists/description-list)
+- [Summary list – GOV.UK Design System](https://design-system.service.gov.uk/components/summary-list/)
+- [Check answers pattern – GOV.UK Design System](https://design-system.service.gov.uk/patterns/check-answers/)
+- [Canonical layouts (list-detail) – Material Design 3](https://m3.material.io/foundations/layout/canonical-layouts/list-detail/)
+
+### Search 아이템 스펙
+- [Search – Material Design 3](https://m3.material.io/components/search/specs)
+- [Search – Carbon Design System](https://carbondesignsystem.com/components/search/usage/)
+- [Filtering pattern – Carbon Design System](https://carbondesignsystem.com/patterns/filtering/)
+- [Search component – USWDS](https://designsystem.digital.gov/components/search/)
+- [Search – MOJ Design System](https://design-patterns.service.justice.gov.uk/components/search/)
+- [Text filter – Cloudscape Design System](https://cloudscape.design/components/text-filter/)
+- [Filtering patterns – Cloudscape Design System](https://cloudscape.design/patterns/general/filter-patterns/)
+- [Empty states – Cloudscape Design System](https://cloudscape.design/patterns/general/empty-states/)
+- [The Anatomy of a Search-Results Page – NN/g](https://www.nngroup.com/articles/anatomy-search-results-page/)
+
+### Card 아이템 스펙
+- [Cards – Material Design 3 (Specs)](https://m3.material.io/components/cards/specs)
+- [Tile – Carbon Design System](https://carbondesignsystem.com/components/tile/usage/)
+- [Card – Shopify Polaris React](https://polaris-react.shopify.com/components/layout-and-structure/card)
+- [Card – Ant Design](https://ant.design/components/card/)
+- [Atlassian Design System – Components overview](https://atlassian.design/components)

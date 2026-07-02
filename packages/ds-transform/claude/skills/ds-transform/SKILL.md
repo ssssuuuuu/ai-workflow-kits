@@ -44,6 +44,18 @@ to-be web planning (component + variant + state + token)
 
 Each phase feeds the next — do not skip ahead or merge phases.
 
+## UI Archetype Reference
+
+Real public design systems mostly document List/Card/Search with an anatomy diagram + prose, not a variant matrix — reserve the matrix for atom-level, two-axis components (see the variant matrix rule above).
+
+| Archetype | Anatomy | Common axes | Phase 4 approach |
+| --- | --- | --- | --- |
+| List / ListItem | leading, title, supporting text, trailing | density, content lines, leading/trailing presence | anatomy + prose; split leading/trailing into namespace-prefixed sub-components if they carry independent logic |
+| Detail / Description | label + value, optional actions | layout, column count, bordered | prose + explicit action-count sub-table (none/single/multiple/group-level) |
+| Search | search icon, input, clear button, optional submit | expanded vs collapsed, with/without button, size | anatomy + prose; route empty/loading states to the system-wide pattern |
+| Card | media, headline, subhead, supporting text, actions | style, media presence, orientation | anatomy + prose; split behavior-specific variants (clickable/selectable/expandable) into their own components |
+| Atom-level, two-axis component | single visual unit | two independent props | variant matrix table |
+
 ## Guardrails
 
 - Do not invent product requirements absent from the source document.

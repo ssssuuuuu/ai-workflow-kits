@@ -35,7 +35,9 @@ It does not design a design system from scratch (see `docs/design-system-methodo
 | --- | --- |
 | Delegate a full as-is -> DS transform as a bounded task | `claude/agents/ds-transform.agent.md` |
 | Run the same workflow inline in the main chat | `claude/skills/ds-transform/SKILL.md` |
-| See a worked example | `examples/legacy-screen-transform/` |
+| See a worked example (checkout screen) | `examples/legacy-screen-transform/` |
+| See a worked example (chart text family, variant matrix) | `examples/chart-text-variant-matrix/` |
+| See a worked example (List / Detail / Search / Card) | `examples/list-detail-search-card-transform/` |
 
 Use the **agent** when the source document is large or the work should run as a separate, boundable task with its own report. Use the **skill** when you want the main chat to walk through the same five phases directly, without spawning a subagent.
 
@@ -52,6 +54,10 @@ Each phase's output is required input for the next. See the agent and skill file
 ### Variant Matrix Documentation
 
 For item-level component specs with multiple independent variants, use a two-axis grid table instead of a bullet list: one axis as rows, the other as columns, each cell showing the component actually rendered in that combination. Cap each table at two axes and split a third axis into a separate table. Group related components under one namespace-prefixed family name (e.g. `Chart` + `Value`/`Label`/`Legend`) so the relationship is visible from the name alone. See `docs/design-system-methodology.md#17-아이템-단위-컴포넌트-스펙-배리언트-매트릭스-문서화` at the repo root for the full pattern and sources, and `examples/chart-text-variant-matrix/` for a worked example.
+
+### UI Archetype Reference
+
+Real public design systems mostly document List, Detail, Search, and Card with an anatomy diagram + prose, not a variant matrix — the matrix is reserved for atom-level, two-axis components (charts, badges, buttons). See section 17.1-17.5 of `docs/design-system-methodology.md` and `examples/list-detail-search-card-transform/` for the researched anatomy, common variant axes, and documentation approach for each of these four archetypes.
 
 ## Evidence Contract
 
