@@ -90,4 +90,7 @@ emphasis=metric (카드1·2)           emphasis=feature (카드3)
 - **미해결 리스크**: 브랜드 컬러/타이포 hex 미확정(placeholder), 캐러셀 자동재생·일시정지 접근성 규칙 미정, 카드 클릭 영역(전체 vs 부분) 결정 필요
 
 ## Phase 6 — Machine-Readable Spec
-컴포넌트별 JSON은 [`component-specs.example.json`](component-specs.example.json)에 배열로 수록했습니다(각 원소는 `../../schema/component-spec.schema.json` 준수). `GlobalHeader`·`PrimaryNav`/`NavItem`·`ProductCard`·`ProductCarousel`·`QuickLink`·`QuickLinkBar` 6종을 포함합니다.
+컴포넌트별 JSON은 [`component-specs.example.json`](component-specs.example.json)에 배열로 수록했습니다(각 원소는 `../../schema/component-spec.schema.json` 준수). `GlobalHeader`·`PrimaryNav`/`NavItem`·`ProductCard`·`ProductCarousel`·`QuickLink`·`QuickLinkBar` 7종을 포함합니다.
+
+## 렌더 프리뷰
+[`preview.html`](preview.html)은 위 to-be 스펙(토큰 + 컴포넌트)을 그대로 렌더링한 자립형 HTML입니다 — 브라우저에서 바로 열 수 있고, 디자인 토큰을 CSS 커스텀 프로퍼티로 정의해 `ProductCard`의 metric/feature 변형, 반응형 `QuickLinkBar`(8/4/2), 라이트/다크 테마, 토큰 레전드를 보여줍니다.
