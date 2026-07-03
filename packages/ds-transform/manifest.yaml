@@ -24,6 +24,7 @@ artifacts:
   - agent
   - skill
   - schema
+  - plugin
   - example
 evidence_required:
   - as_is_ui_inventory

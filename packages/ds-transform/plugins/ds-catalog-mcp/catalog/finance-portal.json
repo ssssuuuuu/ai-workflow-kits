@@ -1,0 +1,160 @@
+[
+  {
+    "name": "GlobalHeader",
+    "atomicLevel": "organism",
+    "description": "포털 전역 헤더. 로고/유틸리티/인증/주네비/툴 영역 슬롯으로 구성.",
+    "slots": [
+      { "name": "logo", "accepts": "Logo" },
+      { "name": "utility", "accepts": "TextLink", "repeatable": true, "optional": true },
+      { "name": "auth", "accepts": "Button", "repeatable": true },
+      { "name": "nav", "accepts": "PrimaryNav" },
+      { "name": "tools", "accepts": "IconButton", "repeatable": true }
+    ],
+    "variants": [],
+    "states": ["default", "sticky", "scrolled"],
+    "compositionApi": "compound",
+    "children": ["Logo", "PrimaryNav", "IconButton"],
+    "accessibility": [
+      "Use a landmark <header> with role=banner.",
+      "PrimaryNav is a <nav> landmark with an accessible name.",
+      "IconButton tools require aria-label (search, menu)."
+    ],
+    "consolidates": ["상단 헤더 전체(로고/유틸 링크/로그인·인증 버튼/네비/아이콘)"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "PrimaryNav",
+    "family": "GlobalHeader",
+    "atomicLevel": "molecule",
+    "description": "헤더의 주 내비게이션. NavItem을 반복.",
+    "slots": [
+      { "name": "items", "accepts": "NavItem", "repeatable": true }
+    ],
+    "variants": [],
+    "states": ["default"],
+    "compositionApi": "compound",
+    "children": ["NavItem"],
+    "accessibility": [
+      "Rendered as <nav><ul>; current section's NavItem exposes aria-current=page."
+    ],
+    "consolidates": ["My 온누리", "신청", "간편 서류제출", "고객서비스"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "NavItem",
+    "family": "GlobalHeader",
+    "atomicLevel": "atom",
+    "description": "주 내비게이션의 개별 항목.",
+    "slots": [
+      { "name": "label", "accepts": "text" }
+    ],
+    "variants": [
+      { "axis": "state", "values": ["default", "active"], "default": "default" }
+    ],
+    "states": ["default", "hover", "focus", "active"],
+    "tokens": [
+      { "name": "navitem-color-active", "references": "color-brand-primary" }
+    ],
+    "compositionApi": "props",
+    "accessibility": ["Active item sets aria-current=page."],
+    "consolidates": ["네비 항목"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "ProductCard",
+    "family": "ProductCarousel",
+    "atomicLevel": "molecule",
+    "description": "홈 메인의 상품 카드. emphasis로 수치강조형/기능링크형을 통합.",
+    "slots": [
+      { "name": "eyebrow", "accepts": "text" },
+      { "name": "description", "accepts": "text", "optional": true },
+      { "name": "metricLabel", "accepts": "text", "optional": true },
+      { "name": "metricValue", "accepts": "text", "optional": true },
+      { "name": "featureLinks", "accepts": "TextLink", "optional": true, "repeatable": true },
+      { "name": "media", "accepts": "Illustration", "optional": true }
+    ],
+    "variants": [
+      { "axis": "emphasis", "values": ["metric", "feature"], "default": "metric" }
+    ],
+    "states": ["default", "hover", "focus"],
+    "statesRef": "docs/design-system-methodology.md#174-종합-컴포넌트-유형별-문서화-방식-선택-가이드",
+    "tokens": [
+      { "name": "card-background", "references": "color-surface-card" },
+      { "name": "card-metricValue-color", "references": "color-highlight" },
+      { "name": "card-radius", "references": "radius-lg" }
+    ],
+    "compositionApi": "compound",
+    "children": ["ProductCard.Eyebrow", "ProductCard.Description", "ProductCard.Metric", "ProductCard.FeatureLinks", "ProductCard.Media"],
+    "accessibility": [
+      "Illustration media is decorative and set aria-hidden.",
+      "If the whole card is clickable it exposes a single accessible name; otherwise each featureLink is an independent link."
+    ],
+    "consolidates": ["든든 모기지론 카드", "새싹 전세자금대출 카드", "AI 맞춤추천 플랫폼 카드"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "ProductCarousel",
+    "atomicLevel": "organism",
+    "description": "ProductCard를 좌우로 순환시키는 캐러셀. 인디케이터와 재생 컨트롤 포함.",
+    "slots": [
+      { "name": "cards", "accepts": "ProductCard", "repeatable": true },
+      { "name": "indicator", "accepts": "CarouselIndicator" },
+      { "name": "control", "accepts": "IconButton" }
+    ],
+    "variants": [
+      { "axis": "autoplay", "values": ["on", "off"], "default": "off" }
+    ],
+    "states": ["default", "paused", "playing"],
+    "compositionApi": "compound",
+    "children": ["ProductCard", "CarouselIndicator"],
+    "accessibility": [
+      "Provide a pause/play control when autoplay is on (WCAG 2.2.2).",
+      "Indicator dots are buttons with aria-label for each slide; current slide uses aria-current."
+    ],
+    "consolidates": ["메인 카드 슬라이드", "점 인디케이터", "재생 버튼"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "QuickLink",
+    "family": "QuickLinkBar",
+    "atomicLevel": "molecule",
+    "description": "아이콘 + 라벨의 바로가기 항목.",
+    "slots": [
+      { "name": "icon", "accepts": "Icon" },
+      { "name": "label", "accepts": "text" }
+    ],
+    "variants": [],
+    "states": ["default", "hover", "focus"],
+    "compositionApi": "compound",
+    "accessibility": ["The icon is decorative (aria-hidden); the label provides the link's accessible name."],
+    "consolidates": ["기준금리 조회", "예상대출금액 조회", "대출 진행조회", "간편 서류제출", "대출 계좌조회", "가상계좌 상환", "증명서 발급", "신용회복"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  },
+  {
+    "name": "QuickLinkBar",
+    "atomicLevel": "organism",
+    "description": "QuickLink를 반응형 그리드로 배치하는 바.",
+    "slots": [
+      { "name": "links", "accepts": "QuickLink", "repeatable": true }
+    ],
+    "variants": [
+      { "axis": "columns", "values": ["8", "4", "2"], "default": "8" }
+    ],
+    "states": ["default"],
+    "tokens": [
+      { "name": "quicklinkbar-background", "references": "color-surface-card" }
+    ],
+    "compositionApi": "compound",
+    "children": ["QuickLink"],
+    "accessibility": ["Rendered as a list; columns collapse 8 -> 4 -> 2 at breakpoints without changing order."],
+    "consolidates": ["하단 퀵링크 바(8개)"],
+    "status": "net-new",
+    "docsRef": "packages/ds-transform/examples/finance-portal-home/to-be.example.md"
+  }
+]

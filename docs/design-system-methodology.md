@@ -530,6 +530,7 @@ page/screen    최종 웹 화면 (19장)
 - **에이전트 UI 생성의 3층위**: (1) 정적(AI가 값만 채움), (2) 선언적(승인된 컴포넌트 레지스트리가 가드레일), (3) 완전 생성(원시 HTML/CSS). 완전 생성은 **컴포넌트 환각**(없는 컴포넌트/props 생성)·접근성·일관성 문제로, 실무는 **화이트리스트 제약 기반 선언적 생성**으로 수렴합니다.
 - **개발 도구 MCP**: Figma Dev Mode MCP 서버(2025.6 베타 — 파일 구조·레이아웃·토큰을 MCP로 노출), shadcn MCP 서버(2025.8 CLI 3.0 — 실제 props·variants로 정확한 생성)가 대표적. MCP는 "컴포넌트 존재·조합 규칙·유효 props·토큰·비협상 접근성 규칙"을 시맨틱 메타데이터로 인코딩합니다.
 - **결론**: AI는 대체가 아니라 가속기이며, **잘 거버넌스된 디자인 시스템이 AI 코드 생성의 가드레일**이 될 때만 일관성·접근성이 확보됩니다("제약은 영속, 생성물은 소모품").
+- **이 저장소의 실행 구현**: `ds-transform`이 Phase 6에서 산출하는 머신 리더블 스펙(JSON)을, 의존성 없는 MCP stdio 서버 [`packages/ds-transform/plugins/ds-catalog-mcp/`](../packages/ds-transform/plugins/ds-catalog-mcp/)가 `list_components`·`get_component_spec`·`search_components` 툴로 노출합니다 — 에이전트가 UI를 생성하기 전에 실제 컴포넌트·슬롯·variant를 조회해 컴포넌트 환각을 막는 구조를 실제 실행 가능한 형태로 제공합니다.
 
 ### 20.2 토큰 파이프라인·멀티브랜드 심화
 
