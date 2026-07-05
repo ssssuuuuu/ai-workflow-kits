@@ -1,0 +1,36 @@
+id: screenshot-sitemap
+name: Screenshot Sitemap
+description: >
+  Reconstruct a depth-aligned website sitemap tree from a folder of unordered
+  screenshots, annotated with modern UI/UX pattern and web-trend analysis.
+category: ux-analysis
+status: active
+runtimes:
+  codex:
+    supported: false
+    status: planned
+    path: codex/
+  claude:
+    supported: true
+    status: active
+    path: claude/
+  gemini:
+    supported: false
+    status: planned
+    path: gemini/
+  copilot:
+    supported: false
+    status: planned
+    path: copilot/
+artifacts:
+  - skill
+  - agent
+  - command
+  - example
+  - guide
+evidence_required:
+  - screenshot_inventory
+  - depth_normalized_tree
+  - per_node_evidence
+  - trend_alignment_summary
+  - unresolved_conflicts

@@ -49,10 +49,13 @@ Evidence can be changed files, test output, build output, logs, screenshots, str
 | --- | --- | --- |
 | [`package-authoring`](packages/package-authoring/README.md) | Add public-safe packages and runtime artifacts consistently | Active |
 | [`keepworking`](packages/keepworking/README.md) | Keep AI agents working until evidence exists | Active |
+| [`screenshot-sitemap`](packages/screenshot-sitemap/README.md) | Reconstruct a depth-aligned sitemap tree and UI/UX trend audit from a folder of screenshots | Active |
 
 `package-authoring` is the meta package for adding future skills, agents, prompts, hooks, commands, plugins, examples, and runtime adapters.
 
 `keepworking` is the first workflow package. It defines a long-running evidence-first loop with tiered routing, parallel worker dispatch, repair, and re-verification.
+
+`screenshot-sitemap` reconstructs a website's information architecture from an unordered folder of screenshots, aligning every branch to the same depth tiers and auditing screens against current UI/UX and web-trend patterns.
 
 ## Repository Model
 
