@@ -79,7 +79,19 @@ the "Trend Research Sources" section below when currency matters.
 This checklist is a static baseline. Visual and color trends move faster
 than any fixed list, so when currency matters (the user asks for "latest"
 trends, or the audit will inform a redesign), top it up with a short live
-lookup instead of relying only on the rows above:
+lookup instead of relying only on the rows above.
+
+A dated snapshot of one such lookup lives in `trend-snapshot-2026.md`
+(Pinterest Predicts 2026 translated into taggable visual signals, plus
+the 2026 award-gallery/product-design consensus). Check its date first:
+use it directly if it's fresh, re-run the lookup if it's more than ~2
+seasons old. Where the snapshot corrects this file (e.g. WebGL heroes are
+now selective-use, not default-modern), the snapshot wins.
+
+Practical constraint: `pinterest.com` returns HTTP 403 to unauthenticated
+fetches (search pages, ideas pages, and the newsroom alike). Do not burn
+turns retrying direct fetches — go through web search over Pinterest
+Predicts coverage and secondary write-ups instead.
 
 - **Award-site showcases** — search for `Awwwards site of the day
   <industry/category>`, `CSS Design Awards <industry>`, or `FWA <industry>`
