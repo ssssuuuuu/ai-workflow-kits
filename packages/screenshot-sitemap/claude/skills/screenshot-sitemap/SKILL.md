@@ -117,6 +117,22 @@ section: what's already current, what reads as legacy, and 3-5 concrete,
 specific modernization recommendations tied to named nodes (not generic
 advice).
 
+When currency matters (the user asks for "latest" trends, or the report
+will inform a redesign), top up the static checklist with a short live
+lookup using `WebSearch`/`WebFetch`, per the "Trend Research Sources"
+section of the checklist file:
+
+- Award-site showcases (Awwwards, CSS Design Awards, FWA) for
+  interaction/motion/layout patterns currently recognized as best-in-class
+- Pinterest trend/mood boards for current color, texture, and visual-mood
+  trends
+
+Cite anything pulled this way as `source — title/URL — pattern observed`,
+and only use it to sharpen a tag that still traces back to a visible cue in
+the actual screenshot. If the lookup isn't available or turns up nothing
+concrete, say so and fall back to the static checklist rather than
+fabricating a source.
+
 ### 7. Report
 
 Write one report containing, in this order:

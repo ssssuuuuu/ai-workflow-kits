@@ -51,6 +51,20 @@ content cardinality, or back/close affordance). When evidence is missing or
 conflicting, the report flags the node as low-confidence instead of silently
 picking a depth.
 
+## Trend Reference Sources
+
+The trend checklist (`claude/skills/screenshot-sitemap/references/trend-checklist.md`)
+is seeded from the pattern language of award-site showcases and mood-board
+platforms, and can be topped up live for currency:
+
+- **Award-site showcases** — Awwwards, CSS Design Awards, FWA: best-in-class
+  interaction, motion, and layout patterns
+- **Pinterest trend/mood boards** — current color, texture, and visual-mood
+  trends
+
+Live lookups supplement the static checklist; every tag still has to trace
+back to a visible cue in the actual screenshot being audited.
+
 ## Evidence Contract
 
 A completed run must produce:

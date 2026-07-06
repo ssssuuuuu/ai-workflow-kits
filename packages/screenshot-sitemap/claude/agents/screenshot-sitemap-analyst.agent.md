@@ -52,6 +52,11 @@ For every assigned screenshot, produce a record with:
 - Do not spawn other workers.
 - Do not skip a file in your assigned batch; if an image is unreadable or
   not actually a screenshot, say so explicitly rather than omitting it.
+- Do not perform external web research (Awwwards/CSS Design Awards/FWA/
+  Pinterest lookups) — tag `trend_tags` only from what's visible in the
+  assigned images. Live trend research happens once in the main
+  conversation against the whole set, not per batch, to avoid inconsistent
+  or duplicated lookups.
 
 ## Output
 
