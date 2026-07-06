@@ -67,6 +67,14 @@ const run = async () => {
   const orgs = JSON.parse(org.result.content[0].text);
   assert(orgs.every((c) => c.atomicLevel === "organism"), "list_components filters by atomicLevel");
 
+  const atomsRes = await request("tools/call", { name: "list_components", arguments: { atomicLevel: "atom" } });
+  const atoms = JSON.parse(atomsRes.result.content[0].text);
+  assert(atoms.length >= 10 && atoms.some((c) => c.name === "Button"), `atom registry served (>=10 atoms incl Button, got ${atoms.length})`);
+
+  const sw = await request("tools/call", { name: "search_components", arguments: { query: "toggle" } });
+  const swHits = JSON.parse(sw.result.content[0].text);
+  assert(swHits.some((c) => c.name === "Switch"), "search 'toggle' resolves to Switch (consolidated)");
+
   const gc = await request("tools/call", { name: "get_component_spec", arguments: { name: "ProductCard" } });
   const spec = JSON.parse(gc.result.content[0].text);
   assert(spec.name === "ProductCard" && Array.isArray(spec.slots), "get_component_spec returns full spec with slots");

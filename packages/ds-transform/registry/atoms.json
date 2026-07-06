@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Text",
+    "atomicLevel": "atom",
+    "description": "본문·문단 텍스트 원자.",
+    "variants": [
+      { "axis": "role", "values": ["body", "caption"], "default": "body" },
+      { "axis": "tone", "values": ["default", "muted"], "default": "default" }
+    ],
+    "states": ["default"],
+    "tokens": [{ "name": "text-color-default", "references": "color-text-default" }],
+    "accessibility": ["문단은 시맨틱 <p>로 렌더한다."],
+    "consolidates": ["p"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#178-label--description--title-아이템-스펙"
+  },
+  {
+    "name": "Title",
+    "atomicLevel": "atom",
+    "description": "제목/헤딩 텍스트 원자.",
+    "variants": [
+      { "axis": "level", "values": ["display", "title", "heading"], "default": "title" },
+      { "axis": "size", "values": ["lg", "md", "sm"], "default": "md" }
+    ],
+    "states": ["default"],
+    "accessibility": ["문서 구조에 맞는 시맨틱 heading(h1–h6)으로 렌더한다."],
+    "consolidates": ["title"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#178-label--description--title-아이템-스펙"
+  },
+  {
+    "name": "Description",
+    "atomicLevel": "atom",
+    "description": "필드/타이틀 아래의 보조 설명(helper) 텍스트.",
+    "variants": [
+      { "axis": "tone", "values": ["default", "error", "warning", "success"], "default": "default" }
+    ],
+    "states": ["default"],
+    "accessibility": ["연관 컨트롤과 aria-describedby로 연결. 에러 톤이면 helper 슬롯을 error 메시지로 대체한다."],
+    "consolidates": ["description"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#178-label--description--title-아이템-스펙"
+  },
+  {
+    "name": "Button",
+    "atomicLevel": "atom",
+    "description": "액션을 실행하는 버튼. 스타일은 kind, 크기는 size 변형으로 통합한다.",
+    "slots": [
+      { "name": "label", "accepts": "text" },
+      { "name": "icon", "accepts": "Icon", "optional": true }
+    ],
+    "variants": [
+      { "axis": "kind", "values": ["primary", "secondary", "tertiary", "ghost", "danger"], "default": "primary" },
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" }
+    ],
+    "states": ["default", "hover", "focus", "active", "disabled", "loading"],
+    "tokens": [{ "name": "button-primary-background", "references": "color-brand-primary" }],
+    "compositionApi": "props",
+    "accessibility": ["role=button; loading 시 aria-busy=true; 아이콘 전용은 IconButton을 쓴다."],
+    "consolidates": ["btn1 (→ kind=primary)", "btn2 (→ kind=secondary)"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#177-button-아이템-스펙"
+  },
+  {
+    "name": "IconButton",
+    "atomicLevel": "atom",
+    "description": "아이콘만 있는 버튼.",
+    "slots": [{ "name": "icon", "accepts": "Icon" }],
+    "variants": [
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" },
+      { "axis": "shape", "values": ["square", "circle"], "default": "square" }
+    ],
+    "states": ["default", "hover", "focus", "disabled"],
+    "accessibility": ["텍스트 라벨이 없으므로 aria-label이 필수다."],
+    "consolidates": [],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#177-button-아이템-스펙"
+  },
+  {
+    "name": "Input",
+    "atomicLevel": "atom",
+    "description": "단일행 입력 필드. 숫자 입력은 type=number 변형으로 통합한다.",
+    "slots": [
+      { "name": "label", "accepts": "text", "optional": true },
+      { "name": "leading", "accepts": "Icon", "optional": true },
+      { "name": "trailing", "accepts": "Icon", "optional": true },
+      { "name": "helper", "accepts": "Description", "optional": true }
+    ],
+    "variants": [
+      { "axis": "type", "values": ["text", "number", "password", "email", "search", "tel"], "default": "text" },
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" },
+      { "axis": "style", "values": ["outlined", "filled"], "default": "outlined" }
+    ],
+    "states": ["default", "focus", "filled", "error", "disabled", "readonly"],
+    "accessibility": ["label과 for/id로 연결; 에러 시 aria-invalid=true + aria-describedby로 helper를 연결한다."],
+    "consolidates": ["input", "number (→ type=number)"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "Radio",
+    "atomicLevel": "atom",
+    "description": "상호배타 선택지 중 하나를 고르는 라디오. 그룹은 RadioGroup으로 분리한다.",
+    "slots": [{ "name": "label", "accepts": "text", "optional": true }],
+    "variants": [
+      { "axis": "selection", "values": ["unselected", "selected"], "default": "unselected" }
+    ],
+    "states": ["default", "hover", "focus", "disabled", "readonly"],
+    "accessibility": ["role=radio, aria-checked; 그룹은 fieldset/legend 또는 RadioGroup으로 묶는다."],
+    "consolidates": ["radio"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#176-checkbox--radio-아이템-스펙"
+  },
+  {
+    "name": "Checkbox",
+    "atomicLevel": "atom",
+    "description": "선택/미선택/불확정 상태를 가지는 체크박스.",
+    "slots": [{ "name": "label", "accepts": "text", "optional": true }],
+    "variants": [
+      { "axis": "selection", "values": ["unselected", "selected", "indeterminate"], "default": "unselected" }
+    ],
+    "states": ["default", "hover", "focus", "disabled", "readonly", "error"],
+    "accessibility": ["role=checkbox, aria-checked=true|false|mixed(indeterminate)."],
+    "consolidates": [],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#176-checkbox--radio-아이템-스펙"
+  },
+  {
+    "name": "Select",
+    "atomicLevel": "atom",
+    "description": "옵션 목록에서 선택하는 컨트롤. 옵션은 네임스페이스 자식(Select.Option)으로 노출한다.",
+    "slots": [
+      { "name": "trigger", "accepts": "text | Icon" },
+      { "name": "menu", "accepts": "Option", "repeatable": true }
+    ],
+    "variants": [
+      { "axis": "mode", "values": ["single", "multiple"], "default": "single" },
+      { "axis": "searchable", "values": ["off", "on"], "default": "off" },
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" }
+    ],
+    "states": ["default", "focus", "open", "filled", "disabled"],
+    "compositionApi": "compound",
+    "children": ["Select.Option"],
+    "accessibility": ["role=combobox/listbox; 옵션은 role=option, 선택 시 aria-selected=true."],
+    "consolidates": ["select"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "Switch",
+    "atomicLevel": "atom",
+    "description": "즉시 적용되는 이진 on/off 컨트롤. 일부 시스템은 Toggle로 부른다(동일 원자).",
+    "slots": [{ "name": "label", "accepts": "text", "optional": true }],
+    "variants": [
+      { "axis": "state", "values": ["off", "on"], "default": "off" },
+      { "axis": "size", "values": ["sm", "md"], "default": "md" }
+    ],
+    "states": ["default", "hover", "focus", "disabled", "readonly"],
+    "accessibility": ["role=switch, aria-checked; 즉시 적용(별도 제출 불필요) — 제출형 다중선택은 Checkbox를 쓴다."],
+    "consolidates": ["switch", "toggle"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "Icon",
+    "atomicLevel": "atom",
+    "description": "장식 또는 의미 전달용 아이콘.",
+    "variants": [
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" }
+    ],
+    "states": ["default"],
+    "accessibility": ["장식이면 aria-hidden=true; 의미가 있으면 title 또는 aria-label을 준다."],
+    "consolidates": [],
+    "status": "net-new",
+    "docsRef": "docs/component-catalog-index.md"
+  }
+]

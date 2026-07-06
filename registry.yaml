@@ -75,5 +75,6 @@ packages:
       - agent
       - skill
       - schema
+      - registry
       - plugin
       - example
