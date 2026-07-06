@@ -8,6 +8,9 @@ for `screenshot-sitemap`.
 - Folder: `./shots` (12 files)
 - Screenshots: `shot_01.png` … `shot_12.png`
 - Excluded/unreadable: none
+- HTML docs: `./html-audit` (3 files, 9 documented pages; 8 matched to
+  screenshots, 1 documented page without a screenshot, 4 screenshots
+  without a doc)
 
 ## 2. Depth-Normalized Tree
 
@@ -85,3 +88,45 @@ entry point exists anywhere in Account or Shop navigation.
 3. Extend the confetti/success micro-animation pattern from Order
    Confirmation (`shot_12.png`) to the Addresses save action
    (`shot_10.png`) for interaction consistency.
+
+## 6. Consulting (visual x markup cross-check)
+
+**Executive summary.** The storefront looks current (bento tiles, dark
+mode, micro-interactions) but the markup under the two highest-traffic
+templates is behind the design: the listing grid ships no responsive/lazy
+image attributes and the checkout form is only partially labeled. The
+Detail template is the opposite — dated-looking but semantically solid —
+so a visual refresh there is cheap. Two quick wins (breadcrumb JSON-LD,
+`aria-current` on nav) can ship without design involvement.
+
+**Scorecard per section**
+
+| Section | Visual currency | Markup quality |
+| --- | --- | --- |
+| Shop / Listing | current | weak |
+| Detail | dated | solid |
+| Cart & Checkout | current | weak |
+| Account | mixed | solid |
+
+**Findings (prioritized)**
+
+1. `critical` — Shipping form (`shot_11.png`, doc `checkout.md`): visible
+   card-number and phone fields, but doc shows `<input type="text">`
+   with no `label for=` or `autocomplete` — conversion and a11y risk on
+   the money page. Recommend typed inputs + `autocomplete="cc-number"`,
+   `tel`.
+2. `major` — Running Shoes listing (`shot_09.png`, doc `listing.md`):
+   24-item image grid, but doc shows plain `<img src>` with no `srcset`,
+   `loading`, or dimensions — performance debt at the highest image
+   count. Recommend `srcset` + `loading="lazy"` + width/height.
+3. `quick-win` — Detail page (`shot_02.png`, doc `pdp.md`): breadcrumb
+   visible in the screenshot, doc shows plain `<div class="crumbs">` —
+   add `nav aria-label="breadcrumb"` + `BreadcrumbList` JSON-LD.
+4. `quick-win` — All nav screenshots: active item styled visually, doc
+   shows no `aria-current="page"` — state exists visually but not
+   programmatically.
+
+**Insufficient evidence.** `shot_04.png` (Home), `shot_05.png`,
+`shot_07.png`, `shot_12.png` have no matching doc page; documented page
+`/gift-cards` has no screenshot. These appear in the sitemap but are
+excluded from cross-check findings.

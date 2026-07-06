@@ -2,7 +2,9 @@
 
 Screenshot Sitemap turns a folder of random, unordered website screenshots into a
 depth-aligned sitemap tree, annotated with modern UI/UX pattern and web-trend
-analysis.
+analysis. When documents listing each page's HTML attributes and tags are also
+provided, it cross-checks visual design against markup quality and produces a
+consulting report.
 
 ## Purpose
 
@@ -12,16 +14,20 @@ crawl order, no URLs, no file-name convention — and need to answer:
 - What is the actual information architecture of this site?
 - Which screen sits at which depth, and how do sections compare to each other?
 - Where does the design already use current web trends, and where is it dated?
+- Does the markup underneath match the design on top — or is a modern-looking
+  screen sitting on div-soup with no semantics, a11y, or structured data?
 
-This package defines the method (skill) and the vision worker (agent) to turn
-that folder into one evidence-backed sitemap report instead of a guess.
+This package defines the method (skill) and the workers (agents) to turn
+those inputs into one evidence-backed sitemap + consulting report instead of
+a guess.
 
 ## Start Here
 
 | I use... | Open this |
 | --- | --- |
 | Claude Code skill | [`claude/skills/screenshot-sitemap/SKILL.md`](claude/skills/screenshot-sitemap/SKILL.md) |
-| Claude Code agent | [`claude/agents/screenshot-sitemap-analyst.agent.md`](claude/agents/screenshot-sitemap-analyst.agent.md) |
+| Claude Code agent (vision) | [`claude/agents/screenshot-sitemap-analyst.agent.md`](claude/agents/screenshot-sitemap-analyst.agent.md) |
+| Claude Code agent (HTML docs) | [`claude/agents/html-signal-analyst.agent.md`](claude/agents/html-signal-analyst.agent.md) |
 | Claude Code command | [`claude/commands/screenshot-sitemap.md`](claude/commands/screenshot-sitemap.md) |
 | Korean guide | [`docs/ko/screenshot-sitemap-guide.md`](docs/ko/screenshot-sitemap-guide.md) |
 
@@ -41,8 +47,10 @@ package currently ships a Claude Code implementation only.
 
 ```text
 inventory screenshots -> read each screen -> extract depth evidence
+  (+ parse HTML docs, match pages to screens when provided)
   -> normalize depth across sections -> assemble tree -> audit against
-  current UI/UX + web-trend patterns -> report with conflicts flagged
+  current UI/UX + web-trend patterns -> cross-check visual x markup
+  -> report with consulting findings and conflicts flagged
 ```
 
 Depth is never assigned by file order or guesswork alone. Every depth
@@ -80,6 +88,10 @@ A completed run must produce:
   present, absent, or dated per section, with concrete recommendations
 - `unresolved_conflicts` — any screenshot whose evidence pointed to more than
   one plausible depth or parent, left explicit rather than resolved by guess
+- `consulting_findings_with_paired_evidence` — when HTML docs are provided:
+  every finding cites both a visual cue from the screenshot and quoted markup
+  from the doc, with severity (`critical`/`major`/`minor`/`quick-win`), rolled
+  up into an executive summary, per-section scorecard, and prioritized roadmap
 
 ## Runtime Cases
 
