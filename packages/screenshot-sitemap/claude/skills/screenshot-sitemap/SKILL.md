@@ -14,15 +14,17 @@ description: >
   문서랑 같이 분석해서 컨설팅 결과 뽑아줘", "build a sitemap from
   these screenshots", "map out this site's IA from screenshots", or any
   request to reconstruct site structure, page hierarchy, UI/UX trend
-  coverage, or a design+markup consulting report from screenshots and
-  recordings.
+  coverage, an observed design system, a UI/UX guide, or a comprehensive
+  design+markup consulting report from screenshots and recordings.
 ---
 
 # screenshot-sitemap
 
-Reconstruct a depth-aligned sitemap tree from a folder of unordered
-screenshots, then audit the screens against current UI/UX and web-trend
-patterns.
+Turn unordered screenshots and video frames into one comprehensive
+analysis report: a depth-aligned sitemap tree, a trend audit, the
+observed design system, a UI/UX guide, and (with HTML docs) consulting
+findings. The sitemap is the skeleton; the deliverable is the whole
+report.
 
 Never assign depth from file order, file name, or a single glance. Depth
 comes from cited visual evidence, and every node in the final tree must use
@@ -224,27 +226,64 @@ Findings must cite both sides of the evidence. If a page has only a
 screenshot or only a doc, it can appear in the sitemap but not in a
 cross-check finding — list it under "insufficient evidence" instead.
 
-### 9. Report
+### 9. Extract the observed design system
+
+Follow `references/design-system-audit.md`, parts 1-2. From the full
+screen set (screenshots + kept frames), reverse-engineer:
+
+- **Observed tokens** — color roles with approximate hex, typography
+  families/weights/scale, radius/spacing/elevation families, icon style —
+  each token citing at least one screen it was sampled from
+- **Component inventory** — a component-by-screen matrix with variants,
+  captured states (`not observed` is a valid state), and drift findings
+  (same component styled differently on different screens, both cited)
+
+This is observation, not invention: never describe a token or component
+no screen shows.
+
+### 10. Write the UI/UX guide
+
+Follow `references/design-system-audit.md`, part 3. Evaluate the *flows*
+the tree reveals against the 8-point rubric (orientation, status,
+consistency, error recovery, recognition, efficiency, visual
+accessibility, emotional quality), then write concrete guidelines in
+three buckets — **Keep** (works, codify it), **Change** (violation +
+screen + fix), **Codify** (de facto standards that should become written
+rules) — every item anchored to named screens. Video frames are the best
+source for status/transition findings; use them.
+
+### 11. Comprehensive report
 
 Write one report containing, in this order:
 
-1. **Input summary** — folder, screenshot count, videos with
+1. **Executive summary** — 5-8 sentences: what the product is, IA health,
+   design currency, system maturity, top risks and quick wins. Written
+   last, placed first.
+2. **Input summary** — folder, screenshot count, videos with
    extracted/deduped/kept frame counts, doc count, unmatched pages, any
    unreadable/excluded files
-2. **Depth-normalized tree** — Markdown tree + Mermaid diagram
-3. **Per-node table** — depth, file (with `video @ mm:ss` provenance for
+3. **Depth-normalized tree** — Markdown tree + Mermaid diagram
+4. **Per-node table** — depth, file (with `video @ mm:ss` provenance for
    frames), title, page type, trend tags, HTML signal summary, evidence
-4. **Conflicts / low-confidence flags** — anything needing human
+5. **Conflicts / low-confidence flags** — anything needing human
    confirmation, with both competing readings shown
-5. **Trend alignment summary** — current vs. dated patterns, with
+6. **Trend alignment summary** — current vs. dated patterns, with
    recommendations anchored to specific nodes
-6. **Consulting section** (when `html_docs` provided) — executive summary,
-   per-section scorecard, prioritized findings and roadmap from step 8
+7. **Observed design system** — token tables, component matrix, drift
+   findings, maturity verdict (`consistent | drifting | ad hoc` per
+   tokens/components/patterns) from step 9
+8. **UI/UX guide** — Keep / Change / Codify guidelines from step 10
+9. **Consulting section** (when `html_docs` provided) — per-section
+   scorecard, prioritized findings from step 8
+10. **Unified roadmap** — one merged, prioritized list across trend,
+    design-system, UI/UX, and consulting findings: quick wins first,
+    then structural work, each item citing its evidence
 
-Never mark the sitemap "complete" if any screenshot was silently dropped
+Never mark the report "complete" if any screenshot was silently dropped
 from the inventory, or if a depth was assigned with zero cited evidence.
-Never mark the consulting section complete if any finding lacks its paired
-visual + markup evidence.
+Never include a consulting finding without paired visual + markup
+evidence, a token or component no screen shows, or a guideline without a
+named screen behind it.
 
 ## Delegating to the agents
 
@@ -254,18 +293,24 @@ batches (e.g. 8-10 images per batch); for many HTML docs, dispatch
 recording contiguous and in timestamp order within a batch so the agent
 can fill in `transition_note` — don't shuffle recordings together. Both agents only extract
 and report facts with quoted evidence — screenshot/doc matching, depth
-normalization, tree assembly, the trend rollup, and the consulting
-synthesis all stay in the main conversation so the whole set is compared
-consistently.
+normalization, tree assembly, the trend rollup, design-system and UI/UX
+synthesis, and the consulting synthesis all stay in the main conversation
+so the whole set is compared consistently. The per-image `ui_inventory`
+and `style_sample` fields the vision agent returns are the raw material
+for the design-system step.
 
 ## Output
 
 ```text
+Executive Summary: <IA health | design currency | system maturity | top risks & quick wins>
 Input: <folder>, <N> screenshots (<M> excluded/unreadable), <V> videos
        (<E> frames extracted -> <K> kept after dedup), <D> html docs
 Tree: <markdown tree + mermaid>
 Nodes: <table: depth | file | title | type | trend tags | html signals | evidence>
 Conflicts: <list, or "none">
 Trend Alignment Summary: <current patterns | dated patterns | recommendations>
-Consulting: <executive summary | scorecard | prioritized roadmap>  (when html_docs provided)
+Design System (observed): <token tables | component matrix | drift | maturity verdict>
+UI/UX Guide: <Keep | Change | Codify — all screen-anchored>
+Consulting: <scorecard | prioritized findings>  (when html_docs provided)
+Unified Roadmap: <quick wins -> structural, merged across all sections>
 ```

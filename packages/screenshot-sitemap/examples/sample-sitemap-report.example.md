@@ -3,6 +3,16 @@
 Fictitious brand, fictitious screenshots. Shows the expected output shape
 for `screenshot-sitemap`.
 
+## Executive Summary
+
+Northline Goods is a four-section e-commerce storefront with a healthy,
+shallow IA (max depth 5, no orphan branches). The design reads current
+(bento tiles, dark mode, micro-interactions) but the system underneath is
+drifting: two primary blues, a radius outlier, no loading standard, and
+the two highest-traffic templates (listing, checkout) carry the weakest
+markup. Three quick wins ship without design involvement; the one
+critical item is the under-labeled checkout form.
+
 ## 1. Input Summary
 
 - Folder: `./shots` (12 files)
@@ -130,3 +140,62 @@ so a visual refresh there is cheap. Two quick wins (breadcrumb JSON-LD,
 `shot_07.png`, `shot_12.png` have no matching doc page; documented page
 `/gift-cards` has no screenshot. These appear in the sitemap but are
 excluded from cross-check findings.
+
+## 7. Observed Design System
+
+**Tokens (sampled, with source screens)**
+
+| Role | Value (approx.) | Sampled from |
+| --- | --- | --- |
+| Primary action | #1A56DB | shot_04 hero CTA, shot_02 add-to-cart |
+| Primary action (drift) | #2563EB | shot_11 "Continue" button |
+| Surface | #F8FAFC | card backgrounds, shot_01/shot_09 |
+| Text primary | near-#111 | all screens |
+| Success | #16A34A | shot_12 confirmation |
+
+Typography: geometric sans, weights 400/600/800; oversized display only
+on Home. Radius family: 8px cards everywhere except `shot_10.png`
+(sharp corners) — drift. Icons: line set, except filled icons in the
+Account tab bar (`shot_05.png`) — mixed sets.
+
+**Component matrix (excerpt)**
+
+| Component | Screens | States captured | Drift |
+| --- | --- | --- | --- |
+| Primary button | 01, 02, 04, 11 | default, disabled (11) | two blues (above) |
+| Product card | 01, 09 | default | consistent |
+| Form input | 10, 11 | default, error (11 @ frame 0:58) | consistent |
+| Modal/sheet | — | not observed | — |
+
+**Maturity verdict.** Tokens: `drifting` (two primary blues, one radius
+outlier). Components: `consistent` for cards/inputs, `drifting` for
+buttons. Patterns: `ad hoc` (no captured loading standard: spinner on
+shot_09, none elsewhere). Top systemization moves: unify primary blue,
+codify the 8px radius, define one loading pattern.
+
+## 8. UI/UX Guide
+
+**Keep** — breadcrumbs at every depth >= 2 in Shop (shot_09, shot_02);
+inline validation on shipping form (video frame @ 0:58); sticky cart
+summary (shot_07).
+
+**Change** — checkout entry has no visible step indicator (shot_11):
+rubric item 1 (orientation); add a 3-step progress header. Listing uses
+spinner-only loading (shot_09): rubric item 2 (status); adopt skeletons.
+Icon-only tab bar in Account (shot_05): rubric item 5 (recognition);
+add labels.
+
+**Codify** — the 8px-radius card (9 of 12 screens) is the de facto
+standard: write it down and migrate shot_10. One primary blue (#1A56DB,
+majority) becomes the token; shot_11 adopts it.
+
+## 9. Unified Roadmap
+
+1. quick-win — breadcrumb `BreadcrumbList` JSON-LD on PDP (consulting #3)
+2. quick-win — `aria-current` on active nav (consulting #4)
+3. quick-win — unify primary blue to #1A56DB (design system)
+4. major — skeleton loaders on listing (trend + UI/UX guide, shot_09)
+5. major — `srcset`/lazy-loading on listing grid (consulting #2)
+6. critical — label + autocomplete the checkout form (consulting #1)
+7. structural — codify radius/loading standards into a written design
+   system doc; add checkout step indicator (UI/UX guide)

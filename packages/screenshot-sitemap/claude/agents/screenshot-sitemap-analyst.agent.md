@@ -54,6 +54,15 @@ For every assigned screenshot, produce a record with:
   batch — e.g. "clicked a grid item, now one product" — or `n/a`
 - `trend_tags`: rows from the trend checklist that are visibly present or
   notably absent, each with the specific visual cue
+- `ui_inventory`: component types visible on this screen (buttons by
+  variant, inputs, cards, nav, tabs, tables, badges, modals/sheets,
+  toasts, breadcrumbs, loaders, empty states) with any captured states
+  (hover/focus/disabled/loading/error) — raw material for the
+  design-system matrix assembled in the main chat
+- `style_sample`: dominant colors by role with approximate hex (primary
+  action, background, surface, text), typography traits (family
+  classification, weights), corner-radius family, icon style — sampled
+  from this screen only, with the element each value came from
 - `confidence`: `high`, `medium`, or `low`, plus why if not `high`
 
 ## Limits
@@ -66,6 +75,9 @@ For every assigned screenshot, produce a record with:
 - Do not spawn other workers.
 - Do not skip a file in your assigned batch; if an image is unreadable or
   not actually a screenshot, say so explicitly rather than omitting it.
+- Do not aggregate across screens — report `ui_inventory` and
+  `style_sample` per image only; cross-screen drift detection and the
+  design-system verdict happen in the main chat with the full set.
 - Do not perform external web research (Awwwards/CSS Design Awards/FWA/
   Pinterest lookups) — tag `trend_tags` only from what's visible in the
   assigned images. Live trend research happens once in the main

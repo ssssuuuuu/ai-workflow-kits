@@ -1,13 +1,14 @@
 # Screenshot Sitemap
 
-Screenshot Sitemap turns a folder of random, unordered website screenshots into a
-depth-aligned sitemap tree, annotated with modern UI/UX pattern and web-trend
-analysis. Recorded web/app test videos (including PowerPoint screen recordings)
-can join the input — frames are sampled at 1-2 s intervals, near-duplicates
-dropped, and kept frames analyzed like screenshots with video + timestamp
-provenance. When documents listing each page's HTML attributes and tags are also
-provided, it cross-checks visual design against markup quality and produces a
-consulting report.
+Screenshot Sitemap turns unordered screenshots and recorded test videos into
+one comprehensive analysis report: a depth-aligned sitemap tree, a web-trend
+audit, the observed design system, a UI/UX guide, and consulting findings.
+
+Recorded web/app test videos (including PowerPoint screen recordings) join the
+input — frames are sampled at 1-2 s intervals, near-duplicates dropped, and
+kept frames analyzed like screenshots with video + timestamp provenance. When
+documents listing each page's HTML attributes and tags are also provided, it
+cross-checks visual design against markup quality for the consulting section.
 
 ## Purpose
 
@@ -17,12 +18,14 @@ crawl order, no URLs, no file-name convention — and need to answer:
 - What is the actual information architecture of this site?
 - Which screen sits at which depth, and how do sections compare to each other?
 - Where does the design already use current web trends, and where is it dated?
+- What design system exists *in practice* — which tokens and components are
+  consistent, which are drifting, which are ad hoc?
+- Which UI/UX patterns should be kept, changed, or codified as written rules?
 - Does the markup underneath match the design on top — or is a modern-looking
   screen sitting on div-soup with no semantics, a11y, or structured data?
 
 This package defines the method (skill) and the workers (agents) to turn
-those inputs into one evidence-backed sitemap + consulting report instead of
-a guess.
+those inputs into one evidence-backed comprehensive report instead of a guess.
 
 ## Start Here
 
@@ -53,8 +56,10 @@ inventory screenshots (+ extract & dedup video frames when provided)
   -> read each screen -> extract depth evidence
   (+ parse HTML docs, match pages to screens when provided)
   -> normalize depth across sections -> assemble tree -> audit against
-  current UI/UX + web-trend patterns -> cross-check visual x markup
-  -> report with consulting findings and conflicts flagged
+  current UI/UX + web-trend patterns -> extract observed design system
+  -> write UI/UX guide -> cross-check visual x markup
+  -> comprehensive report: exec summary, tree, trend audit, design
+     system, UI/UX guide, consulting, unified roadmap
 ```
 
 Depth is never assigned by file order or guesswork alone. Every depth
@@ -94,10 +99,17 @@ A completed run must produce:
   present, absent, or dated per section, with concrete recommendations
 - `unresolved_conflicts` — any screenshot whose evidence pointed to more than
   one plausible depth or parent, left explicit rather than resolved by guess
+- `observed_design_system` — token tables (color/typography/shape, each
+  citing a source screen), a component-by-screen matrix with captured states
+  and drift findings, and a maturity verdict (`consistent | drifting | ad hoc`
+  per tokens/components/patterns)
+- `uiux_guide` — Keep / Change / Codify guidelines against the 8-point flow
+  rubric, every item anchored to named screens
 - `consulting_findings_with_paired_evidence` — when HTML docs are provided:
   every finding cites both a visual cue from the screenshot and quoted markup
-  from the doc, with severity (`critical`/`major`/`minor`/`quick-win`), rolled
-  up into an executive summary, per-section scorecard, and prioritized roadmap
+  from the doc, with severity (`critical`/`major`/`minor`/`quick-win`)
+- `unified_roadmap` — one merged, prioritized list across trend,
+  design-system, UI/UX, and consulting findings, quick wins first
 
 ## Runtime Cases
 

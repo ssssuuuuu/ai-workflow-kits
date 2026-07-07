@@ -33,13 +33,22 @@ The main chat should:
    explicit placeholder node for any tier a section has no screenshot for
 8. audit every node against `references/trend-checklist.md` and roll up a
    trend alignment summary with node-anchored recommendations
-9. when `--html-docs` is given, cross-check visual evidence against HTML
-   signals per `references/html-signal-checklist.md` and produce the
-   consulting section: executive summary, per-section scorecard
-   (visual currency x markup quality), prioritized findings and roadmap —
-   every finding citing both a visual cue and quoted markup
-10. write the full report and flag any unresolved depth/parent conflicts
-    instead of guessing
+9. extract the observed design system per
+   `references/design-system-audit.md`: token tables (color/type/shape,
+   each citing a source screen), a component-by-screen matrix with drift
+   findings, and a maturity verdict
+10. write the UI/UX guide from the same reference: Keep / Change / Codify
+    guidelines against the 8-point flow rubric, every item anchored to
+    named screens
+11. when `--html-docs` is given, cross-check visual evidence against HTML
+    signals per `references/html-signal-checklist.md` and produce the
+    consulting section: per-section scorecard (visual currency x markup
+    quality) and prioritized findings — every finding citing both a
+    visual cue and quoted markup
+12. write the comprehensive report — executive summary first, unified
+    roadmap last (quick wins -> structural, merged across trend,
+    design-system, UI/UX, and consulting findings) — and flag any
+    unresolved depth/parent conflicts instead of guessing
 
 ## Dispatching batches
 
@@ -72,6 +81,9 @@ Batches dispatched: <count image + count doc>
 Tree: <written to report>
 Conflicts: <count, or "none">
 Trend Alignment Summary: <included in report>
+Design System: <token/component counts, maturity verdict>
+UI/UX Guide: <Keep/Change/Codify item counts>
 Consulting: <finding counts by severity, or "not requested">
+Unified Roadmap: <item count, quick wins first>
 Status: completed | partial | blocked
 ```

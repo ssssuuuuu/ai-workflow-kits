@@ -1,11 +1,11 @@
 id: screenshot-sitemap
 name: Screenshot Sitemap
 description: >
-  Reconstruct a depth-aligned website sitemap tree from a folder of unordered
-  screenshots and recorded web/app test videos (frames sampled at 1-2 s,
-  duplicates dropped), annotated with modern UI/UX pattern and web-trend
-  analysis. Optionally cross-check documented HTML attributes/tags per page
-  to produce a design + markup consulting report.
+  Turn unordered screenshots and recorded web/app test videos (frames sampled
+  at 1-2 s, duplicates dropped) into one comprehensive analysis report: a
+  depth-aligned sitemap tree, a web-trend audit, the observed design system,
+  a UI/UX guide, and — with documented HTML attributes/tags per page — a
+  design + markup consulting section with a unified roadmap.
 category: ux-analysis
 status: active
 runtimes:
@@ -38,4 +38,7 @@ evidence_required:
   - trend_alignment_summary
   - unresolved_conflicts
   - video_frame_counts_extracted_dropped_kept  # when videos input is provided
+  - observed_design_system_with_cited_screens
+  - uiux_guide_keep_change_codify
   - consulting_findings_with_paired_evidence  # when html_docs input is provided
+  - unified_roadmap
