@@ -23,21 +23,35 @@ the full set of screenshots gets compared consistently.
 
 ## Responsibilities
 
+Assigned images are standalone screenshots or deduplicated video frames;
+the main chat passes each frame's provenance (`video-frame <video> @
+<mm:ss>`) and within-recording order. Frame extraction and dedup are
+already done — never re-derive or question them, just analyze the images
+given.
+
 For every assigned screenshot, produce a record with:
 
 - `file`: the screenshot's path
+- `source`: `screenshot` or the provided `video-frame <video> @ <mm:ss>`
+  provenance, copied verbatim
 - `title`: your best inference of the page's title or purpose
 - `breadcrumb_or_url`: any visible breadcrumb trail or URL bar text, quoted
   verbatim, or `none visible`
 - `nav_highlight`: which nav item (if any) appears active/highlighted
 - `page_type`: one of `home/landing`, `section hub`, `listing/search-results`,
   `detail/record`, `transactional/form`, `account/settings`,
-  `modal/overlay`, `error/empty-state`, or `unclear`
+  `modal/overlay`, `error/empty-state`, `transition/loading` (video frames
+  caught mid-navigation: blur, half-rendered page — but a stable skeleton
+  or spinner state is a real page state, tag its loading style in
+  `trend_tags`), or `unclear`
 - `content_cardinality`: `single hero subject`, `grid of many similar
   items`, `one item's full detail`, or `single-purpose form/step`
 - `depth_signal`: the single strongest cue for depth (breadcrumb segment
   count > URL segments > nav nesting > cardinality > back/close affordance)
   and which one you used
+- `transition_note` (video frames only): what visibly changed from the
+  previous frame in the same recording, if that frame was also in your
+  batch — e.g. "clicked a grid item, now one product" — or `n/a`
 - `trend_tags`: rows from the trend checklist that are visibly present or
   notably absent, each with the specific visual cue
 - `confidence`: `high`, `medium`, or `low`, plus why if not `high`

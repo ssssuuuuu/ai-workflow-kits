@@ -2,7 +2,10 @@
 
 Screenshot Sitemap turns a folder of random, unordered website screenshots into a
 depth-aligned sitemap tree, annotated with modern UI/UX pattern and web-trend
-analysis. When documents listing each page's HTML attributes and tags are also
+analysis. Recorded web/app test videos (including PowerPoint screen recordings)
+can join the input — frames are sampled at 1-2 s intervals, near-duplicates
+dropped, and kept frames analyzed like screenshots with video + timestamp
+provenance. When documents listing each page's HTML attributes and tags are also
 provided, it cross-checks visual design against markup quality and produces a
 consulting report.
 
@@ -46,7 +49,8 @@ package currently ships a Claude Code implementation only.
 ## Method Summary
 
 ```text
-inventory screenshots -> read each screen -> extract depth evidence
+inventory screenshots (+ extract & dedup video frames when provided)
+  -> read each screen -> extract depth evidence
   (+ parse HTML docs, match pages to screens when provided)
   -> normalize depth across sections -> assemble tree -> audit against
   current UI/UX + web-trend patterns -> cross-check visual x markup
@@ -78,7 +82,9 @@ back to a visible cue in the actual screenshot being audited.
 A completed run must produce:
 
 - `screenshot_inventory` — every image file found in the input folder, none
-  silently skipped
+  silently skipped; for video inputs, extracted/dropped/kept frame counts
+  per recording, with each kept frame carrying `video-frame <file> @ <mm:ss>`
+  provenance
 - `depth_normalized_tree` — one tree where every branch uses the same depth
   tiers (Home -> Section -> Listing -> Detail -> Transactional/Utility),
   with explicit placeholder nodes for tiers no screenshot covers

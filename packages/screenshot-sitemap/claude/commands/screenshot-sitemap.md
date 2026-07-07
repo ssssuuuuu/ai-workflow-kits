@@ -4,33 +4,42 @@ Use this command pattern from the main chat:
 
 ```text
 /screenshot-sitemap <folder-path>
+/screenshot-sitemap <folder-path> --videos <video-or-pptx-path>
 /screenshot-sitemap <folder-path> --html-docs <docs-path>
 ```
 
 The main chat should:
 
 1. inventory every image file in `<folder-path>` — none silently skipped
-2. for small folders (roughly <= 15 images), read screenshots directly; for
-   larger folders, dispatch `screenshot-sitemap-analyst` in batches of
-   8-10 images
-3. when `--html-docs` is given, read the documents (dispatching
+2. when `--videos` is given, run the pipeline in
+   `references/video-frame-extraction.md`: unzip `pptx` media, extract
+   frames with ffmpeg at a 1-2 s interval, drop near-duplicates with the
+   difference-hash script, and add kept frames to the inventory with
+   `video-frame <file> @ <mm:ss>` provenance — reporting
+   extracted/dropped/kept counts
+3. for small sets (roughly <= 15 images), read images directly; for
+   larger sets, dispatch `screenshot-sitemap-analyst` in batches of
+   8-10 images, keeping frames from one recording contiguous and in
+   timestamp order
+4. when `--html-docs` is given, read the documents (dispatching
    `html-signal-analyst` in batches if there are many) and match each
    documented page to a screenshot by URL, title, or page name — unmatched
    pages on either side stay listed, never force-paired
-4. collect the structured per-image and per-page records from all batches
-5. normalize depth across the whole set using the shared tier scale
-   (Home -> Section -> Listing -> Detail -> Transactional -> Terminal)
-6. assemble the depth-normalized tree (Markdown + Mermaid) — inserting an
+5. collect the structured per-image and per-page records from all batches
+6. normalize depth across the whole set using the shared tier scale
+   (Home -> Section -> Listing -> Detail -> Transactional -> Terminal);
+   recording transition order is supporting evidence only
+7. assemble the depth-normalized tree (Markdown + Mermaid) — inserting an
    explicit placeholder node for any tier a section has no screenshot for
-7. audit every node against `references/trend-checklist.md` and roll up a
+8. audit every node against `references/trend-checklist.md` and roll up a
    trend alignment summary with node-anchored recommendations
-8. when `--html-docs` is given, cross-check visual evidence against HTML
+9. when `--html-docs` is given, cross-check visual evidence against HTML
    signals per `references/html-signal-checklist.md` and produce the
    consulting section: executive summary, per-section scorecard
    (visual currency x markup quality), prioritized findings and roadmap —
    every finding citing both a visual cue and quoted markup
-9. write the full report and flag any unresolved depth/parent conflicts
-   instead of guessing
+10. write the full report and flag any unresolved depth/parent conflicts
+    instead of guessing
 
 ## Dispatching batches
 
@@ -57,6 +66,7 @@ cross-checking, and consulting synthesis wait for both.
 ```text
 Folder: <path>
 Screenshots: <count> (<count> excluded/unreadable)
+Videos: <count> (<frames extracted> -> <frames kept> after dedup)
 HTML docs: <count> (<count> pages, <count> unmatched either side)
 Batches dispatched: <count image + count doc>
 Tree: <written to report>
