@@ -173,5 +173,51 @@
     "consolidates": [],
     "status": "net-new",
     "docsRef": "docs/component-catalog-index.md"
+  },
+  {
+    "name": "Slider",
+    "atomicLevel": "atom",
+    "description": "연속 또는 이산 값을 범위에서 선택하는 슬라이더.",
+    "variants": [
+      { "axis": "mode", "values": ["single", "range"], "default": "single" },
+      { "axis": "orientation", "values": ["horizontal", "vertical"], "default": "horizontal" }
+    ],
+    "states": ["default", "hover", "focus", "dragging", "disabled"],
+    "accessibility": ["role=slider, aria-valuemin/valuemax/valuenow; 키보드 화살표로 조정한다."],
+    "consolidates": ["slider"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "Rating",
+    "atomicLevel": "atom",
+    "description": "별점 등으로 평가값을 입력하거나 표시한다.",
+    "slots": [{ "name": "icon", "accepts": "Icon", "optional": true }],
+    "variants": [
+      { "axis": "mode", "values": ["input", "display"], "default": "input" },
+      { "axis": "precision", "values": ["full", "half"], "default": "full" },
+      { "axis": "size", "values": ["sm", "md", "lg"], "default": "md" }
+    ],
+    "states": ["default", "hover", "focus", "readonly", "disabled"],
+    "accessibility": ["입력형은 role=slider 또는 radiogroup; 표시형은 aria-label로 '5점 중 4점'처럼 값을 제공한다."],
+    "consolidates": ["rating"],
+    "status": "net-new",
+    "docsRef": "docs/component-catalog-index.md"
+  },
+  {
+    "name": "SegmentedControl",
+    "atomicLevel": "atom",
+    "description": "소수의 상호배타 옵션을 한 줄 세그먼트로 전환하는 컨트롤.",
+    "slots": [{ "name": "segments", "accepts": "text | Icon", "repeatable": true }],
+    "variants": [
+      { "axis": "size", "values": ["sm", "md"], "default": "md" }
+    ],
+    "states": ["default", "focus", "disabled"],
+    "compositionApi": "compound",
+    "children": ["SegmentedControl.Item"],
+    "accessibility": ["role=radiogroup, 각 세그먼트 role=radio + aria-checked; 2–5개 옵션을 권장한다."],
+    "consolidates": ["segmented control"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu"
   }
 ]
