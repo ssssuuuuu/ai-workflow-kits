@@ -254,6 +254,14 @@ source for status/transition findings; use them.
 
 ### 11. Comprehensive report
 
+Pick the output mode first, per `references/report-modes.md`: **실무 상세**
+(default — evidence tags and IDs in the body), **경영 보고** (executive —
+conclusions/numbers/asks first, detail collapsed into appendices, cost
+language instead of analyst language), or **심플 문서형** (Korean
+formal-document style — Ⅰ/Ⅱ/Ⅲ numbering, table-centric, minimal color).
+Signals like "상급자 보고", "경영진", "결재 문서", "심플하게" switch the
+mode; the content below stays the same in all three.
+
 Write one report containing, in this order:
 
 1. **Executive summary** — 5-8 sentences: what the product is, IA health,

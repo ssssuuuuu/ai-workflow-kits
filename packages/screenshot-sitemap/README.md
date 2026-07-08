@@ -36,6 +36,7 @@ those inputs into one evidence-backed comprehensive report instead of a guess.
 | Claude Code agent (HTML docs) | [`claude/agents/html-signal-analyst.agent.md`](claude/agents/html-signal-analyst.agent.md) |
 | Claude Code command | [`claude/commands/screenshot-sitemap.md`](claude/commands/screenshot-sitemap.md) |
 | Korean guide | [`docs/ko/screenshot-sitemap-guide.md`](docs/ko/screenshot-sitemap-guide.md) |
+| Local install guide (한국어) | [`docs/install-local.md`](docs/install-local.md) |
 
 Other runtimes (Codex, Gemini, Copilot) are `planned` — not built yet. This
 package currently ships a Claude Code implementation only.
