@@ -1,5 +1,5 @@
 version: 1
-updated_at: "2026-05-27"
+updated_at: "2026-07-05"
 packages:
   - id: package-authoring
     name: Package Authoring
@@ -52,3 +52,28 @@ packages:
       - hook
       - instruction
       - example
+  - id: screenshot-sitemap
+    name: Screenshot Sitemap
+    description: Depth-aligned sitemap tree and UI/UX trend audit reconstructed from a folder of unordered screenshots.
+    category: ux-analysis
+    status: active
+    path: packages/screenshot-sitemap
+    runtimes:
+      codex:
+        status: planned
+        path: packages/screenshot-sitemap/codex
+      claude:
+        status: active
+        path: packages/screenshot-sitemap/claude
+      gemini:
+        status: planned
+        path: packages/screenshot-sitemap/gemini
+      copilot:
+        status: planned
+        path: packages/screenshot-sitemap/copilot
+    artifacts:
+      - skill
+      - agent
+      - command
+      - example
+      - guide

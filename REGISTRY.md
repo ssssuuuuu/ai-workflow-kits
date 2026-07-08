@@ -6,6 +6,7 @@ This file is the human-readable catalog for AI Workflow Kits.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [`package-authoring`](packages/package-authoring/README.md) | Meta workflow for adding public-safe packages and runtime artifacts | Active | Draft | Stub | Stub | Active |
 | [`keepworking`](packages/keepworking/README.md) | Long-running evidence-first workflow loop | Active | Active | Draft | Draft | Active |
+| [`screenshot-sitemap`](packages/screenshot-sitemap/README.md) | Depth-aligned sitemap tree + UI/UX trend audit from a screenshot folder | Planned | Active | Planned | Planned | Active |
 
 ## Status Values
 
