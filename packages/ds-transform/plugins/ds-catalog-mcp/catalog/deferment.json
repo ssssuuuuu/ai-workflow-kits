@@ -1,0 +1,108 @@
+[
+  {
+    "name": "AppBar",
+    "atomicLevel": "organism",
+    "description": "모바일 상단 앱바. 뒤로가기·타이틀·우측 도구 아이콘을 배치한다.",
+    "slots": [
+      { "name": "leading", "accepts": "IconButton" },
+      { "name": "badge", "accepts": "Badge", "optional": true },
+      { "name": "title", "accepts": "Title" },
+      { "name": "actions", "accepts": "IconButton", "repeatable": true, "optional": true }
+    ],
+    "variants": [],
+    "states": ["default", "scrolled"],
+    "compositionApi": "compound",
+    "children": ["IconButton", "Badge", "Title"],
+    "accessibility": ["landmark <header>; 아이콘 액션은 aria-label 필수."],
+    "consolidates": ["상단 헤더(뒤로/TEST 배지/타이틀/글자크기/메뉴)"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#192-앱-셸과-영역region-슬롯"
+  },
+  {
+    "name": "DescriptionList",
+    "atomicLevel": "molecule",
+    "description": "라벨-값 쌍을 그리드로 나열하는 속성표.",
+    "slots": [{ "name": "items", "accepts": "DescriptionItem", "repeatable": true }],
+    "variants": [
+      { "axis": "columns", "values": ["1", "2"], "default": "2" }
+    ],
+    "states": ["default", "empty"],
+    "compositionApi": "compound",
+    "children": ["DescriptionItem"],
+    "accessibility": ["시맨틱 <dl><dt><dd> 구조를 권장한다."],
+    "consolidates": ["유예시작월/종료월/기간/진행단계/심사결과/통지서 속성 그리드"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#172-detail--속성표description-아이템-스펙"
+  },
+  {
+    "name": "DescriptionItem",
+    "family": "DescriptionList",
+    "atomicLevel": "atom",
+    "description": "속성표의 한 라벨-값 쌍.",
+    "slots": [
+      { "name": "label", "accepts": "text" },
+      { "name": "value", "accepts": "text" }
+    ],
+    "variants": [],
+    "states": ["default", "empty"],
+    "accessibility": ["label=<dt>, value=<dd>."],
+    "consolidates": [],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#172-detail--속성표description-아이템-스펙"
+  },
+  {
+    "name": "ApplicationCard",
+    "atomicLevel": "organism",
+    "description": "신청 건 하나를 요약하는 카드. 상품/계좌 헤더 + 속성표 + 액션 버튼으로 구성.",
+    "slots": [
+      { "name": "title", "accepts": "Title" },
+      { "name": "account", "accepts": "Text" },
+      { "name": "details", "accepts": "DescriptionList" },
+      { "name": "action", "accepts": "Button", "optional": true }
+    ],
+    "variants": [
+      { "axis": "density", "values": ["full", "condensed"], "default": "full" }
+    ],
+    "states": ["default", "hover"],
+    "compositionApi": "compound",
+    "children": ["Title", "Text", "DescriptionList", "Button"],
+    "accessibility": ["카드 전체가 링크가 아니면 액션 버튼만 인터랙티브."],
+    "consolidates": ["신청 목록 카드", "유예신청 카드"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#174-card-아이템-스펙"
+  },
+  {
+    "name": "FormCard",
+    "atomicLevel": "molecule",
+    "description": "제목 헤더 + 폼 필드 묶음을 담는 카드.",
+    "slots": [
+      { "name": "header", "accepts": "Title" },
+      { "name": "fields", "accepts": "Input | Select", "repeatable": true },
+      { "name": "action", "accepts": "Button", "optional": true }
+    ],
+    "variants": [],
+    "states": ["default"],
+    "compositionApi": "compound",
+    "children": ["Title", "Select", "Button"],
+    "accessibility": ["헤더를 fieldset/legend 또는 heading으로 연결한다."],
+    "consolidates": ["유예시작월 선택 카드"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "BottomBar",
+    "atomicLevel": "organism",
+    "description": "화면 하단 고정 액션 바. 이전/다음 등 단계 이동 버튼을 배치.",
+    "slots": [{ "name": "actions", "accepts": "Button", "repeatable": true }],
+    "variants": [
+      { "axis": "layout", "values": ["split", "single"], "default": "split" }
+    ],
+    "states": ["default"],
+    "compositionApi": "compound",
+    "children": ["Button"],
+    "accessibility": ["고정 바는 콘텐츠와 겹치지 않도록 하단 패딩을 확보한다."],
+    "consolidates": ["이전/다음 하단 네비", "원금상환유예 신청 CTA"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#193-캐노니컬-레이아웃-검증된-페이지-골격"
+  }
+]

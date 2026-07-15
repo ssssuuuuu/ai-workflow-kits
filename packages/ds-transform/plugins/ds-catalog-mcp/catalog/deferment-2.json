@@ -1,0 +1,111 @@
+[
+  {
+    "name": "SelectField",
+    "atomicLevel": "molecule",
+    "description": "라벨 + Select 컨트롤 + 보조 정보(태그/주소)를 묶은 필드.",
+    "slots": [
+      { "name": "label", "accepts": "text" },
+      { "name": "value", "accepts": "Select" },
+      { "name": "tag", "accepts": "Tag", "optional": true },
+      { "name": "helper", "accepts": "Text", "optional": true }
+    ],
+    "variants": [
+      { "axis": "size", "values": ["md", "lg"], "default": "md" }
+    ],
+    "states": ["default", "focus", "filled", "disabled", "error"],
+    "compositionApi": "compound",
+    "children": ["Select", "Tag", "Text"],
+    "accessibility": ["label을 Select와 for/id로 연결; helper는 aria-describedby."],
+    "consolidates": ["대출계좌 선택 필드", "담보물 주소 표시"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1710-input-계열-textfield--textarea--select--switch"
+  },
+  {
+    "name": "Checklist",
+    "atomicLevel": "molecule",
+    "description": "확인/동의용 체크 항목 묶음. 모든 항목 체크 시 다음 단계 진행 가능한 게이팅에 쓰인다.",
+    "slots": [
+      { "name": "sectionTitle", "accepts": "Title", "optional": true },
+      { "name": "items", "accepts": "CheckItem", "repeatable": true }
+    ],
+    "variants": [
+      { "axis": "gating", "values": ["none", "all-required"], "default": "none" }
+    ],
+    "states": ["default", "complete"],
+    "compositionApi": "compound",
+    "children": ["CheckItem"],
+    "accessibility": ["그룹은 group role + 접근 가능한 이름; all-required면 미완료 사유를 알린다."],
+    "consolidates": ["신청 대상 확인 체크리스트", "차주 동의 체크리스트"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#176-checkbox--radio-아이템-스펙"
+  },
+  {
+    "name": "CheckItem",
+    "family": "Checklist",
+    "atomicLevel": "atom",
+    "description": "체크리스트의 한 항목. 체크박스 + 라벨(+ 중첩 보조 설명).",
+    "slots": [
+      { "name": "checkbox", "accepts": "Checkbox" },
+      { "name": "label", "accepts": "text" },
+      { "name": "subBullets", "accepts": "Text", "optional": true, "repeatable": true }
+    ],
+    "variants": [],
+    "states": ["unchecked", "checked", "disabled"],
+    "accessibility": ["Checkbox와 label을 연결; 중첩 설명은 항목에 종속되게 배치한다."],
+    "consolidates": [],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#176-checkbox--radio-아이템-스펙"
+  },
+  {
+    "name": "Accordion",
+    "atomicLevel": "molecule",
+    "description": "헤더를 눌러 패널을 펼치고 접는 컴포넌트.",
+    "slots": [
+      { "name": "header", "accepts": "Title" },
+      { "name": "panel", "accepts": "any" }
+    ],
+    "variants": [],
+    "states": ["collapsed", "expanded"],
+    "compositionApi": "compound",
+    "children": ["Title"],
+    "accessibility": ["헤더는 button + aria-expanded; 패널은 aria-controls로 연결한다."],
+    "consolidates": ["원금상환유예 온라인신청 상세안내"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu"
+  },
+  {
+    "name": "DataTable",
+    "atomicLevel": "organism",
+    "description": "열 헤더 + 데이터 행으로 구성된 표.",
+    "slots": [
+      { "name": "columns", "accepts": "text", "repeatable": true },
+      { "name": "rows", "accepts": "cell", "repeatable": true }
+    ],
+    "variants": [
+      { "axis": "density", "values": ["default", "condensed"], "default": "default" }
+    ],
+    "states": ["default", "empty", "loading"],
+    "statesRef": "docs/design-system-methodology.md#174-종합-컴포넌트-유형별-문서화-방식-선택-가이드",
+    "compositionApi": "data-array",
+    "accessibility": ["<table>에 열 헤더 <th scope=col>; 셀은 <td>로 연결한다."],
+    "consolidates": ["신청일/남은 영업일/신청가능여부 표"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#172-detail--속성표description-아이템-스펙"
+  },
+  {
+    "name": "BottomCTA",
+    "atomicLevel": "molecule",
+    "description": "화면 하단 고정 단일 대표 액션 바.",
+    "slots": [{ "name": "action", "accepts": "Button" }],
+    "variants": [
+      { "axis": "layout", "values": ["single", "double"], "default": "single" }
+    ],
+    "states": ["default", "disabled"],
+    "compositionApi": "compound",
+    "children": ["Button"],
+    "accessibility": ["고정 바가 콘텐츠를 가리지 않도록 하단 여백을 확보한다."],
+    "consolidates": ["원금상환유예 신청 CTA"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#193-캐노니컬-레이아웃-검증된-페이지-골격"
+  }
+]
