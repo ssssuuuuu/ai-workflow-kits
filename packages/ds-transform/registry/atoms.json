@@ -219,5 +219,66 @@
     "consolidates": ["segmented control"],
     "status": "net-new",
     "docsRef": "docs/design-system-methodology.md#1713-내비게이션-계열-tabs--breadcrumb--pagination--menu"
+  },
+  {
+    "name": "Badge",
+    "atomicLevel": "atom",
+    "description": "상태·라벨을 짧게 표시하는 배지.",
+    "slots": [{ "name": "label", "accepts": "text" }],
+    "variants": [
+      { "axis": "tone", "values": ["brand", "neutral", "info", "success", "warning", "danger"], "default": "neutral" },
+      { "axis": "size", "values": ["sm", "md"], "default": "md" }
+    ],
+    "states": ["default"],
+    "accessibility": ["의미를 전달하면 스크린리더가 읽도록 텍스트로 제공한다."],
+    "consolidates": ["badge"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1711-표시상태-계열-tag--badge--chip--avatar--progress"
+  },
+  {
+    "name": "Tag",
+    "atomicLevel": "atom",
+    "description": "객체 라벨/속성을 나타내는 태그(칩).",
+    "slots": [
+      { "name": "label", "accepts": "text" },
+      { "name": "leading", "accepts": "Icon", "optional": true },
+      { "name": "dismiss", "accepts": "Icon", "optional": true }
+    ],
+    "variants": [
+      { "axis": "style", "values": ["filled", "outlined", "subtle"], "default": "outlined" },
+      { "axis": "interactive", "values": ["read-only", "dismissible", "selectable"], "default": "read-only" }
+    ],
+    "states": ["default", "hover", "focus", "disabled"],
+    "accessibility": ["dismissible이면 제거 버튼에 aria-label을 준다."],
+    "consolidates": ["tag", "chip"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#1711-표시상태-계열-tag--badge--chip--avatar--progress"
+  },
+  {
+    "name": "Divider",
+    "atomicLevel": "atom",
+    "description": "콘텐츠 영역을 구분하는 선.",
+    "variants": [
+      { "axis": "orientation", "values": ["horizontal", "vertical"], "default": "horizontal" }
+    ],
+    "states": ["default"],
+    "accessibility": ["의미상 구분이면 role=separator; 순수 장식이면 생략한다."],
+    "consolidates": ["divider", "border"],
+    "status": "net-new",
+    "docsRef": "docs/component-catalog-index.md"
+  },
+  {
+    "name": "Fab",
+    "atomicLevel": "atom",
+    "description": "화면에 떠 있는 기본 액션 버튼(Floating Action Button).",
+    "slots": [{ "name": "icon", "accepts": "Icon" }],
+    "variants": [
+      { "axis": "size", "values": ["md", "lg"], "default": "md" }
+    ],
+    "states": ["default", "hover", "focus", "disabled"],
+    "accessibility": ["아이콘만 있으므로 aria-label이 필수다."],
+    "consolidates": ["fab", "floating action button"],
+    "status": "net-new",
+    "docsRef": "docs/design-system-methodology.md#177-button-아이템-스펙"
   }
 ]

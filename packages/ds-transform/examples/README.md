@@ -19,4 +19,6 @@ Current examples:
   - `preview-layers.html` — a layered "spec sheet" that separates Design Tokens / Atoms / Components / Assembled Screen with labeled region dividers and tier tags (◫ token · ◇ atom · ◆ component · ▤ screen).
   - `preview-guide.html` — a redline guideline overlay: component regions tinted blue at 60%, the atoms on top tinted light red at 60% (multiply blend so text stays legible), with a guide on/off toggle. Shows the compose relationship "atoms inside components".
 
+- `deferment-flow/`: a fictional mobile "원금상환유예 신청" flow reconstructed end to end from OCR-scanned screenshots — decomposed into atoms, recomposed into components (AppBar, ApplicationCard, DescriptionList, FormCard, BottomBar), and rendered as a design-system web screen. `preview.html` has a guideline toggle (components blue, atoms red on a grayscaled base); `component-specs.example.json` holds the composed component specs; `notes.md` documents the OCR→atom→component mapping.
+
 All example content is fictional. No real product names, customer data, or internal project labels are used.

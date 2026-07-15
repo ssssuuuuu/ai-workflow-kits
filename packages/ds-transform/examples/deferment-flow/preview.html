@@ -1,0 +1,280 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>flow</title><style>*{margin:0}</style></head><body>
+<style>
+  :root{
+    --brand:#1F6FEB; --brand-strong:#155CD0; --brand-050:#EAF1FD;
+    --ink:#1A1D21; --muted:#6B7280; --line:#E5E8EC; --page:#EEF1F5; --card:#FFFFFF; --raised:#F7F9FB;
+    --comp:#2563EB; --atom:#F26D6D; --atom-ink:#D63B3B;
+    --r-sm:8px; --r-md:12px; --r-lg:16px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--brand-strong:#7DAEF8;--brand-050:#1A2536;}
+  }
+  :root[data-theme="light"]{--ink:#1A1D21;--muted:#6B7280;--line:#E5E8EC;--page:#EEF1F5;--card:#FFFFFF;--raised:#F7F9FB;--brand:#1F6FEB;--brand-strong:#155CD0;--brand-050:#EAF1FD;}
+  :root[data-theme="dark"]{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--brand-strong:#7DAEF8;--brand-050:#1A2536;}
+
+  *{box-sizing:border-box;}
+  .dsp{font-family:var(--sans);color:var(--ink);background:var(--page);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;}
+  .dsp :where(h1,h2,h3,h4,p){margin:0;}
+  .mono{font-family:var(--mono);}
+
+  /* ---- top bar (page-level, not the phone) ---- */
+  .topbar{position:sticky;top:0;z-index:30;background:var(--ink);color:var(--card);}
+  .topbar .in{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 20px;font-size:12px;}
+  .topbar .l{display:flex;align-items:center;gap:10px;font-family:var(--mono);opacity:.92;}
+  .topbar .l i{width:7px;height:7px;border-radius:50%;background:var(--atom);}
+  .controls{display:flex;gap:8px;}
+  .ctl{font:inherit;font-family:var(--mono);font-size:11px;cursor:pointer;color:inherit;background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 10px;}
+  .ctl:hover{border-color:currentColor;}
+  .ctl[aria-pressed="true"]{background:var(--card);color:var(--ink);border-color:var(--card);}
+
+  .head{max-width:1000px;margin:0 auto;padding:28px 20px 6px;}
+  .head h1{font-size:clamp(20px,3vw,26px);font-weight:800;letter-spacing:-.02em;}
+  .head p{color:var(--muted);font-size:13.5px;margin-top:6px;max-width:70ch;}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;}
+  .lg{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .lg i{width:24px;height:16px;border-radius:5px;}
+  .lg .ci{background:var(--comp);opacity:.55;border:2px solid var(--comp);}
+  .lg .ai{background:var(--atom);opacity:.55;border:1.5px dashed var(--atom-ink);}
+
+  .stage{max-width:1000px;margin:0 auto;padding:22px 20px 60px;display:flex;gap:28px;flex-wrap:wrap;justify-content:center;}
+
+  /* ---- phone frame ---- */
+  .phone{width:380px;max-width:100%;background:var(--card);border:1px solid var(--line);border-radius:30px;
+    box-shadow:0 1px 2px rgba(20,25,35,.06),0 30px 60px -30px rgba(20,25,35,.45);overflow:hidden;}
+  .phone .cap{padding:8px 14px 4px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--raised);}
+  .statusbar{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 4px;font-size:13px;font-weight:700;color:var(--ink);}
+  .statusbar .r{display:flex;align-items:center;gap:6px;font-size:11px;}
+  .statusbar .batt{background:#3BB273;color:#fff;border-radius:4px;padding:0 5px;font-size:10px;font-weight:700;}
+
+  /* ---- AppBar (component) ---- */
+  .appbar{display:flex;align-items:center;gap:10px;padding:6px 12px 12px;border-bottom:1px solid var(--line);}
+  .iconbtn{width:36px;height:36px;border:0;background:transparent;color:var(--ink);display:grid;place-items:center;border-radius:8px;cursor:pointer;flex:none;}
+  .iconbtn:hover{background:var(--raised);}
+  .iconbtn svg{width:22px;height:22px;}
+  .badge{background:var(--brand);color:#fff;font-size:12px;font-weight:800;border-radius:7px;padding:3px 9px;letter-spacing:.02em;flex:none;}
+  .appbar .apptitle{font-size:17px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:4px;}
+  .appbar .apptitle svg{width:16px;height:16px;color:var(--muted);}
+  .appbar .sp{margin-left:auto;}
+
+  .body{padding:20px 18px 26px;position:relative;max-height:720px;overflow-y:auto;}
+  .body::-webkit-scrollbar{width:0;}
+  .h2{font-size:22px;font-weight:800;letter-spacing:-.02em;}
+  .desc{color:var(--muted);font-size:13.5px;margin-top:10px;}
+  .kw{color:var(--brand);font-weight:700;}
+
+  /* ---- Checkbox (atom) ---- */
+  .chk{display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:600;cursor:pointer;}
+  .chk .box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;background:var(--card);color:transparent;}
+  .chk.on .box{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .chk .box svg{width:15px;height:15px;}
+  .chk .t{font-weight:500;color:var(--ink);line-height:1.45;}
+
+  /* ---- Card (component) + DescriptionList ---- */
+  .card{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--card);
+    box-shadow:0 1px 2px rgba(20,25,35,.05),0 10px 24px -18px rgba(20,25,35,.25);}
+  .card .ch{padding:18px 18px 4px;}
+  .card .ch .pt{font-size:19px;font-weight:800;color:var(--brand);letter-spacing:-.01em;}
+  .card .ch .acct{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px;}
+  .dl{padding:16px 18px 4px;display:grid;grid-template-columns:1fr 1fr;gap:18px 12px;border-top:1px solid var(--line);margin-top:14px;}
+  .di .k{font-size:12.5px;color:var(--muted);font-weight:600;}
+  .di .v{font-size:15px;color:var(--ink);font-weight:700;margin-top:3px;letter-spacing:-.01em;}
+  .btn{display:block;width:100%;text-align:center;font:inherit;font-family:var(--sans);font-weight:800;font-size:16px;border:0;cursor:pointer;padding:15px;}
+  .btn.primary{background:var(--brand);color:#fff;}
+  .btn.primary:hover{background:var(--brand-strong);}
+  .metarow{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:12px;font-size:13px;}
+  .metarow .k{color:var(--muted);}
+  .metarow .v{font-weight:700;font-variant-numeric:tabular-nums;}
+
+  /* ---- FAB (atom) ---- */
+  .fab{position:sticky;float:right;bottom:14px;margin-top:-46px;margin-right:2px;width:52px;height:52px;border-radius:50%;border:0;
+    background:#9AA3AE;color:#fff;display:grid;place-items:center;box-shadow:0 8px 20px -6px rgba(20,25,35,.5);cursor:pointer;}
+  .fab svg{width:26px;height:26px;}
+
+  /* ---- Form screen ---- */
+  .field{margin-top:4px;}
+  .field .lab{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:6px;}
+  .select{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);
+    border-radius:10px;padding:13px 14px;font-size:15px;background:var(--card);color:var(--ink);cursor:pointer;}
+  .select .ph{color:var(--muted);}
+  .select svg{width:18px;height:18px;color:var(--muted);}
+  .btn.outline{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;font-size:15px;padding:13px;width:auto;}
+  .btn.outline:hover{border-color:var(--brand);color:var(--brand);}
+  .formcard{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--raised);overflow:hidden;}
+  .formcard .fh{padding:14px 16px;font-weight:800;font-size:16px;border-bottom:1px solid var(--line);background:var(--card);}
+  .formcard .fb{padding:16px;display:flex;flex-direction:column;gap:14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .tag{display:inline-flex;align-items:center;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--card);}
+  .bullets{font-size:13px;color:var(--muted);line-height:1.6;}
+  .bullets b{color:var(--ink);}
+
+  /* ---- BottomBar (component) ---- */
+  .bottombar{display:flex;border-top:1px solid var(--line);background:var(--card);}
+  .bottombar .b{flex:1;text-align:center;padding:16px;font-weight:800;font-size:16px;cursor:pointer;background:transparent;border:0;color:var(--muted);font-family:var(--sans);}
+  .bottombar .b.next{color:#fff;background:var(--brand);}
+  .bottombar .b.next:hover{background:var(--brand-strong);}
+
+  /* ---- section title ---- */
+  .sect{font-size:17px;font-weight:800;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-top:8px;}
+
+  /* ================= GUIDELINE OVERLAY ================= */
+  .guide .gbase{filter:grayscale(1) contrast(.92);}
+  .guide [data-comp]{position:relative;outline:2px solid var(--comp);outline-offset:-2px;border-radius:8px;}
+  .guide [data-comp]::before{content:"";position:absolute;inset:0;background:var(--comp);opacity:.5;mix-blend-mode:multiply;pointer-events:none;z-index:1;border-radius:7px;}
+  .guide [data-comp]::after{content:attr(data-comp);position:absolute;top:2px;left:2px;z-index:7;pointer-events:none;background:var(--comp);color:#fff;font:600 9.5px/1.4 var(--mono);padding:2px 6px;border-radius:5px;white-space:nowrap;}
+  .guide [data-comp].cr::after{left:auto;right:2px;}
+  .guide [data-atom]{position:relative;outline:1.5px dashed var(--atom-ink);outline-offset:-1px;border-radius:5px;z-index:3;}
+  .guide [data-atom]::before{content:"";position:absolute;inset:0;background:var(--atom);opacity:.5;mix-blend-mode:multiply;pointer-events:none;z-index:4;border-radius:4px;}
+  .guide [data-atom]::after{content:attr(data-atom);position:absolute;bottom:2px;right:2px;z-index:8;pointer-events:none;background:var(--atom-ink);color:#fff;font:600 9px/1.4 var(--mono);padding:1px 5px;border-radius:5px;white-space:nowrap;}
+  .guide [data-atom] > *{position:relative;z-index:5;}
+
+  footer.foot{border-top:1px solid var(--line);}
+  footer.foot .in{max-width:1000px;margin:0 auto;padding:22px 20px;font-size:11.5px;color:var(--muted);font-family:var(--mono);text-align:center;}
+
+  @media (max-width:820px){.stage{gap:22px;}}
+</style>
+
+<div class="dsp">
+  <div class="topbar">
+    <div class="in">
+      <span class="l"><i></i>ds-transform · OCR → atoms → components → screen</span>
+      <div class="controls">
+        <button class="ctl" id="guideBtn" type="button" aria-pressed="false">○ 가이드 OFF</button>
+        <button class="ctl" id="themeBtn" type="button">◐ theme</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="head">
+    <h1>원금상환유예 신청 — 디자인 시스템 재구성</h1>
+    <p>모바일 신청 플로우를 OCR로 분해해 원자로 재분리하고, 디자인 시스템 컴포넌트로 다시 조립한 웹 화면입니다. 상단 '가이드'를 켜면 파란 영역=컴포넌트, 그 위 빨간 영역=원자로 표시됩니다. (브랜드·계좌·주소는 가상값)</p>
+    <div class="legend">
+      <span class="lg"><i class="ci"></i>Component · 컴포넌트</span>
+      <span class="lg"><i class="ai"></i>Atom · 아이템(원자)</span>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <!-- ============ PHONE 1: 신청 목록 ============ -->
+    <div class="phone">
+      <div class="cap">Screen 1 · 신청 목록</div>
+      <div class="gbase">
+        <div class="statusbar"><span>8:18</span><span class="r">•••• <span>◗</span> <span class="batt">23</span></span></div>
+        <div class="appbar" data-comp="◆ AppBar">
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="뒤로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="badge" data-atom="◇ Badge">TEST</span>
+          <span class="apptitle" data-atom="◇ Title">원금상환유예 신청 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+          <span class="sp"></span>
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="글자 크기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18L9 6l5 12M6 14h6"/><path d="M18 8v6M15 11h6"/></svg></button>
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+        <div class="body">
+          <h2 class="h2" data-atom="◇ Title">원금상환유예 신청</h2>
+          <p class="desc" data-atom="◇ Description">고객님의 원금상환유예 신청내용입니다. 심사에 필요한 증빙서류, 심사진행상황 및 결과는 관할지사로 문의하시기 바랍니다.</p>
+          <label class="chk on" data-atom="◇ Checkbox" style="margin-top:20px">
+            <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+            <span class="t">과거내역 포함</span>
+          </label>
+
+          <div class="card" data-comp="◆ ApplicationCard" style="margin-top:18px">
+            <div class="ch">
+              <div class="pt" data-atom="◇ Title">든든 보금자리론</div>
+              <div class="acct" data-atom="◇ Text">1166-09-****-036</div>
+            </div>
+            <div class="dl" data-comp="◆ DescriptionList cr">
+              <div class="di" data-atom="◇ Item"><div class="k">유예시작월</div><div class="v">2024.05</div></div>
+              <div class="di" data-atom="◇ Item"><div class="k">유예종료월</div><div class="v">2025.04</div></div>
+              <div class="di" data-atom="◇ Item"><div class="k">유예기간</div><div class="v">12개월</div></div>
+              <div class="di" data-atom="◇ Item"><div class="k">진행단계</div><div class="v">심사중</div></div>
+              <div class="di" data-atom="◇ Item"><div class="k">심사결과</div><div class="v">—</div></div>
+              <div class="di" data-atom="◇ Item"><div class="k">통지서</div><div class="v">미발급</div></div>
+            </div>
+            <button class="btn primary" data-atom="◇ Button" style="margin-top:14px">유예신청</button>
+          </div>
+          <div class="metarow"><span class="k">신청일자</span><span class="v" data-atom="◇ Text">2024-04-10</span></div>
+
+          <div class="card" data-comp="◆ ApplicationCard" style="margin-top:18px">
+            <div class="ch">
+              <div class="pt">든든 보금자리론</div>
+              <div class="acct">1166-09-****-036</div>
+            </div>
+            <div class="dl">
+              <div class="di"><div class="k">유예시작월</div><div class="v">2023.03</div></div>
+              <div class="di"><div class="k">유예종료월</div><div class="v">2024.02</div></div>
+            </div>
+          </div>
+
+          <button class="fab" data-atom="◇ FAB" aria-label="추가"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PHONE 2: 신청사항(유예시작월 선택) ============ -->
+    <div class="phone">
+      <div class="cap">Screen 5 · 신청사항</div>
+      <div class="gbase">
+        <div class="statusbar"><span>8:19</span><span class="r">•••• <span>◗</span> <span class="batt">25</span></span></div>
+        <div class="appbar" data-comp="◆ AppBar">
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="뒤로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="badge" data-atom="◇ Badge">TEST</span>
+          <span class="apptitle">원금상환유예 신청 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+          <span class="sp"></span>
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="글자 크기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18L9 6l5 12M6 14h6"/><path d="M18 8v6M15 11h6"/></svg></button>
+          <button class="iconbtn" data-atom="◇ IconButton" aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+        <div class="body" style="max-height:640px">
+          <h2 class="h2">원금상환유예 신청사항</h2>
+
+          <div class="formcard" data-comp="◆ FormCard" style="margin-top:18px">
+            <div class="fh" data-atom="◇ Title">유예시작월 선택</div>
+            <div class="fb">
+              <div class="grid2">
+                <div class="field" data-atom="◇ Select">
+                  <div class="lab">유예시작월</div>
+                  <div class="select"><span class="ph">유예시작월</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="field">
+                  <div class="lab">유예종료월</div>
+                  <div class="select" style="background:var(--raised);color:var(--muted)"><span>자동 계산</span></div>
+                </div>
+              </div>
+              <div class="field" data-atom="◇ Select" style="max-width:200px">
+                <div class="lab">유예기간</div>
+                <div class="select"><span class="ph">유예기간</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+              <button class="btn outline" data-atom="◇ Button" style="align-self:flex-end">상환스케줄 미리보기</button>
+            </div>
+          </div>
+
+          <div class="bullets" style="margin-top:18px">
+            <b>· 유예시작월</b><br>원금을 연체중인 경우 원금상환유예 적용 시기를 연체시작월로 소급할 수 있습니다.<br><br>
+            <b>· 선택 가능한 유예시작월</b><br>– 정상계좌: 신청 당일로부터 5영업일 이상 남은 차회 원리금 상환일의 해당월<br>– 연체계좌: 연체원금이 존재하는 과거 월부터 차회 상환일의 해당월
+          </div>
+        </div>
+        <div class="bottombar" data-comp="◆ BottomBar">
+          <button class="b" data-atom="◇ Button">이전</button>
+          <button class="b next" data-atom="◇ Button">다음</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="foot"><div class="in">가상 브랜드·계좌·주소 · OCR → 원자 분해 → 컴포넌트 조립 → 디자인 시스템 웹 화면 · 실제 기관/상품과 무관</div></footer>
+</div>
+
+<script>
+  (function(){
+    var root=document.documentElement, stage=document.getElementById('stage'), gb=document.getElementById('guideBtn');
+    gb.addEventListener('click',function(){
+      var on=stage.classList.toggle('guide');
+      gb.setAttribute('aria-pressed',on?'true':'false');
+      gb.textContent=on?'◉ 가이드 ON':'○ 가이드 OFF';
+    });
+    document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');if(!c){c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}root.setAttribute('data-theme',c==='dark'?'light':'dark');});
+  })();
+</script>
+</body></html>

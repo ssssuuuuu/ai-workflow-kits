@@ -25,7 +25,7 @@ A raw wishlist of attributes (`p, radio, select, toggle, switch, btn1, btn2, des
 
 `atoms.json` — the array of atom specs. Fields per atom: `name`, `atomicLevel`, `description`, `slots`, `variants` (independent axes), `states`, `tokens`, `compositionApi`, `children`, `accessibility`, `consolidates` (the raw attributes it absorbs), `status`, `docsRef` (link to the item-spec section in `docs/design-system-methodology.md`).
 
-Currently registered (14): `Text`, `Title`, `Description`, `Button`, `IconButton`, `Input`, `Radio`, `Checkbox`, `Select`, `Switch`, `Icon`, `Slider`, `Rating`, `SegmentedControl`.
+Currently registered (18): `Text`, `Title`, `Description`, `Button`, `IconButton`, `Input`, `Radio`, `Checkbox`, `Select`, `Switch`, `Icon`, `Slider`, `Rating`, `SegmentedControl`, `Badge`, `Tag`, `Divider`, `Fab`.
 
 ## Related reference
 
