@@ -7,7 +7,9 @@ A fictional reconstruction of a mobile "원금상환유예 신청" (principal-re
 ## Deliverable
 
 - `preview.html` — a self-contained, browser-openable render of two screens (신청 목록 · 신청사항) built from design-system tokens and components, with a **guideline toggle**: components tinted blue, atoms tinted red on top (base grayscaled so the overlay reads). Open in a browser and press "가이드 ON".
-- `component-specs.example.json` — machine-readable specs for the composed components, conforming to `../../schema/component-spec.schema.json`.
+- `redline.html` — a redline proof that the screen is token/component-driven, not a copied image: an 8px spacing-token grid + ruler, per-element token callouts, and three things a screenshot can't do (theme switch, token propagation, component reuse).
+- `slot-guides.html` — slot-anatomy diagrams (in the `DataListItem` sample's visual language: dashed component boundary, ❖/◈ family labels, region labels, `#slot` placeholders) for `ApplicationCard`, `AppBar`, `FormCard`, `BottomBar`.
+- `component-specs.example.json` — machine-readable specs for the composed components, conforming to `../../schema/component-spec.schema.json`. The `slots` field is the data behind `slot-guides.html`.
 
 ## OCR decomposition → registry
 
