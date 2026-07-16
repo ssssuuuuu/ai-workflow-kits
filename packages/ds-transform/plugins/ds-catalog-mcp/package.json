@@ -1,0 +1,13 @@
+{
+  "name": "ds-catalog-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal dependency-free MCP stdio server exposing a ds-transform component-spec catalog to AI agents.",
+  "type": "module",
+  "bin": { "ds-catalog-mcp": "./server.mjs" },
+  "scripts": {
+    "start": "node server.mjs",
+    "smoke": "node smoke-test.mjs"
+  },
+  "license": "MIT"
+}

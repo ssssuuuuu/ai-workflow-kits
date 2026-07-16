@@ -1,0 +1,159 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>anno</title><style>*{margin:0}</style></head><body>
+<style>
+  :root{
+    --brand:#1F6FEB; --brand-strong:#155CD0;
+    --ink:#1A1D21; --muted:#6B7280; --line:#E5E8EC; --page:#EEF1F5; --card:#FFFFFF; --raised:#F7F9FB;
+    --anno:#E0143C;            /* redline color */
+    --r-md:12px; --r-lg:16px;
+    --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--brand-strong:#7DAEF8;--anno:#FF5C79;}}
+  :root[data-theme="light"]{--ink:#1A1D21;--muted:#6B7280;--line:#E5E8EC;--page:#EEF1F5;--card:#FFFFFF;--raised:#F7F9FB;--brand:#1F6FEB;--anno:#E0143C;}
+  :root[data-theme="dark"]{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--anno:#FF5C79;}
+
+  *{box-sizing:border-box;}
+  .dsp{font-family:var(--sans);color:var(--ink);background:var(--page);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;padding-bottom:40px;}
+  .dsp :where(h1,h2,h3,p){margin:0;}
+  .mono{font-family:var(--mono);}
+
+  .topbar{background:var(--ink);color:var(--card);}
+  .topbar .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 22px;font-size:12px;}
+  .topbar .l{font-family:var(--mono);opacity:.92;}
+  .controls{display:flex;gap:8px;}
+  .ctl{font:inherit;font-family:var(--mono);font-size:11px;cursor:pointer;color:inherit;background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 10px;}
+  .ctl:hover{border-color:currentColor;}
+  .ctl[aria-pressed="true"]{background:var(--card);color:var(--ink);border-color:var(--card);}
+
+  .head{max-width:1080px;margin:0 auto;padding:26px 22px 4px;}
+  .head h1{font-size:clamp(20px,2.8vw,26px);font-weight:800;letter-spacing:-.02em;}
+  .head p{color:var(--muted);font-size:14px;margin-top:8px;max-width:78ch;}
+  .head p b{color:var(--ink);}
+
+  .canvas{max-width:1080px;margin:0 auto;padding:24px 22px;display:grid;grid-template-columns:minmax(0,520px) 1fr;gap:34px;align-items:start;}
+
+  /* -------- annotated card -------- */
+  .cardwrap{position:relative;padding-right:150px;}
+  .ruler{position:absolute;left:-2px;top:0;bottom:0;width:44px;border-right:1px dashed var(--anno);}
+  .ruler .tick{position:absolute;left:0;width:44px;border-top:1px solid color-mix(in srgb,var(--anno) 40%,transparent);font-family:var(--mono);font-size:9px;color:var(--anno);padding-left:2px;}
+  .card{position:relative;margin-left:54px;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--card);
+    box-shadow:0 1px 2px rgba(20,25,35,.05),0 10px 24px -18px rgba(20,25,35,.25);}
+  .card.grid::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom, color-mix(in srgb,var(--brand) 16%,transparent) 0 1px, transparent 1px 8px);}
+  .ch{padding:18px 18px 4px;}
+  .pt{font-size:19px;font-weight:800;color:var(--brand);letter-spacing:-.01em;}
+  .acct{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px;}
+  .dl{padding:16px 18px 4px;display:grid;grid-template-columns:1fr 1fr;gap:18px 12px;border-top:1px solid var(--line);margin-top:14px;}
+  .di .k{font-size:12.5px;color:var(--muted);font-weight:600;}
+  .di .v{font-size:15px;color:var(--ink);font-weight:700;margin-top:3px;}
+  .btn{display:block;width:100%;text-align:center;font:inherit;font-family:var(--sans);font-weight:800;font-size:16px;border:0;cursor:pointer;padding:15px;background:var(--brand);color:#fff;margin-top:14px;}
+
+  /* token callout chips, pinned to the element's right edge (inside card) */
+  .anno{position:relative;}
+  .anno > .tag{position:absolute;top:4px;right:8px;white-space:nowrap;font-family:var(--mono);font-size:9.5px;
+    color:#fff;background:var(--anno);padding:2px 7px;border-radius:5px;z-index:6;box-shadow:0 1px 0 rgba(0,0,0,.15);}
+  .di.anno > .tag{top:auto;bottom:-9px;right:0;}
+
+  /* -------- proof panel -------- */
+  .panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin:2px 0 12px;}
+  .proof{display:flex;flex-direction:column;gap:14px;}
+  .pf{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 15px;}
+  .pf .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--card);font-weight:800;font-size:12px;font-family:var(--mono);margin-right:8px;}
+  .pf .t{font-weight:700;font-size:14.5px;}
+  .pf .d{color:var(--muted);font-size:13px;margin-top:6px;}
+  .pf .d code{font-family:var(--mono);color:var(--ink);font-size:12px;background:var(--raised);padding:1px 5px;border-radius:4px;}
+  .toklist{margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .toklist .th{background:var(--raised);padding:9px 13px;font-family:var(--mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);}
+  .tokrow{display:flex;align-items:center;gap:10px;padding:8px 13px;font-family:var(--mono);font-size:11.5px;border-bottom:1px solid var(--line);}
+  .tokrow:last-child{border-bottom:0;}
+  .tokrow i{width:20px;height:20px;border-radius:5px;border:1px solid var(--line);flex:none;}
+  .tokrow .nm{color:var(--ink);}
+  .tokrow .vl{margin-left:auto;color:var(--muted);}
+  .reuse{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .reuse span{font-family:var(--mono);font-size:11px;background:var(--raised);border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--ink);}
+
+  footer.foot{max-width:1080px;margin:0 auto;padding:8px 22px;font-size:11.5px;color:var(--muted);font-family:var(--mono);}
+
+  @media (max-width:860px){.canvas{grid-template-columns:1fr;}.cardwrap{padding-right:150px;}}
+</style>
+
+<div class="dsp">
+  <div class="topbar"><div class="in">
+    <span class="l">ds-transform · redline — why this is a design system, not an image</span>
+    <div class="controls">
+      <button class="ctl" id="gridBtn" type="button" aria-pressed="true">◉ 8px grid</button>
+      <button class="ctl" id="themeBtn" type="button">◐ theme (proof ①)</button>
+    </div>
+  </div></div>
+
+  <div class="head">
+    <h1>“이미지랑 똑같은데?” — 맞습니다. 그게 목표예요.</h1>
+    <p>디자인 시스템으로 바꾼다는 건 <b>겉모습을 바꾸는 게 아니라</b>, 같은 화면을 <b>토큰과 재사용 컴포넌트로 다시 조립</b>하는 것입니다. 차이는 픽셀이 아니라 구조라서 스크린샷으로는 안 보입니다. 아래 <b>빨간 라인·토큰 콜아웃</b>이 그 구조를 드러냅니다.</p>
+  </div>
+
+  <div class="canvas">
+    <!-- annotated card -->
+    <div class="cardwrap">
+      <div class="ruler" id="ruler"></div>
+      <div class="card grid" id="card">
+        <div class="ch">
+          <div class="pt anno">든든 보금자리론<span class="tag">Title/lg · brand</span></div>
+          <div class="acct anno">1166-09-****-036<span class="tag">Text · tabular</span></div>
+        </div>
+        <div class="dl anno">
+          <span class="tag">DescriptionList</span>
+          <div class="di"><div class="k">유예시작월</div><div class="v">2024.05</div></div>
+          <div class="di anno"><div class="k">유예종료월</div><div class="v">2025.04</div><span class="tag">DescriptionItem</span></div>
+          <div class="di"><div class="k">유예기간</div><div class="v">12개월</div></div>
+          <div class="di"><div class="k">진행단계</div><div class="v">심사중</div></div>
+        </div>
+        <div class="anno"><button class="btn">유예신청</button><span class="tag">Button/primary</span></div>
+      </div>
+      <div class="mono" style="margin-left:54px;margin-top:14px;font-size:11px;color:var(--anno)">▲ 카드 자체: surface-card · radius-lg(16) · border: line · shadow-card &nbsp;|&nbsp; 파란 가로줄 = 8px 간격 토큰 그리드</div>
+    </div>
+
+    <!-- proof panel -->
+    <div class="panel">
+      <h2>스크린샷은 못 하는 3가지 (=디자인 시스템 증거)</h2>
+      <div class="proof">
+        <div class="pf"><div class="t"><span class="n">1</span>테마 전환</div><div class="d">우측 상단 <code>◐ theme</code>를 눌러보세요. 모든 색이 <code>--color-*</code> 토큰에서 즉시 다시 계산됩니다. 이미지는 다크모드로 못 바뀝니다.</div></div>
+        <div class="pf"><div class="t"><span class="n">2</span>토큰 전파</div><div class="d">브랜드 색을 <code>--brand</code> 한 곳만 바꾸면 타이틀·버튼·체크박스가 <b>한 번에</b> 바뀝니다. 이미지는 픽셀을 하나하나 다시 칠해야 합니다.</div></div>
+        <div class="pf"><div class="t"><span class="n">3</span>컴포넌트 재사용</div><div class="d">같은 원자/컴포넌트가 화면 곳곳에서 <b>하나의 정의</b>로 반복됩니다(복붙 픽셀 아님):<div class="reuse"><span>AppBar ×2</span><span>Button ×4</span><span>Checkbox ×3</span><span>Select ×2</span><span>IconButton ×6</span><span>Card ×2</span></div></div></div>
+      </div>
+
+      <div class="toklist">
+        <div class="th">이 화면을 구성하는 디자인 토큰 (실제 CSS 변수)</div>
+        <div class="tokrow"><i style="background:var(--brand)"></i><span class="nm">--color-brand-primary</span><span class="vl">#1F6FEB</span></div>
+        <div class="tokrow"><i style="background:var(--ink)"></i><span class="nm">--color-text-default</span><span class="vl">#1A1D21</span></div>
+        <div class="tokrow"><i style="background:var(--muted)"></i><span class="nm">--color-text-muted</span><span class="vl">#6B7280</span></div>
+        <div class="tokrow"><i style="background:var(--line)"></i><span class="nm">--color-line</span><span class="vl">#E5E8EC</span></div>
+        <div class="tokrow"><i style="background:var(--card);"></i><span class="nm">--surface-card / radius-lg</span><span class="vl">#FFF / 16px</span></div>
+        <div class="tokrow"><i style="background:repeating-linear-gradient(to bottom,var(--brand) 0 1px,transparent 1px 4px)"></i><span class="nm">space scale</span><span class="vl">8·12·16·20·24</span></div>
+      </div>
+      <p class="mono" style="font-size:11px;color:var(--muted);margin-top:12px">↳ 이 토큰·컴포넌트는 머신 리더블 스펙(JSON)으로도 등록되어 MCP로 조회됩니다. 이미지에는 없는 것.</p>
+    </div>
+  </div>
+
+  <footer class="foot">가상 데이터 · redline 가이드 = 토큰/컴포넌트 구조 증명</footer>
+</div>
+
+<script>
+  (function(){
+    // build 8px ruler ticks
+    var card=document.getElementById('card'), ruler=document.getElementById('ruler');
+    function ticks(){
+      var h=card.offsetHeight; ruler.style.height=h+'px'; ruler.innerHTML='';
+      for(var y=0;y<=h;y+=8){
+        var d=document.createElement('div'); d.className='tick'; d.style.top=y+'px';
+        if(y%40===0) d.textContent=y; ruler.appendChild(d);
+      }
+    }
+    setTimeout(ticks,60); window.addEventListener('resize',ticks);
+    var root=document.documentElement;
+    var gb=document.getElementById('gridBtn');
+    gb.addEventListener('click',function(){var on=card.classList.toggle('grid');gb.setAttribute('aria-pressed',on?'true':'false');gb.textContent=on?'◉ 8px grid':'○ 8px grid';});
+    document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');if(!c){c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}root.setAttribute('data-theme',c==='dark'?'light':'dark');setTimeout(ticks,20);});
+  })();
+</script>
+</body></html>

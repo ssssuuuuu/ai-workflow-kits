@@ -1,0 +1,36 @@
+id: ds-transform
+name: DS Transform
+description: Evolve as-is general web planning documents into design-system-based UI component specs.
+category: design-system
+status: active
+runtimes:
+  codex:
+    supported: false
+    status: planned
+    path: codex/
+  claude:
+    supported: true
+    status: active
+    path: claude/
+  gemini:
+    supported: false
+    status: planned
+    path: gemini/
+  copilot:
+    supported: false
+    status: planned
+    path: copilot/
+artifacts:
+  - agent
+  - skill
+  - schema
+  - registry
+  - plugin
+  - example
+evidence_required:
+  - as_is_ui_inventory
+  - component_candidate_list
+  - token_proposal
+  - ds_based_spec_rewrite
+  - machine_readable_spec_optional
+  - unresolved_risks

@@ -1,0 +1,126 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>slotinspect</title><style>*{margin:0}</style></head><body>
+<style>
+  :root{
+    --ink:#1A1D21; --muted:#6B7280; --line:#E5E8EC; --page:#EEF1F5; --card:#FFFFFF; --raised:#F7F9FB; --brand:#1F6FEB;
+    --slotc:#7C4DD6;
+    --r-md:12px; --r-lg:16px;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--slotc:#A995F0;}}
+  :root[data-theme="light"]{--ink:#1A1D21;--muted:#6B7280;--line:#E5E8EC;--page:#EEF1F5;--card:#FFFFFF;--raised:#F7F9FB;--brand:#1F6FEB;--slotc:#7C4DD6;}
+  :root[data-theme="dark"]{--ink:#ECEDEF;--muted:#9AA3AE;--line:#2A2F37;--page:#0F1216;--card:#181C22;--raised:#20252D;--brand:#5C97F5;--slotc:#A995F0;}
+
+  *{box-sizing:border-box;}
+  .dsp{font-family:var(--sans);color:var(--ink);background:var(--page);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;}
+  .dsp :where(h1,h2,h3,p){margin:0;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px;}
+  .mono{font-family:var(--mono);}
+
+  .topbar{background:var(--ink);color:var(--card);}
+  .topbar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:8px 22px;font-size:12px;font-family:var(--mono);}
+  .controls{display:flex;gap:8px;}
+  .ctl{font:inherit;font-family:var(--mono);font-size:11px;cursor:pointer;color:inherit;background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 10px;}
+  .ctl:hover{border-color:currentColor;} .ctl[aria-pressed="true"]{background:var(--card);color:var(--ink);border-color:var(--card);}
+
+  .head{padding:26px 0 6px;}
+  .head h1{font-size:clamp(19px,2.6vw,25px);font-weight:800;letter-spacing:-.02em;}
+  .head p{color:var(--muted);font-size:13.5px;margin-top:8px;max-width:70ch;}
+
+  .stage{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;padding:22px 0 0;}
+  .phone{width:390px;max-width:100%;background:var(--card);border:1px solid var(--line);border-radius:26px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,25,35,.06),0 30px 60px -30px rgba(20,25,35,.45);}
+  .cap{padding:8px 14px 5px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--raised);}
+
+  /* base UI (grayscaled when inspect on, so #slot chips pop) */
+  .body{padding:18px 16px 24px;}
+  .inspect .gbase{filter:grayscale(1) contrast(.94);}
+
+  .appbar{display:flex;align-items:center;gap:9px;padding:6px 4px 14px;border-bottom:1px solid var(--line);}
+  .iconbtn{width:34px;height:34px;border:0;background:transparent;color:var(--ink);display:grid;place-items:center;border-radius:8px;flex:none;}
+  .iconbtn svg{width:21px;height:21px;}
+  .badge{background:var(--brand);color:#fff;font-size:12px;font-weight:800;border-radius:7px;padding:3px 9px;flex:none;}
+  .apptitle{font-size:16px;font-weight:800;display:flex;align-items:center;gap:3px;} .apptitle svg{width:15px;height:15px;color:var(--muted);}
+  .sp{margin-left:auto;}
+
+  .h2{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:16px;}
+  .desc{color:var(--muted);font-size:13px;margin-top:9px;}
+  .chk{display:flex;align-items:center;gap:9px;margin-top:16px;}
+  .cbx{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;color:#fff;flex:none;}
+  .cbx svg{width:14px;height:14px;} .chk .t{font-weight:500;font-size:14px;}
+
+  .card{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-top:16px;
+    box-shadow:0 1px 2px rgba(20,25,35,.05),0 10px 22px -18px rgba(20,25,35,.22);}
+  .ch{padding:16px 16px 3px;}
+  .pt{font-size:18px;font-weight:800;color:var(--brand);}
+  .acct{font-size:14px;margin-top:2px;font-variant-numeric:tabular-nums;}
+  .dl{padding:14px 16px 3px;display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;border-top:1px solid var(--line);margin-top:12px;}
+  .di .k{font-size:12px;color:var(--muted);font-weight:600;} .di .v{font-size:14px;font-weight:700;margin-top:3px;}
+  .btn{display:block;width:100%;text-align:center;font-weight:800;font-size:15px;border:0;padding:14px;background:var(--brand);color:#fff;margin-top:12px;}
+
+  /* #slot chips */
+  .slot{position:relative;}
+  .inspect .slot{outline:1.5px dashed var(--slotc);outline-offset:1px;border-radius:6px;}
+  .inspect .slot::after{content:attr(data-slot);position:absolute;top:-9px;left:6px;z-index:9;
+    background:var(--slotc);color:#fff;font:600 9.5px/1.4 var(--mono);padding:1px 6px;border-radius:5px;white-space:nowrap;pointer-events:none;}
+  .inspect .slot.br::after{left:auto;right:6px;}
+  .inspect .slot.bot::after{top:auto;bottom:-9px;}
+
+  @media (max-width:840px){.stage{gap:20px;}}
+</style>
+
+<div class="dsp">
+  <div class="topbar"><div class="in"><span>ds-transform · slot inspect — #slot on screen</span>
+    <div class="controls"><button class="ctl" id="insBtn" type="button" aria-pressed="true">◉ #slot ON</button><button class="ctl" id="themeBtn" type="button">◐ theme</button></div></div></div>
+
+  <div class="wrap">
+    <div class="head">
+      <h1>슬롯 가이드를 화면에 반영 (#slot inspect)</h1>
+      <p>재구성한 원금상환유예 화면 위에 각 요소의 <span class="mono">#슬롯</span> 이름을 직접 얹었습니다. 상단 <span class="mono">#slot</span> 토글을 끄면 실제 화면, 켜면 슬롯 가이드입니다. (가상 데이터)</p>
+    </div>
+
+    <div class="stage inspect" id="stage">
+      <div class="phone">
+        <div class="cap">Screen 1 · 신청 목록 · ◆ ApplicationCard</div>
+        <div class="body">
+          <div class="gbase">
+            <div class="appbar">
+              <button class="iconbtn slot" data-slot="#leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+              <span class="badge slot" data-slot="#badge">TEST</span>
+              <span class="apptitle slot" data-slot="#title">원금상환유예 신청 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+              <span class="sp"></span>
+              <span class="slot br" data-slot="#actions" style="display:flex;gap:2px">
+                <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18L9 6l5 12M6 14h6"/><path d="M18 8v6M15 11h6"/></svg></button>
+                <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+              </span>
+            </div>
+            <h2 class="h2 slot" data-slot="#pageTitle">원금상환유예 신청</h2>
+            <p class="desc slot" data-slot="#description">고객님의 원금상환유예 신청내용입니다. 심사 결과는 관할지사로 문의하시기 바랍니다.</p>
+            <label class="chk slot bot" data-slot="#label"><span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span class="t">과거내역 포함</span></label>
+
+            <div class="card">
+              <div class="ch">
+                <div class="pt slot" data-slot="#title">든든 보금자리론</div>
+                <div class="acct slot bot" data-slot="#account">1166-09-****-036</div>
+              </div>
+              <div class="dl slot br" data-slot="◆ DescriptionList">
+                <div class="di slot bot" data-slot="#key/#value"><div class="k">유예시작월</div><div class="v">2024.05</div></div>
+                <div class="di"><div class="k">유예종료월</div><div class="v">2025.04</div></div>
+                <div class="di"><div class="k">유예기간</div><div class="v">12개월</div></div>
+                <div class="di"><div class="k">진행단계</div><div class="v">심사중</div></div>
+              </div>
+              <button class="btn slot bot" data-slot="#action">유예신청</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>(function(){
+  var root=document.documentElement, stage=document.getElementById('stage'), ib=document.getElementById('insBtn');
+  ib.addEventListener('click',function(){var on=stage.classList.toggle('inspect');ib.setAttribute('aria-pressed',on?'true':'false');ib.textContent=on?'◉ #slot ON':'○ #slot OFF';});
+  document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');if(!c){c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}root.setAttribute('data-theme',c==='dark'?'light':'dark');});
+})();</script>
+</body></html>

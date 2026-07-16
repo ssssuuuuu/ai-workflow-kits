@@ -6,6 +6,7 @@ This file is the human-readable catalog for AI Workflow Kits.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [`package-authoring`](packages/package-authoring/README.md) | Meta workflow for adding public-safe packages and runtime artifacts | Active | Draft | Stub | Stub | Active |
 | [`keepworking`](packages/keepworking/README.md) | Long-running evidence-first workflow loop | Active | Active | Draft | Draft | Active |
+| [`ds-transform`](packages/ds-transform/README.md) | Evolve as-is web planning into design-system-based UI component specs | Planned | Active | Planned | Planned | Active |
 
 ## Status Values
 

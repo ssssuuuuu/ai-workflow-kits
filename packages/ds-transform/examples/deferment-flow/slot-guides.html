@@ -1,0 +1,180 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>slots</title><style>*{margin:0}</style></head><body>
+<style>
+  :root{
+    --page:#F5F4FB; --ink:#2A2E37; --slot:#5A6472; --meta:#A2A7B2; --line:#E6E4F2;
+    --vio:#7C4DD6; --indigo:#5578E6; --dash:#9C8CEA; --check:#2563EB;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{--page:#14131C;--ink:#E7E5F0;--slot:#AEB4C0;--meta:#767C88;--line:#2A2838;--dash:#7E6FD0;}}
+  :root[data-theme="light"]{--page:#F5F4FB;--ink:#2A2E37;--slot:#5A6472;--meta:#A2A7B2;--line:#E6E4F2;--dash:#9C8CEA;}
+  :root[data-theme="dark"]{--page:#14131C;--ink:#E7E5F0;--slot:#AEB4C0;--meta:#767C88;--line:#2A2838;--dash:#7E6FD0;}
+
+  *{box-sizing:border-box;}
+  .dsp{font-family:var(--sans);color:var(--ink);background:var(--page);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:56px;}
+  .dsp :where(h1,h2,h3,p){margin:0;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px;}
+  .mono{font-family:var(--mono);}
+
+  .topbar{background:var(--ink);color:var(--page);}
+  .topbar .in{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:8px 26px;font-size:12px;font-family:var(--mono);}
+  .ctl{font:inherit;font-family:var(--mono);font-size:11px;cursor:pointer;color:inherit;background:transparent;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px;}
+  .ctl:hover{border-color:currentColor;}
+
+  .head{padding:30px 0 8px;}
+  .head h1{font-size:clamp(20px,2.8vw,26px);font-weight:800;letter-spacing:-.02em;}
+  .head p{color:var(--meta);font-size:14px;margin-top:8px;max-width:70ch;}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:34px;padding-top:20px;}
+
+  /* ---- diagram primitives (matches the DataListItem sample) ---- */
+  .fam{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;margin:0 0 14px 8px;letter-spacing:-.01em;}
+  .fam .d{font-size:15px;}
+  .fam .d.v{color:var(--vio);} .fam .d.i{color:var(--indigo);}
+  .fam .nv{color:var(--vio);} .fam .ni{color:var(--indigo);} .fam .sl{color:var(--meta);font-weight:600;}
+
+  .boxwrap{position:relative;padding-left:56px;}
+  .rlabel{position:absolute;left:0;font-size:15px;color:var(--vio);font-weight:600;}
+  .box{border:2px dashed var(--dash);border-radius:16px;background:color-mix(in srgb,var(--page) 55%, #fff);padding:26px 30px;}
+  @media (prefers-color-scheme:dark){.box{background:color-mix(in srgb,var(--page) 70%, #000);}}
+  .divide{border-top:2px dashed var(--dash);margin:0 -30px;}
+  .region{padding:6px 0 10px;}
+
+  .slot{color:var(--slot);font-size:21px;font-weight:500;letter-spacing:-.01em;}
+  .slot.meta{color:var(--meta);font-size:17px;}
+  .slot.link{text-decoration:underline;text-underline-offset:3px;}
+  .row{display:flex;align-items:center;gap:14px;}
+  .between{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
+  .col{display:flex;flex-direction:column;gap:14px;}
+  .col.end{align-items:flex-end;}
+
+  /* placeholder atoms */
+  .ph-check{width:26px;height:26px;border:2px dashed var(--dash);border-radius:7px;flex:none;}
+  .cbx{width:26px;height:26px;border-radius:7px;background:var(--check);display:grid;place-items:center;flex:none;color:#fff;}
+  .cbx svg{width:17px;height:17px;}
+  .heart{width:26px;height:26px;color:var(--slot);flex:none;}
+  .icob{width:30px;height:30px;border:1.5px dashed var(--dash);border-radius:8px;display:grid;place-items:center;color:var(--meta);flex:none;font-size:13px;}
+  .pill{border:1.5px dashed var(--dash);border-radius:999px;padding:5px 14px;color:var(--slot);font-size:16px;}
+  .btnph{border:2px dashed var(--dash);border-radius:10px;padding:12px 0;text-align:center;color:var(--slot);font-size:17px;font-weight:600;}
+  .selph{border:1.5px dashed var(--dash);border-radius:9px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;color:var(--meta);font-size:16px;}
+  .caption{margin:12px 0 0 56px;font-family:var(--mono);font-size:11.5px;color:var(--meta);}
+  .kvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;}
+</style>
+
+<div class="dsp">
+  <div class="topbar"><div class="in"><span>ds-transform · component slot-anatomy guides</span><button class="ctl" id="themeBtn" type="button">◐ theme</button></div></div>
+  <div class="wrap">
+    <div class="head">
+      <h1>컴포넌트 안 아이템(슬롯) 구분 가이드</h1>
+      <p>첨부한 <span class="mono">DataListItem</span> 다이어그램과 같은 언어로, 각 컴포넌트를 점선 경계 안에서 <span class="mono">#슬롯</span> 아이템으로 분해합니다. ❖ = 컴포넌트 패밀리, ◈ = 아이템, 점선 = 경계/영역, <span class="mono">#label</span>(밑줄) = 링크 슬롯.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- 0) 샘플 재구성: DataListItem -->
+      <section>
+        <div class="fam"><span class="d v">❖</span><span class="nv">DataList</span><span class="sl">/</span><span class="d i">◈</span><span class="ni">DataListItem</span></div>
+        <div class="boxwrap">
+          <div class="rlabel" style="top:30%">right</div>
+          <div class="rlabel" style="top:78%">left</div>
+          <div class="box">
+            <div class="region between">
+              <div class="row"><span class="ph-check"></span><span class="slot">#title</span></div>
+              <div class="col end">
+                <div class="row"><span class="slot">#description</span><svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-7-9.5A3.5 3.5 0 0 1 12 8a3.5 3.5 0 0 1 7 2.5C19 15.4 12 20 12 20z"/></svg></div>
+                <span class="slot meta">#meta</span>
+                <span class="slot link">#label</span>
+                <div class="row"><span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span class="slot">#label</span></div>
+              </div>
+            </div>
+            <div class="divide"></div>
+            <div class="region">
+              <div class="row" style="gap:60px"><span class="slot">#title</span><span class="slot">#description</span></div>
+              <div style="margin-top:14px"><span class="slot link">#label</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">샘플 재구성 · region(right/left) 변형 = 같은 슬롯 세트, 정렬만 다름</div>
+      </section>
+
+      <!-- 1) ApplicationCard (deferment flow) -->
+      <section>
+        <div class="fam"><span class="d v">❖</span><span class="nv">ApplicationCard</span><span class="sl">/</span><span class="d i">◈</span><span class="ni">DescriptionList</span></div>
+        <div class="boxwrap">
+          <div class="box">
+            <div class="between">
+              <span class="slot">#title</span>
+              <span class="slot meta">#status</span>
+            </div>
+            <div style="margin-top:6px"><span class="slot meta">#account</span></div>
+            <div class="divide" style="margin-top:16px"></div>
+            <div class="region kvgrid" style="padding-top:14px">
+              <div class="row" style="gap:10px"><span class="slot meta" style="font-size:15px">#key</span><span class="slot" style="font-size:17px">#value</span></div>
+              <div class="row" style="gap:10px"><span class="slot meta" style="font-size:15px">#key</span><span class="slot" style="font-size:17px">#value</span></div>
+              <div class="row" style="gap:10px"><span class="slot meta" style="font-size:15px">#key</span><span class="slot" style="font-size:17px">#value</span></div>
+              <div class="row" style="gap:10px"><span class="slot meta" style="font-size:15px">#key</span><span class="slot" style="font-size:17px">#value</span></div>
+            </div>
+            <div class="btnph" style="margin-top:16px">#action · Button/primary</div>
+          </div>
+        </div>
+        <div class="caption">slots: #title · #account · #status · DescriptionList(#key/#value ×n) · #action</div>
+      </section>
+
+      <!-- 2) AppBar -->
+      <section>
+        <div class="fam"><span class="d v">❖</span><span class="nv">AppBar</span></div>
+        <div class="boxwrap">
+          <div class="box" style="padding:20px 24px">
+            <div class="between" style="align-items:center">
+              <div class="row">
+                <span class="icob">‹</span>
+                <span class="pill">#badge</span>
+                <span class="slot">#title</span>
+                <span class="slot meta" style="font-size:15px">▾</span>
+              </div>
+              <div class="row"><span class="icob">가</span><span class="icob">≡</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">slots: #leading(IconButton) · #badge(Badge) · #title(Title) · #actions(IconButton ×n)</div>
+      </section>
+
+      <!-- 3) FormCard -->
+      <section>
+        <div class="fam"><span class="d v">❖</span><span class="nv">FormCard</span></div>
+        <div class="boxwrap">
+          <div class="box">
+            <span class="slot">#header</span>
+            <div class="divide" style="margin:14px -30px"></div>
+            <div class="region kvgrid" style="padding-top:6px">
+              <div class="col" style="gap:7px"><span class="slot meta" style="font-size:15px">#label</span><div class="selph">#field · Select <span>▾</span></div></div>
+              <div class="col" style="gap:7px"><span class="slot meta" style="font-size:15px">#label</span><div class="selph">#field · Select <span>▾</span></div></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:16px"><span class="btnph" style="padding:11px 18px">#action · Button/outline</span></div>
+          </div>
+        </div>
+        <div class="caption">slots: #header(Title) · #fields(Select/Input ×n) · #action(Button)</div>
+      </section>
+
+      <!-- 4) BottomBar -->
+      <section>
+        <div class="fam"><span class="d v">❖</span><span class="nv">BottomBar</span></div>
+        <div class="boxwrap">
+          <div class="box" style="padding:0;overflow:hidden">
+            <div class="row" style="gap:0">
+              <div class="btnph" style="flex:1;border:0;border-right:2px dashed var(--dash);border-radius:0;padding:18px 0">#prev · Button</div>
+              <div class="btnph" style="flex:1;border:0;border-radius:0;padding:18px 0;color:#fff;background:var(--check)">#next · Button/primary</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">slots: #actions(Button ×2) · layout=split</div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){var root=document.documentElement;document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');if(!c){c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}root.setAttribute('data-theme',c==='dark'?'light':'dark');});})();
+</script>
+</body></html>

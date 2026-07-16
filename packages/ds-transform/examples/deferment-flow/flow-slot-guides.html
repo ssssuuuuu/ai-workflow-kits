@@ -1,0 +1,212 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>flowslots</title><style>*{margin:0}</style></head><body>
+<style>
+  :root{
+    --page:#F5F4FB; --ink:#2A2E37; --slot:#5A6472; --meta:#A2A7B2; --line:#E6E4F2;
+    --vio:#7C4DD6; --indigo:#5578E6; --dash:#9C8CEA; --check:#2563EB;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{--page:#14131C;--ink:#E7E5F0;--slot:#AEB4C0;--meta:#767C88;--line:#2A2838;--dash:#7E6FD0;}}
+  :root[data-theme="light"]{--page:#F5F4FB;--ink:#2A2E37;--slot:#5A6472;--meta:#A2A7B2;--line:#E6E4F2;--dash:#9C8CEA;}
+  :root[data-theme="dark"]{--page:#14131C;--ink:#E7E5F0;--slot:#AEB4C0;--meta:#767C88;--line:#2A2838;--dash:#7E6FD0;}
+
+  *{box-sizing:border-box;}
+  .dsp{font-family:var(--sans);color:var(--ink);background:var(--page);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:56px;}
+  .dsp :where(h1,h2,h3,p){margin:0;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px;}
+  .mono{font-family:var(--mono);}
+
+  .topbar{background:var(--ink);color:var(--page);}
+  .topbar .in{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:8px 26px;font-size:12px;font-family:var(--mono);}
+  .ctl{font:inherit;font-family:var(--mono);font-size:11px;cursor:pointer;color:inherit;background:transparent;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px;}
+  .ctl:hover{border-color:currentColor;}
+
+  .head{padding:30px 0 8px;}
+  .head h1{font-size:clamp(20px,2.8vw,26px);font-weight:800;letter-spacing:-.02em;}
+  .head p{color:var(--meta);font-size:14px;margin-top:8px;max-width:74ch;}
+
+  .screen{margin-top:34px;}
+  .screen-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--vio);padding:4px 12px;border-radius:999px;}
+  .screen-sub{color:var(--meta);font-size:13px;margin:8px 0 4px;}
+
+  .fam{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;margin:20px 0 12px 6px;letter-spacing:-.01em;}
+  .fam .d{font-size:14px;} .fam .d.v{color:var(--vio);} .fam .d.i{color:var(--indigo);}
+  .fam .nv{color:var(--vio);} .fam .ni{color:var(--indigo);} .fam .sl{color:var(--meta);font-weight:600;}
+
+  .boxwrap{position:relative;padding-left:52px;}
+  .rlabel{position:absolute;left:0;font-size:14px;color:var(--vio);font-weight:600;}
+  .box{border:2px dashed var(--dash);border-radius:15px;background:color-mix(in srgb,var(--page) 55%,#fff);padding:22px 26px;}
+  @media (prefers-color-scheme:dark){.box{background:color-mix(in srgb,var(--page) 70%,#000);}}
+  .divide{border-top:2px dashed var(--dash);margin:0 -26px;}
+
+  .slot{color:var(--slot);font-size:19px;font-weight:500;letter-spacing:-.01em;}
+  .slot.sm{font-size:16px;} .slot.meta{color:var(--meta);} .slot.link{text-decoration:underline;text-underline-offset:3px;}
+  .row{display:flex;align-items:center;gap:12px;} .between{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+  .col{display:flex;flex-direction:column;gap:12px;} .col.end{align-items:flex-end;}
+
+  .ph-check{width:24px;height:24px;border:2px dashed var(--dash);border-radius:6px;flex:none;}
+  .cbx{width:24px;height:24px;border-radius:6px;background:var(--check);display:grid;place-items:center;flex:none;color:#fff;}
+  .cbx svg{width:15px;height:15px;}
+  .heart{width:24px;height:24px;color:var(--slot);flex:none;}
+  .icob{width:28px;height:28px;border:1.5px dashed var(--dash);border-radius:7px;display:grid;place-items:center;color:var(--meta);flex:none;font-size:12px;}
+  .pill{border:1.5px dashed var(--dash);border-radius:999px;padding:4px 13px;color:var(--slot);font-size:15px;}
+  .btnph{border:2px dashed var(--dash);border-radius:9px;padding:11px 0;text-align:center;color:var(--slot);font-size:16px;font-weight:600;}
+  .selph{border:1.5px dashed var(--dash);border-radius:9px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;color:var(--meta);font-size:15px;}
+  .caption{margin:11px 0 0 52px;font-family:var(--mono);font-size:11px;color:var(--meta);}
+  .kvgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
+  .fieldlab{font-size:13px;color:var(--meta);margin-bottom:6px;}
+  .tbl{display:grid;gap:0;border:1.5px dashed var(--dash);border-radius:8px;overflow:hidden;}
+  .tbl .tr{display:grid;grid-template-columns:1.3fr 1fr 1fr;}
+  .tbl .th,.tbl .td{padding:9px 12px;font-size:14px;color:var(--slot);border-bottom:1.5px dashed var(--dash);}
+  .tbl .th{color:var(--meta);background:color-mix(in srgb,var(--dash) 12%,transparent);}
+  .tbl .tr:last-child .td{border-bottom:0;}
+  .tbl .tr .th:not(:last-child),.tbl .tr .td:not(:last-child){border-right:1.5px dashed var(--dash);}
+  .stack{display:flex;flex-direction:column;gap:24px;}
+  .nested{margin-left:36px;color:var(--meta);font-size:15px;}
+</style>
+
+<div class="dsp">
+  <div class="topbar"><div class="in"><span>ds-transform · 원금상환유예 flow · component → #slot guides</span><button class="ctl" id="themeBtn" type="button">◐ theme</button></div></div>
+  <div class="wrap">
+    <div class="head">
+      <h1>플로우 전체에 슬롯 가이드 적용</h1>
+      <p>첨부한 5개 화면을 <span class="mono">DataListItem</span> 다이어그램 언어로 분해했습니다. 화면별로 등장하는 컴포넌트를 점선 경계 + <span class="mono">#슬롯</span> 아이템으로 표시합니다. (가상 데이터)</p>
+    </div>
+
+    <!-- ===== SCREEN 1 ===== -->
+    <div class="screen">
+      <span class="screen-tag">Screen 1 · 신청 목록</span>
+      <div class="stack">
+        <div>
+          <div class="fam"><span class="d v">❖</span><span class="nv">AppBar</span></div>
+          <div class="boxwrap"><div class="box" style="padding:16px 20px"><div class="between" style="align-items:center"><div class="row"><span class="icob">‹</span><span class="pill">#badge</span><span class="slot">#title</span><span class="slot meta sm">▾</span></div><div class="row"><span class="icob">가</span><span class="icob">≡</span></div></div></div></div>
+        </div>
+        <div>
+          <div class="fam"><span class="d i">◈</span><span class="ni">Checkbox</span></div>
+          <div class="boxwrap"><div class="box" style="padding:14px 20px"><div class="row"><span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span class="slot">#label</span></div></div></div>
+        </div>
+        <div>
+          <div class="fam"><span class="d v">❖</span><span class="nv">ApplicationCard</span><span class="sl">/</span><span class="d i">◈</span><span class="ni">DescriptionList</span></div>
+          <div class="boxwrap"><div class="box">
+            <div class="between"><span class="slot">#title</span><span class="slot meta">#status</span></div>
+            <div style="margin-top:5px"><span class="slot meta sm">#account</span></div>
+            <div class="divide" style="margin-top:14px"></div>
+            <div class="kvgrid" style="padding-top:12px">
+              <div class="row" style="gap:9px"><span class="slot meta sm">#key</span><span class="slot sm">#value</span></div>
+              <div class="row" style="gap:9px"><span class="slot meta sm">#key</span><span class="slot sm">#value</span></div>
+              <div class="row" style="gap:9px"><span class="slot meta sm">#key</span><span class="slot sm">#value</span></div>
+              <div class="row" style="gap:9px"><span class="slot meta sm">#key</span><span class="slot sm">#value</span></div>
+            </div>
+            <div class="btnph" style="margin-top:14px">#action · Button/primary</div>
+          </div></div>
+          <div class="caption">+ MetaText(#신청일자) · Fab(#icon) — 화면 레벨 원자</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 2 ===== -->
+    <div class="screen">
+      <span class="screen-tag">Screen 2 · 대출계좌 선택</span>
+      <div class="stack">
+        <div>
+          <div class="fam"><span class="d i">◈</span><span class="ni">SelectField</span></div>
+          <div class="boxwrap"><div class="box"><div class="fieldlab">#label</div><div class="selph"><span>#value · Select</span><span>▾</span></div><div style="margin-top:12px" class="row"><span class="pill">#tag · 담보물 주소</span></div><div style="margin-top:8px"><span class="slot meta sm">#addressText</span></div></div></div>
+          <div class="caption">slots: #label · #value(Select) · #tag(Tag) · #addressText(Text)</div>
+        </div>
+        <div>
+          <div class="fam"><span class="d v">❖</span><span class="nv">Checklist</span><span class="sl">/</span><span class="d i">◈</span><span class="ni">CheckItem</span></div>
+          <div class="boxwrap"><div class="box">
+            <div class="slot sm" style="font-weight:700;color:var(--ink)">#sectionTitle</div>
+            <div class="divide" style="margin:12px -26px"></div>
+            <div class="col" style="gap:14px;padding-top:2px">
+              <div class="row"><span class="ph-check"></span><span class="slot">#item</span></div>
+              <div class="row"><span class="ph-check"></span><span class="slot">#item</span></div>
+              <div class="row"><span class="ph-check"></span><span class="slot">#item</span></div>
+            </div>
+          </div></div>
+          <div class="caption">slots: #sectionTitle · #item(CheckItem ×n) — 모두 체크해야 다음 단계 가능</div>
+        </div>
+        <div>
+          <div class="fam"><span class="d i">◈</span><span class="ni">BottomCTA</span></div>
+          <div class="boxwrap"><div class="box" style="padding:0;overflow:hidden"><div class="btnph" style="border:0;border-radius:0;padding:16px 0;color:#fff;background:var(--check)">#action · Button/primary · full-width</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 3 ===== -->
+    <div class="screen">
+      <span class="screen-tag">Screen 3 · 신청 동의</span>
+      <div class="stack">
+        <div>
+          <div class="fam"><span class="d i">◈</span><span class="ni">Accordion</span></div>
+          <div class="boxwrap"><div class="box" style="padding:0;overflow:hidden">
+            <div class="row between" style="padding:15px 20px;align-items:center"><span class="slot sm" style="font-weight:700;color:var(--ink)">#header</span><span class="slot meta">▾</span></div>
+            <div class="divide"></div>
+            <div style="padding:16px 20px"><span class="slot meta sm">#panel</span></div>
+          </div></div>
+          <div class="caption">slots: #header · #panel · state=expanded/collapsed</div>
+        </div>
+        <div>
+          <div class="fam"><span class="d v">❖</span><span class="nv">DataTable</span></div>
+          <div class="boxwrap"><div class="box" style="padding:20px 22px">
+            <div class="tbl">
+              <div class="tr"><div class="th">#col</div><div class="th">#col</div><div class="th">#col</div></div>
+              <div class="tr"><div class="td">#cell</div><div class="td">#cell</div><div class="td">#cell</div></div>
+              <div class="tr"><div class="td">#cell</div><div class="td">#cell</div><div class="td">#cell</div></div>
+            </div>
+          </div></div>
+          <div class="caption">slots: #columns(#col ×3) · #rows(#cell ×n)</div>
+        </div>
+        <div>
+          <div class="fam"><span class="d v">❖</span><span class="nv">BottomBar</span></div>
+          <div class="boxwrap"><div class="box" style="padding:0;overflow:hidden"><div class="row" style="gap:0"><div class="btnph" style="flex:1;border:0;border-right:2px dashed var(--dash);border-radius:0;padding:15px 0">#prev · Button</div><div class="btnph" style="flex:1;border:0;border-radius:0;padding:15px 0;color:var(--meta)">#next · Button(disabled)</div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 4 ===== -->
+    <div class="screen">
+      <span class="screen-tag">Screen 4 · 동의 (계속)</span>
+      <div>
+        <div class="fam"><span class="d v">❖</span><span class="nv">Checklist</span><span class="sl">/</span><span class="d i">◈</span><span class="ni">CheckItem (nested)</span></div>
+        <div class="boxwrap"><div class="box">
+          <div class="col" style="gap:16px">
+            <div class="row"><span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span class="slot">#item</span></div>
+            <div>
+              <div class="row"><span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span class="slot">#item</span></div>
+              <div class="nested" style="margin-top:8px">· #subBullet<br>· #subBullet</div>
+            </div>
+            <div class="row"><span class="ph-check"></span><span class="slot">#item</span></div>
+            <div class="row"><span class="ph-check"></span><span class="slot">#item</span></div>
+          </div>
+        </div></div>
+        <div class="caption">slots: #item(CheckItem ×n) · #subBullet(nested Text) · state=checked/unchecked</div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 5 ===== -->
+    <div class="screen">
+      <span class="screen-tag">Screen 5 · 신청사항</span>
+      <div>
+        <div class="fam"><span class="d v">❖</span><span class="nv">FormCard</span></div>
+        <div class="boxwrap"><div class="box">
+          <span class="slot" style="font-weight:700;color:var(--ink)">#header</span>
+          <div class="divide" style="margin:13px -26px"></div>
+          <div class="kvgrid" style="padding-top:4px">
+            <div class="col" style="gap:6px"><span class="fieldlab" style="margin:0">#label</span><div class="selph">#field · Select <span>▾</span></div></div>
+            <div class="col" style="gap:6px"><span class="fieldlab" style="margin:0">#label</span><div class="selph">#value · 자동계산</div></div>
+          </div>
+          <div class="col" style="gap:6px;margin-top:14px;max-width:220px"><span class="fieldlab" style="margin:0">#label</span><div class="selph">#field · Select <span>▾</span></div></div>
+          <div style="display:flex;justify-content:flex-end;margin-top:14px"><span class="btnph" style="padding:10px 16px">#action · Button/outline</span></div>
+        </div></div>
+        <div class="caption">slots: #header · #fields(Select ×n, #label + control) · #action(Button) · + BottomBar(#prev/#next)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function(){var root=document.documentElement;document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');if(!c){c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}root.setAttribute('data-theme',c==='dark'?'light':'dark');});})();
+</script>
+</body></html>
