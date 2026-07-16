@@ -80,6 +80,20 @@ token → atom(slot) → molecule → organism → template → page/screen
 | List/Detail/Search/Card | 분자, 아나토미+prose | [`list-detail-search-card-transform/`](../packages/ds-transform/examples/list-detail-search-card-transform/) |
 | DataList composition | 조합(슬롯), 컴포넌트→화면 | [`datalist-composition/`](../packages/ds-transform/examples/datalist-composition/) |
 | Checkout screen | 전체 흐름 | [`legacy-screen-transform/`](../packages/ds-transform/examples/legacy-screen-transform/) |
+| Finance portal home | 화면 조립 + 머신 리더블 스펙 | [`finance-portal-home/`](../packages/ds-transform/examples/finance-portal-home/) |
+| 원금상환유예 flow | OCR → 원자/컴포넌트 → 화면 + 가이드(오버레이·redline·slot) | [`deferment-flow/`](../packages/ds-transform/examples/deferment-flow/) |
+
+## 머신 리더블 레지스트리 (AI 네이티브)
+
+원자·컴포넌트를 스키마 준수 JSON으로 등록해, MCP 서버로 에이전트가 조회할 수 있습니다.
+
+| 항목 | 내용 | 경로 |
+| --- | --- | --- |
+| 원자 레지스트리 (18) | Text·Title·Description·Button·IconButton·Input·Radio·Checkbox·Select·Switch·Icon·Slider·Rating·SegmentedControl·Badge·Tag·Divider·Fab | [`registry/atoms.json`](../packages/ds-transform/registry/atoms.json) |
+| 컴포넌트 스펙 | finance-portal(7) · deferment-flow(12: AppBar·ApplicationCard·DescriptionList·FormCard·BottomBar·SelectField·Checklist·CheckItem·Accordion·DataTable·BottomCTA…) | 각 예제의 `component-specs*.json` |
+| 스키마 | 모든 스펙이 준수하는 JSON Schema | [`schema/component-spec.schema.json`](../packages/ds-transform/schema/component-spec.schema.json) |
+| MCP 서버 | `list_components` / `get_component_spec` / `search_components` | [`plugins/ds-catalog-mcp/`](../packages/ds-transform/plugins/ds-catalog-mcp/) |
+| TDS Mobile 참조 인덱스 | 공개 컴포넌트 taxonomy 매핑 | [`registry/tds-mobile-index.md`](../packages/ds-transform/registry/tds-mobile-index.md) |
 
 ## 워크플로우로 실행하기
 
