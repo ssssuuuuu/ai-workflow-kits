@@ -10,6 +10,7 @@ A fictional reconstruction of a mobile "원금상환유예 신청" (principal-re
 - `redline.html` — a redline proof that the screen is token/component-driven, not a copied image: an 8px spacing-token grid + ruler, per-element token callouts, and three things a screenshot can't do (theme switch, token propagation, component reuse).
 - `slot-guides.html` — slot-anatomy diagrams (in the `DataListItem` sample's visual language: dashed component boundary, ❖/◈ family labels, region labels, `#slot` placeholders) for `ApplicationCard`, `AppBar`, `FormCard`, `BottomBar`.
 - `flow-slot-guides.html` — the same slot language applied across **all five screens** of the flow, grouped by screen, covering every component (adds `SelectField`, `Checklist`/`CheckItem`, `BottomCTA`, `Accordion`, `DataTable`).
+- `slot-inspect.html` — the guide reflected **onto the rendered screen**: each element carries its `#slot` name pinned in place (toggle #slot on/off; base grayscaled so the labels pop).
 - `component-specs.example.json` / `component-specs-2.example.json` — machine-readable specs for the composed components, conforming to `../../schema/component-spec.schema.json`. The `slots` fields are the data behind the slot guides. Both are also served over MCP (copied into `../../plugins/ds-catalog-mcp/catalog/`).
 
 ## Components registered from this flow
