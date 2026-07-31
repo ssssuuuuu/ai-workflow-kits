@@ -91,7 +91,9 @@ token → atom(slot) → molecule → organism → template → page/screen
 | --- | --- | --- |
 | 원자 레지스트리 (18) | Text·Title·Description·Button·IconButton·Input·Radio·Checkbox·Select·Switch·Icon·Slider·Rating·SegmentedControl·Badge·Tag·Divider·Fab | [`registry/atoms.json`](../packages/ds-transform/registry/atoms.json) |
 | 컴포넌트 스펙 | finance-portal(7) · deferment-flow(12: AppBar·ApplicationCard·DescriptionList·FormCard·BottomBar·SelectField·Checklist·CheckItem·Accordion·DataTable·BottomCTA…) | 각 예제의 `component-specs*.json` |
+| 디자인 토큰 (3-tier) | reference → semantic → component 변수 카탈로그 (CSS custom properties) | [`registry/tokens.json`](../packages/ds-transform/registry/tokens.json) |
 | 스키마 | 모든 스펙이 준수하는 JSON Schema | [`schema/component-spec.schema.json`](../packages/ds-transform/schema/component-spec.schema.json) |
+| 관리자 웹화면 (콘솔) | 컴포넌트별 아이콘·토큰·변수를 실무자가 조회 (원자·컴포넌트·토큰·아이콘 통합 뷰) | [`docs/ds-admin.html`](ds-admin.html) |
 | MCP 서버 | `list_components` / `get_component_spec` / `search_components` | [`plugins/ds-catalog-mcp/`](../packages/ds-transform/plugins/ds-catalog-mcp/) |
 | TDS Mobile 참조 인덱스 | 공개 컴포넌트 taxonomy 매핑 | [`registry/tds-mobile-index.md`](../packages/ds-transform/registry/tds-mobile-index.md) |
 

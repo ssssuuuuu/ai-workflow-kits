@@ -101,6 +101,7 @@ Do not split one workflow across separate top-level `skills`, `agents`, and `pro
 - Design system planning & engineering methodology research: [`docs/design-system-methodology.md`](docs/design-system-methodology.md)
 - Component catalog index (atoms → components → screens): [`docs/component-catalog-index.md`](docs/component-catalog-index.md)
 - Project overview (browser view): [`docs/overview.html`](docs/overview.html)
+- Design system console — icons, tokens, variables per component (admin web view): [`docs/ds-admin.html`](docs/ds-admin.html)
 - GitHub About text and topics: [`docs/github-about.md`](docs/github-about.md)
 - Project board plan: [`docs/project-board.md`](docs/project-board.md)
 - Wiki source pages: [`docs/wiki/Home.md`](docs/wiki/Home.md)
